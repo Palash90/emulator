@@ -37,22 +37,23 @@ class NewFile extends Component {
     }
 
     changeLabel(e) {
-        if (e.target.value && e.target.value !== '') {
-            this.setState({ label: e.target.value });
-        }
+        this.setState({ label: e.target.value });
     }
 
     keyDown(e) {
         if (e.key === 'Enter') {
             const files = this.context.files;
             const matchedFileNames = files.filter(file => file.name === this.state.label);
+            if(!this.state.label || this.state.label===''){
+                alert("Please input a file name");
+            }
             if (matchedFileNames.length < 1) {
                 files.push({ key: files.length, id: files.length, name: this.state.label, content: '' });
-                this.context.setFiles(files);
+                this.context.setFiles([...files]);
             } else {
                 alert("File name already exists");
-                this.setState({ label: 'New File', edit: false })
             }
+            this.setState({ label: 'New File', edit: true })
         }
     }
 
