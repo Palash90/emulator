@@ -10,15 +10,15 @@ import { useState } from "react";
 
 import "./App.css";
 
-const files = JSON.parse(localStorage.getItem('files')) || [{id:1, name:"nand.js", content:""}];
+const files = JSON.parse(localStorage.getItem('files')) || [{ id: 1, name: "nand.js", content: "" }];
 alert(JSON.stringify(files));
 
 function App() {
-  const [currQuote, setCurrQuote] = useState(1);
+  const [currFile, setCurrFle] = useState(1);
 
   return (
     <div className="App">
-      <FileContext.Provider value={{  files, currQuote, setCurrQuote }}>
+      <FileContext.Provider value={{ files, currFile, setCurrFle }}>
         <SplitPane className="split-pane-row">
           <SplitPaneLeft>
             <SplitPane className="split-pane-col">
