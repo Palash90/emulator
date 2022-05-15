@@ -5,7 +5,7 @@ import React, {
     useRef,
     useState,
   } from "react";
-  import QuoteContext from "./QuoteContext";
+  import FileContext from "./FileContext";
   import SplitPaneContext from "./SplitPaneContext";
   
   const SplitPane = ({ children, ...props }) => {
@@ -72,7 +72,7 @@ import React, {
   export const SplitPaneTop = (props) => {
     const topRef = createRef();
     const { clientHeight, setClientHeight } = useContext(SplitPaneContext);
-    const { quotes, setCurrQuote } = useContext(QuoteContext);
+    const {   files, setCurrQuote } = useContext(FileContext);
   
     useEffect(() => {
       if (!clientHeight) {
@@ -86,13 +86,13 @@ import React, {
   
     return (
       <div {...props} className="split-pane-top" ref={topRef}>
-        <h1>Famous quotes:</h1>
+        <h4>Files:</h4>
         <ul>
-          {quotes.map((el, i) => {
+          {files.map((el, i) => {
             return (
               <li key={i}>
                 <a href="#" onClick={() => setCurrQuote(el.id)}>
-                  {el.author}
+                  {el.name}
                 </a>
               </li>
             );
@@ -103,11 +103,11 @@ import React, {
   };
   
   export const SplitPaneBottom = (props) => {
-    const { currQuote } = useContext(QuoteContext);
+    const  files  = useContext(FileContext);
   
     return (
       <div {...props} className="split-pane-bottom">
-        Current <b>quote id</b>: {currQuote}
+       <button type="button" onClick={localStorage.setItem('files', JSON.stringify(files.files))}>Save Project</button>
       </div>
     );
   };
@@ -130,14 +130,13 @@ import React, {
   };
   
   export const SplitPaneRight = (props) => {
-    const { quotes, currQuote } = useContext(QuoteContext);
-    const quote = quotes.find((el) => el.id === currQuote);
+    const { files, currQuote } = useContext(FileContext);
+    const file = files.find((el) => el.id === currQuote);
   
     return (
       <div {...props} className="split-pane-right">
         <div className="quote">
-          <blockquote>{quote.description}</blockquote>—{" "}
-          <span>{quote.author}</span>
+         <p>{file.content}</p>
         </div>
       </div>
     );
