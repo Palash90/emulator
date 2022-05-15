@@ -6,7 +6,7 @@ class NewFile extends Component {
     constructor() {
         super();
         this.state = {
-            label: 'New Tab', // default label
+            label: 'New File', // default label
             edit: false, // default editing mode
         };
 
@@ -37,17 +37,22 @@ class NewFile extends Component {
     }
 
     changeLabel(e) {
-        const files = this.context;
         if (e.target.value && e.target.value !== '') {
-            this.setState({ label: e.target.value }); // change label
+            this.setState({ label: e.target.value });
         }
     }
 
     keyDown(e) {
         if (e.key === 'Enter') {
             const files = this.context;
-            files.files.push({ key: files.files.length, id: files.files.length, name: this.state.label, content: '' });
-        } 
+            const matchedFileNames = files.files.filter(file => file.name === this.state.label);
+            if (matchedFileNames.length < 1) {
+                files.files.push({ key: files.files.length, id: files.files.length, name: this.state.label, content: '' });
+            } else {
+                alert("File name already exists");
+                this.setState({ label: 'New File', edit: false })
+            }
+        }
     }
 
     renderLabel() {

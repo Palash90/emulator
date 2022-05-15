@@ -92,10 +92,8 @@ export const SplitPaneTop = (props) => {
         {files.map((el, i) => {
           return FileDisplay(i, setCurrFile, el);
         })}
-        <li>
-          <NewFile></NewFile>
-        </li>
       </ul>
+      <NewFile></NewFile>
     </div>
   );
 };
