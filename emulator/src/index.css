@@ -29,7 +29,8 @@ body {
 .split-pane-right,
 .split-pane-left {
   flex: 1;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .split-pane-right {

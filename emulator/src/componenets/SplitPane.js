@@ -141,8 +141,6 @@ export const SplitPaneRight = (props) => {
 export default SplitPane;
 
 function saveFile(files, settings) {
-  alert("save file called")
-  alert(JSON.stringify(files.files));
   return localStorage.setItem('files', JSON.stringify({ files: files.files, settings: settings }));
 }
 
