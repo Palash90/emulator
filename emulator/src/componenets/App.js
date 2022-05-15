@@ -10,8 +10,7 @@ import { useState } from "react";
 
 import "./App.css";
 
-const files = JSON.parse(localStorage.getItem('files')) || [{ id: 1, name: "nand.js", content: "" }];
-alert(JSON.stringify(files));
+const files = JSON.parse(localStorage.getItem('files')) || [];
 
 function App() {
   const [currFile, setCurrFle] = useState(1);

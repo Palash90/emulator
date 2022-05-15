@@ -90,13 +90,7 @@ export const SplitPaneTop = (props) => {
       <h4>Files:</h4>
       <ul>
         {files.map((el, i) => {
-          return (
-            <li key={i}>
-              <a href="#" onClick={() => setCurrFile(el.id)}>
-                {el.name}
-              </a>
-            </li>
-          );
+          return FileDisplay(i, setCurrFile, el);
         })}
         <li>
           <NewFile></NewFile>
@@ -140,10 +134,23 @@ export const SplitPaneRight = (props) => {
   return (
     <div {...props} className="split-pane-right">
       <div className="quote">
-        <p>{file.content}</p>
+        <p>{file && file.content ? file.content : ""}</p>
       </div>
     </div>
   );
 };
 
 export default SplitPane;
+
+function FileDisplay(i, setCurrFile, el) {
+  if (el && el.name && el.name !== '') {
+    return <li key={i}>
+      <a href="#" onClick={() => setCurrFile(el.id)}>
+        {el.name}
+      </a>
+    </li>;
+  } else {
+    return <></>
+  }
+}
+
