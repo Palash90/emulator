@@ -44,10 +44,11 @@ class NewFile extends Component {
 
     keyDown(e) {
         if (e.key === 'Enter') {
-            const files = this.context;
-            const matchedFileNames = files.files.filter(file => file.name === this.state.label);
+            const files = this.context.files;
+            const matchedFileNames = files.filter(file => file.name === this.state.label);
             if (matchedFileNames.length < 1) {
-                files.files.push({ key: files.files.length, id: files.files.length, name: this.state.label, content: '' });
+                files.push({ key: files.length, id: files.length, name: this.state.label, content: '' });
+                this.context.setFiles(files);
             } else {
                 alert("File name already exists");
                 this.setState({ label: 'New File', edit: false })
