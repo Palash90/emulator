@@ -102,10 +102,10 @@ export const SplitPaneTop = (props) => {
 
 export const SplitPaneBottom = (props) => {
   const files = useContext(FileContext);
-
+  const settings = useContext(SplitPaneContext);
   return (
     <div {...props} className="split-pane-bottom">
-      <button type="button" onClick={localStorage.setItem('files', JSON.stringify(files.files))}>Save Project</button>
+      <button type="button" onClick={localStorage.setItem('files', JSON.stringify({files:files.files, settings:settings}))}>Save Project</button>
     </div>
   );
 };
