@@ -105,7 +105,7 @@ export const SplitPaneBottom = (props) => {
   const settings = useContext(SplitPaneContext);
   return (
     <div {...props} className="split-pane-bottom">
-      <button type="button" onClick={localStorage.setItem('files', JSON.stringify({files:files.files, settings:settings}))}>Save Project</button>
+      <button type="button" onClick={() => saveFile(files, settings)}>Save Project</button>
     </div>
   );
 };
@@ -141,6 +141,12 @@ export const SplitPaneRight = (props) => {
 };
 
 export default SplitPane;
+
+function saveFile(files, settings) {
+  alert("save file called")
+  alert(JSON.stringify(files.files));
+  return localStorage.setItem('files', JSON.stringify({ files: files.files, settings: settings }));
+}
 
 function FileDisplay(i, setCurrFile, el) {
   if (el && el.name && el.name !== '') {
