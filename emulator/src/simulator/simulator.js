@@ -11,7 +11,7 @@ function tokenize(content) {
 
 const getSeparators = () => [" ", "\n"];
 
-const getValidTokens = () => ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'IMPORT', '{', '}', ';', ':', '(', ')'];
+const getValidTokens = () => ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'IMPORT', '{', '}', ';', ':', '(', ')', "//", "/*", '*/'];
 
 function handleFailure(errorMessage) {
     return {
