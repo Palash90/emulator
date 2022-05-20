@@ -1,5 +1,5 @@
 import React from "react";
-import { Component, useContext } from "react";
+import { Component } from "react";
 import FileContext from "./FileContext";
 
 class NewFile extends Component {
