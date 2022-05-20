@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import FileContext from "./FileContext";
 import SplitPane from "react-split-pane";
 
-
+import "./Editor.css";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-vhdl";
@@ -38,6 +38,7 @@ export const EditorPane = (props) => {
             <div >
                 <p className="file-header">{fileName}</p>
                 <Editor
+                className="editor"
                     value={content}
                     onValueChange={(content) => saveNewCode(content)}
                     highlight={(content) => highlight(content, languages.vhdl)}
