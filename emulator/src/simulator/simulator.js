@@ -2,7 +2,12 @@ function simulate(content) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
-    var tokens = tokenize(content);
+    var onlyProgram = removeComments(content);
+    return onlyProgram;
+}
+
+function removeComments(content){
+    return content;
 }
 
 function tokenize(content) {
@@ -20,10 +25,6 @@ function handleFailure(errorMessage) {
     }
 }
 
-
-
-// Driver code, need to remove once done
-const fs = require('fs');
-var content = fs.readFileSync("./hdl_program", 'utf8');
-console.log(content, content.length)
-console.log(simulate(content));
+module.exports = {
+    simulate: simulate
+}
