@@ -40,9 +40,11 @@ ul {
 
 ul li {
   margin: 2px;
-  list-style-type: disclosure-closed;
+  
   text-align: left;
 }
+
+
 
 ul a {
   text-decoration: none;
@@ -118,4 +120,12 @@ a.nav-link {
 .output{
   text-align: center;
   text-decoration: underline;
+}
+
+.unselectedFile{
+  list-style-type: disclosure-closed;
+}
+
+.selectedFile{
+  list-style-type: disclosure-open;
 }

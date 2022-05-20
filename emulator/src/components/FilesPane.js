@@ -27,7 +27,7 @@ function FilesPane() {
         <h6>Files:</h6>
         <ul>
           {files.map((el, i) => {
-            return FileDisplay(i, setCurrFile, el);
+            return FileDisplay(i, currFile, setCurrFile, el);
           })}
         </ul>
         <NewFile></NewFile>
@@ -41,10 +41,10 @@ function FilesPane() {
   }
 }
 
-function FileDisplay(i, setCurrFile, el) {
+function FileDisplay(i, currFile, setCurrFile, el) {
   if (el && el.name && el.name !== '') {
     return <a key={i} href="#" onClick={() => setCurrFile(el.key)}>
-      <li>
+      <li className={el.key == currFile?"selectedFile":"unselectedFile"}>
         {el.name}
       </li>
     </a>;
