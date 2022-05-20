@@ -21,8 +21,15 @@ export const EditorPane = (props) => {
             content = file.id + " -> " + file.name;
         }
     }
-
+    console.log("content", content);
     var [code, setCode] = useState(content);
+
+    var saveNewCode = (code) => {
+        setCode(code);
+    };
+
+    console.log("code",code)
+
     return (
         <SplitPane split="horizontal"
             minSize={400}
@@ -31,7 +38,7 @@ export const EditorPane = (props) => {
             <div >
                 <Editor
                     value={code}
-                    onValueChange={(code) => setCode(code)}
+                    onValueChange={(code) => saveNewCode(code)}
                     highlight={(code) => highlight(code, languages.js)}
                     padding={10}
                     style={{
@@ -46,3 +53,4 @@ export const EditorPane = (props) => {
         </SplitPane>
     );
 };
+
