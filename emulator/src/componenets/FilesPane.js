@@ -3,10 +3,11 @@ import FileContext from "./FileContext";
 import { useContext } from "react";
 import SplitPane from "react-split-pane";
 import Button from 'react-bootstrap/Button';
+import runSimulation from "./hdlSimulator";
 
 
 function FilesPane() {
-  const { files, setCurrFile } = useContext(FileContext);
+  const { files, currFile, setCurrFile } = useContext(FileContext);
 
   return (
     <SplitPane split="horizontal"
@@ -16,6 +17,7 @@ function FilesPane() {
 
       <div className="btn-group btn-group-sm" role="group" >
         <Button type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
+        <Button type="button" onClick={() => runSimulation(currFile, files)}>Run</Button>
       </div>
       <div  >
         <h6>Files:</h6>
