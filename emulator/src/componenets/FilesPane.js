@@ -7,7 +7,7 @@ import runSimulation from "./hdlSimulator";
 
 
 function FilesPane() {
-  const { files, currFile, setCurrFile } = useContext(FileContext);
+  const { files, currFile, setCurrFile, setFiles } = useContext(FileContext);
 
   return (
     <SplitPane split="horizontal"
@@ -16,8 +16,9 @@ function FilesPane() {
       onChange={(size) => localStorage.setItem('splitPosFilesPane', size)}>
 
       <div className="btn-group btn-group-sm" role="group" >
-        <Button type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
+        <Button className="btn-success" type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
         <Button type="button" onClick={() => runSimulation(currFile, files)}>Run</Button>
+        <Button className="btn-danger" type="button" onClick={() => deleteProject()}>Delete</Button>
       </div>
       <div  >
         <h6>Files:</h6>
@@ -28,19 +29,22 @@ function FilesPane() {
         </ul>
         <NewFile></NewFile>
       </div>
-
     </SplitPane>
-
   );
+
+  function deleteProject() {
+    setFiles([])
+    return localStorage.setItem('files', JSON.stringify([]));
+  }
 }
 
 function FileDisplay(i, setCurrFile, el) {
   if (el && el.name && el.name !== '') {
-    return <li key={i}>
-      <a href="#" onClick={() => setCurrFile(el.key)}>
+    return <a key={i} href="#" onClick={() => setCurrFile(el.key)}>
+      <li>
         {el.name}
-      </a>
-    </li>;
+      </li>
+    </a>;
   } else {
     return <></>
   }
