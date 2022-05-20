@@ -5,12 +5,21 @@ export const EditorPane = (props) => {
     const { files, currFile } = useContext(FileContext);
     const file = files.find((el) => el.id === currFile);
 
+    console.log("Editor Pane", file, currFile)
+
+    var content = "default"
+
+    if(file){
+        content = file.content;
+    }
+
     return (
+        
         <div>
             <div className="quote">
-                <p>{file && file.content ? file.content : file.id + " ---> " + file.name}</p>
+                <p>{content}</p>
             </div>
         </div>
     );
-    
+
 };
