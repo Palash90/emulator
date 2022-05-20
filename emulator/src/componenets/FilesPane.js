@@ -10,14 +10,15 @@ function FilesPane() {
 
   return (
     <SplitPane split="horizontal"
-      minSize={20}
-      defaultSize={parseInt(localStorage.getItem('splitPosFilsPane'), 10)}
-      onChange={(size) => localStorage.setItem('splitPosFilsPane', size)}>
-      <div>
+      minSize={45}
+      defaultSize={parseInt(localStorage.getItem('splitPosFilesPane'), 10)}
+      onChange={(size) => localStorage.setItem('splitPosFilesPane', size)}>
+
+      <div className="btn-group btn-group-sm" role="group" >
         <Button type="button" onClick={() => localStorage.setItem('files', JSON.stringify({ files: files }))}>Save Project</Button>
       </div>
       <div  >
-        <h4>Files:</h4>
+        <h6>Files:</h6>
         <ul>
           {files.map((el, i) => {
             return FileDisplay(i, setCurrFile, el);
