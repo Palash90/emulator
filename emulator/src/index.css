@@ -10,6 +10,22 @@ body {
   text-align: center;
 }
 
+:root {
+  --font-color: #eee;
+  --background-color: #333;
+  --link-color: lightblue;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--font-color);
+}
+
+a {
+  color: var(--link-color);
+}
+
+
 ul {
   margin-left: -2%;
 }
@@ -21,10 +37,11 @@ ul li {
 
 ul a {
   text-decoration: none;
-  color: darkblue;
+  color: var(--link-color);
   font-size: large;
 }
 
 ul a:hover {
-  color: black;
+  color: var(--link-color);
 }
+
