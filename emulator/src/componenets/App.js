@@ -2,6 +2,7 @@ import SplitPane from "react-split-pane";
 import FileContext from "./FileContext";
 import { useState } from "react";
 import FilesPane from "./FilesPane";
+import { EditorPane } from "./EditorPane";
 import "./App.css";
 
 const existingFiles = JSON.parse(localStorage.getItem('files')) ? JSON.parse(localStorage.getItem('files')).files || [] : [];
@@ -18,13 +19,11 @@ function App() {
           defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
           onChange={(size) => localStorage.setItem('splitPos', size)}>
           <FilesPane />
-          <div >World</div>
+          <EditorPane/>
         </SplitPane>
       </FileContext.Provider>
     </div>
   );
 }
-
-
 
 export default App;
