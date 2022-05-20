@@ -7,7 +7,7 @@ function OutputWindow() {
     if (simulationResult && simulationResult.error) {
         return <div className="alert alert-warning" role="alert">{simulationResult.errorMessage}</div>
     } else {
-        return <></>
+        return  <div className="alert alert-success" role="alert">{simulationResult.result}</div>
     }
 
 }

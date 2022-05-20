@@ -1,8 +1,9 @@
+import {simulate} from '../simulator/parser';
+
 export default function runSimulation(currFileId, files, callback) {
     var result;
     if(files && files.length>0){
         var file = files.find((el) => el.key === currFileId);
-        console.log(file.content)
         if(!file.content || file.content===''){
             result = {
                 error:true,
@@ -11,7 +12,8 @@ export default function runSimulation(currFileId, files, callback) {
 
         } else {
             result ={
-                error:false
+                error:false,
+                result:simulate(file.content)
             }
         }
     } else {
@@ -21,7 +23,6 @@ export default function runSimulation(currFileId, files, callback) {
         };
     }
 
-    console.log(result)
     if(callback){
         callback(result)
     } else {
