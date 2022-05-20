@@ -11,7 +11,7 @@ function FilesPane() {
   return (
     <SplitPane split="horizontal"
       minSize={45}
-      defaultSize={parseInt(localStorage.getItem('splitPosFilesPane'), 10)}
+      defaultSize={parseInt(localStorage.getItem('splitPosFilesPane')||"45", 10)}
       onChange={(size) => localStorage.setItem('splitPosFilesPane', size)}>
 
       <div className="btn-group btn-group-sm" role="group" >

@@ -28,12 +28,12 @@ a {
 
 
 ul {
-  margin-left: -2%;
+  margin-left: 2%;
 }
 
 ul li {
   margin: 2px;
-  list-style-type:disc;
+  list-style-type:disclosure-closed;
 }
 
 ul a {
@@ -43,11 +43,11 @@ ul a {
 }
 
 ul a:hover {
-  color: var(--font-color);
+  color: var(--bs-cyan);
 }
 
 a.nav-link {
-  color: var(--newfile-link-color);
+  color: var(--bs-teal);
 }
 
 .Resizer {

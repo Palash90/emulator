@@ -20,7 +20,7 @@ export const EditorPane = (props) => {
 
         <SplitPane split="horizontal"
             minSize={400}
-            defaultSize={parseInt(localStorage.getItem('splitPosEditorPane'), 10)}
+            defaultSize={parseInt(localStorage.getItem('splitPosEditorPane')||"400", 10)}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
             <div >
                 Editor Window
