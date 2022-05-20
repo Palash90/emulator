@@ -35,7 +35,7 @@ function FilesPane() {
 function FileDisplay(i, setCurrFile, el) {
   if (el && el.name && el.name !== '') {
     return <li key={i}>
-      <a href="#" onClick={() => setCurrFile(el.id)}>
+      <a href="#" onClick={() => setCurrFile(el.key)}>
         {el.name}
       </a>
     </li>;

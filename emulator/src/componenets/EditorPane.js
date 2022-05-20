@@ -5,30 +5,30 @@ import SplitPane from "react-split-pane";
 
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-vhdl";
 import "prismjs/themes/prism.css";
 
 export const EditorPane = (props) => {
-    const { files, currFile } = useContext(FileContext);
-    const file = files.find((el) => el.id === currFile);
+    const { files, currFile, setFiles } = useContext(FileContext);
+    const file = files.find((el) => el.key === currFile);
+    var fileName = '';
 
-    var content = "default";
+    var content = "";
     if (file) {
-        if (file.content) {
-            content = file.content
-        } else {
-            content = file.id + " -> " + file.name;
-        }
+        content = file.content;
+        fileName = file.name
     }
-    console.log("content", content);
-    var [code, setCode] = useState(content);
 
     var saveNewCode = (code) => {
-        setCode(code);
-    };
+        var newFile = { key: file.key, name: file.name, content: code };
+        var newFiles = files.filter(function (f) {
+            return f.key !== file.key;
+        });
 
-    console.log("code",code)
+        newFiles.push(newFile);
+        newFiles = newFiles.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+        setFiles(newFiles);
+    };
 
     return (
         <SplitPane split="horizontal"
@@ -36,10 +36,11 @@ export const EditorPane = (props) => {
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400", 10)}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
             <div >
+                <p className="file-header">{fileName}</p>
                 <Editor
-                    value={code}
-                    onValueChange={(code) => saveNewCode(code)}
-                    highlight={(code) => highlight(code, languages.js)}
+                    value={content}
+                    onValueChange={(content) => saveNewCode(content)}
+                    highlight={(content) => highlight(content, languages.vhdl)}
                     padding={10}
                     style={{
                         fontFamily: '"Fira code", "Fira Mono", monospace',

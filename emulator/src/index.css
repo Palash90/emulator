@@ -34,6 +34,7 @@ ul {
 ul li {
   margin: 2px;
   list-style-type:disclosure-closed;
+  text-align: left;
 }
 
 ul a {
@@ -100,4 +101,8 @@ a.nav-link {
 
 .Resizer.disabled:hover {
   border-color: transparent;
+}
+
+.file-header{
+  background-color: var(--bs-gray);
 }
