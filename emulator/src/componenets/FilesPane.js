@@ -4,10 +4,12 @@ import { useContext } from "react";
 import SplitPane from "react-split-pane";
 import Button from 'react-bootstrap/Button';
 import runSimulation from "./hdlSimulator";
+import SimulationContext from "./SimulationContext";
 
 
 function FilesPane() {
   const { files, currFile, setCurrFile, setFiles } = useContext(FileContext);
+  const { setSimulationResult } = useContext(SimulationContext);
 
   return (
     <SplitPane split="horizontal"
@@ -17,7 +19,7 @@ function FilesPane() {
 
       <div className="btn-group btn-group-sm" role="group" >
         <Button className="btn-success" type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
-        <Button type="button" onClick={() => runSimulation(currFile, files)}>Run</Button>
+        <Button type="button" onClick={() => runSimulation(currFile, files, (result) => setSimulationResult(result))}>Run</Button>
         <Button className="btn-danger" type="button" onClick={() => deleteProject()}>Delete</Button>
       </div>
       <div  >

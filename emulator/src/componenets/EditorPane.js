@@ -7,6 +7,7 @@ import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-vhdl";
 import "prismjs/themes/prism.css";
+import OutputWindow from "./OutputWindow";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles } = useContext(FileContext);
@@ -38,7 +39,7 @@ export const EditorPane = (props) => {
             <div >
                 <p className="file-header">{fileName}</p>
                 <Editor
-                className="editor"
+                    className="editor"
                     value={content}
                     onValueChange={(content) => saveNewCode(content)}
                     highlight={(content) => highlight(content, languages.vhdl)}
@@ -50,7 +51,8 @@ export const EditorPane = (props) => {
                 />
             </div>
             <div>
-                Output Window
+                <h6 className="output">Simulation Output</h6>
+                <OutputWindow />
             </div>
         </SplitPane>
     );

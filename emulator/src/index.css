@@ -112,4 +112,10 @@ a.nav-link {
 
 .file-header {
   background-color: var(--bs-gray);
+  text-align: left;
+}
+
+.output{
+  text-align: center;
+  text-decoration: underline;
 }
