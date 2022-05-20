@@ -33,7 +33,7 @@ export const EditorPane = (props) => {
     return (
         <SplitPane split="horizontal"
             minSize={400}
-            defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400", 10)}
+            defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
             <div >
                 <p className="file-header">{fileName}</p>

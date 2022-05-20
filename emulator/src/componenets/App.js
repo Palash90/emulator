@@ -5,7 +5,7 @@ import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainPane from "./MainPane";
 
-const existingFiles = JSON.parse(localStorage.getItem('files')) ? JSON.parse(localStorage.getItem('files')).files || [] : [];
+const existingFiles = JSON.parse(localStorage.getItem('files')) ? JSON.parse(localStorage.getItem('files')) || [] : [];
 
 function App() {
   const [currFile, setCurrFile] = useState(1);

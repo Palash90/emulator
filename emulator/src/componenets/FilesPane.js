@@ -11,11 +11,11 @@ function FilesPane() {
   return (
     <SplitPane split="horizontal"
       minSize={45}
-      defaultSize={parseInt(localStorage.getItem('splitPosFilesPane')||"45", 10)}
+      defaultSize={parseInt(localStorage.getItem('splitPosFilesPane') || "45")}
       onChange={(size) => localStorage.setItem('splitPosFilesPane', size)}>
 
       <div className="btn-group btn-group-sm" role="group" >
-        <Button type="button" onClick={() => localStorage.setItem('files', JSON.stringify({ files: files }))}>Save Project</Button>
+        <Button type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
       </div>
       <div  >
         <h6>Files:</h6>

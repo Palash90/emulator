@@ -48,9 +48,11 @@ class NewFile extends Component {
                 alert("Please input a file name");
             }
             if (matchedFileNames.length < 1) {
-                files.push({ key: files.length, id: files.length, name: this.state.label, content: '' });
+                var newFileKey = files.length;
+                files.push({ key: newFileKey, id: files.length, name: this.state.label, content: '' });
                 var sortedFiles = files.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
                 this.context.setFiles([...sortedFiles]);
+                this.context.setCurrFile(newFileKey);
             } else {
                 alert("File name already exists");
             }
