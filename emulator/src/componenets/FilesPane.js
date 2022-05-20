@@ -18,8 +18,9 @@ function FilesPane() {
       onChange={(size) => localStorage.setItem('splitPosFilesPane', size)}>
 
       <div className="btn-group btn-group-sm" role="group" >
-        <Button className="btn-success" type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
+        <Button className="btn-success" type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save</Button>
         <Button type="button" onClick={() => runSimulation(currFile, files, (result) => setSimulationResult(result))}>Run</Button>
+        <Button className="btn-success" type="button" href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(files))}`} download="project.json">Download</Button>
         <Button className="btn-danger" type="button" onClick={() => deleteProject()}>Delete</Button>
       </div>
       <div  >

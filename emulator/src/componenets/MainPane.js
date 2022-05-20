@@ -8,8 +8,8 @@ export default function MainPane() {
         onChange={(size) => localStorage.setItem('splitPosMainPane', size)}>
         <div>Top Pane</div>
         <SplitPane split="vertical"
-            minSize={200}
-            defaultSize={parseInt(localStorage.getItem('splitPosBottomPane')||200)}
+            minSize={230}
+            defaultSize={parseInt(localStorage.getItem('splitPosBottomPane')||230)}
             onChange={(size) => localStorage.setItem('splitPosBottomPane', size)}>
             <FilesPane />
             <EditorPane />
