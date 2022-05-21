@@ -40,7 +40,7 @@ ul {
 
 ul li {
   margin: 2px;
-  
+
   text-align: left;
 }
 
@@ -117,15 +117,31 @@ a.nav-link {
   text-align: left;
 }
 
-.output{
+.output {
   text-align: center;
   text-decoration: underline;
 }
 
-.unselectedFile{
+.unselectedFile {
   list-style-type: disclosure-closed;
 }
 
-.selectedFile{
+.selectedFile {
   list-style-type: disclosure-open;
 }
+
+.buttonPane {
+  background-color: var(--bs-dark);
+  flex: 0 0 auto;
+  position: relative;
+  outline: none;
+  height: 30px;
+  display: flex;
+}
+
+.btn-dark {
+  background-color: var(--bs-dark);
+}
+
+
+
