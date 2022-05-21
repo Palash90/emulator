@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const simulator = require('../parser/parser');
+const parser = require('../parser/parser');
 const fs = require('fs');
 const path = require('path')
 const getInputOutput = (input) => {
@@ -15,7 +15,7 @@ describe("HDL Interpreter Test", function () {
     describe("Remove comments", function () {
         it("Removes multi-line comments", function () {
             var io = getInputOutput("program1");
-            var result = simulator.simulate(io.input);
+            var result = parser.simulate(io.input);
             expect(io.output).to.equal(result);
         }
         );

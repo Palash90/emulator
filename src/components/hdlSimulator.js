@@ -1,4 +1,4 @@
-import {simulate} from '../simulator/parser';
+import {simulate} from '../parser/parser';
 
 export default function runSimulation(currFileId, files, callback) {
     var result;
