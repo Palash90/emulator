@@ -6,7 +6,7 @@ export default function MainPane() {
     return <SplitPane split="horizontal" minSize={50}
         defaultSize={parseInt(localStorage.getItem('splitPosMainPane')||50)}
         onChange={(size) => localStorage.setItem('splitPosMainPane', size)}>
-        <div>Top Pane</div>
+        <div>Top Pane -- Edited to test hosting</div>
         <SplitPane split="vertical"
             minSize={230}
             defaultSize={parseInt(localStorage.getItem('splitPosBottomPane')||230)}
