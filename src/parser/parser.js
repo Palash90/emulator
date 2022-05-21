@@ -2,12 +2,8 @@ function simulate(content) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
-    var onlyProgram = removeComments(content);
-    return onlyProgram;
-}
-
-function removeComments(content){
-    return content;
+    var program = content.replaceAll(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, "");
+    return program;
 }
 
 function tokenize(content) {

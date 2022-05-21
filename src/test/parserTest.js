@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const simulator = require('../simulator/simulator');
+const simulator = require('../parser/parser');
 const fs = require('fs');
 const path = require('path')
 const getInputOutput = (input) => {

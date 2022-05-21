@@ -1,3 +1,9 @@
-CHIP And {
-    
+
+CHIP Not {
+    IN a;
+    OUT out;
+
+    PARTS:
+     
+     Nor(a=a, b=a, out=out); 
 }
