@@ -67,7 +67,6 @@ const Tokenizer = () => {
             }
             index++;
         }
-        console.log(tokens)
         return analyzeTokens();
     }
 
@@ -75,11 +74,11 @@ const Tokenizer = () => {
 
     const analyzeTokens = () => {
         var analyzedTokens = [];
-        console.log(tokens)
-        while (Peek() !== EOF) {
+        while (true) {
             var currToken = Peek();
-            console.log(JSON.stringify(currToken) + " is under process")
-            if (currToken.value === '=') {
+            if (currToken.type === EOF) {
+                break;
+            } else if (currToken.value === '=') {
                 var currToken;
                 var tempToken = Peek();
                 tempToken.type = OPERATOR;
@@ -93,31 +92,30 @@ const Tokenizer = () => {
                 }
                 analyzedTokens.push(tempToken);
             } else if (isOperator(currToken.value)) {
-                console.log("Operator token", currToken)
                 var token = Peek();
                 token.type = OPERATOR;
                 analyzedTokens.push(token);
                 Consume();
             }
             else if (isSeparator(currToken.value)) {
-                console.log("Sparator token", currToken)
                 var token = Peek();
                 token.type = SEPARATOR;
                 analyzedTokens.push(token);
                 Consume();
             }
             else if (isKeyword(currToken.value)) {
-                console.log("Keyword token", currToken)
                 var token = Peek();
                 token.type = KEYWORD;
                 analyzedTokens.push(token);
                 Consume();
             }
             else {
-                console.log("Varable and literal token", currToken)
                 CheckVariableAndLiterals(analyzedTokens);
             }
         }
+
+        console.log(analyzedTokens);
+        return analyzedTokens;
     }
 
     const PeekLast = (tokens) => {
