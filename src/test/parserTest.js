@@ -15,7 +15,7 @@ describe("HDL Interpreter Test", function () {
     describe("Remove comments", function () {
         it("Removes multi-line comments", function () {
             var io = getInputOutput("program1");
-            var result = parser.simulate(io.input);
+            var result = parser.parse(io.input);
             expect(io.output).to.equal(result);
         }
         );

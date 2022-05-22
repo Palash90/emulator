@@ -44,7 +44,7 @@ class NewFile extends Component {
         if (e.key === 'Enter') {
             const files = this.context.files;
             const matchedFileNames = files.filter(file => file.name === this.state.label);
-            if(!this.state.label || this.state.label===''){
+            if (!this.state.label || this.state.label === '') {
                 alert("Please input a file name");
             }
             if (matchedFileNames.length < 1) {

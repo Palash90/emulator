@@ -1,22 +1,12 @@
-const Tokenizer = () => {
-    const OPERATOR = 0;
-    const SEPARATOR = 1;
-    const VARIABLE = 2;
-    const KEYWORD = 3;
-    const START = 4;
-    const EOF = 5;
-    const CHIPDEF = 9;
-    const CHIP_INVOKE = 10;
-    var Separators = [' ', '\t', '\n', ','];
-    var Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':'];
-    var Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
+const Token = require('./Token')
 
+const Tokenizer = () => {
     var tokens = [];
     var pointer = 0;
 
-    const isSeparator = (value) => Separators.some(el => el === value);
-    const isOperator = (value) => Operators.some(el => el === value);
-    const isKeyword = (value) => Keywords.some(el => el === value);
+    const isSeparator = (value) => Token.Separators.some(el => el === value);
+    const isOperator = (value) => Token.Operators.some(el => el === value);
+    const isKeyword = (value) => Token.Keywords.some(el => el === value);
 
     const tokenize = (text) => {
         var line = 1;
@@ -71,36 +61,36 @@ const Tokenizer = () => {
         var analyzedTokens = [];
         while (true) {
             var currToken = Peek();
-            if (currToken.type === EOF) {
+            if (currToken.type === Token.EOF) {
                 break;
             } else if (currToken.value === '=') {
                 var currToken;
                 var tempToken = Peek();
-                tempToken.type = OPERATOR;
+                tempToken.type = Token.OPERATOR;
                 Consume();
                 currToken = Peek();
 
-                if (currToken.value == "=") {
+                if (currToken.value === "=") {
                     Consume();
                     tempToken.value = newValue;
-                    tempToken.type = OPERATOR;
+                    tempToken.type = Token.OPERATOR;
                 }
                 analyzedTokens.push(tempToken);
             } else if (isOperator(currToken.value)) {
                 var token = Peek();
-                token.type = OPERATOR;
+                token.type = Token.OPERATOR;
                 analyzedTokens.push(token);
                 Consume();
             }
             else if (isSeparator(currToken.value)) {
                 var token = Peek();
-                token.type = SEPARATOR;
+                token.type = Token.SEPARATOR;
                 analyzedTokens.push(token);
                 Consume();
             }
             else if (isKeyword(currToken.value)) {
                 var token = Peek();
-                token.type = KEYWORD;
+                token.type = Token.KEYWORD;
                 analyzedTokens.push(token);
                 Consume();
             }
@@ -116,7 +106,7 @@ const Tokenizer = () => {
         if (tokens.length > 0)
             return tokens[tokens.length - 1];
         else
-            return { type: START };
+            return { type: Token.START };
     };
 
     const Peek = () => {
@@ -124,7 +114,7 @@ const Tokenizer = () => {
             return tokens[pointer];
         }
         else {
-            return { type: EOF };
+            return { type: Token.EOF };
         }
     }
 
@@ -133,7 +123,7 @@ const Tokenizer = () => {
             return tokens[pointer + 1];
         }
         else {
-            return { type: EOF };
+            return { type: Token.EOF };
         }
     }
 
@@ -145,19 +135,19 @@ const Tokenizer = () => {
         var token = Peek();
 
         var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
-        var match = token.value.match(regex).length>0;
+        var match = token.value.match(regex).length > 0;
 
         if (match) {
             var last = PeekLast(analyzedTokens);
             var next = PeekNext();
 
             if (last.value === "CHIP") {
-                token.type = CHIPDEF;
+                token.type = Token.CHIPDEF;
             }
             else if (next.value === "(") {
-                token.type = CHIP_INVOKE;
+                token.type = Token.CHIP_INVOKE;
             } else {
-                token.type = VARIABLE;
+                token.type = Token.VARIABLE;
             }
         }
         else {
@@ -174,7 +164,7 @@ const Tokenizer = () => {
         Consume();
     }
 }
-
+Tokenizer()
 module.exports = {
     Tokenizer: Tokenizer
 }
