@@ -169,31 +169,43 @@ const Tokenizer = () => {
 
         var token = Peek();
 
-        var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
-        var match = token.value.match(regex).length > 0;
+        var intRegex = /[0-9]*/;
+        var intMatch = token.value.match(intRegex);
 
-        if (match) {
-            var last = PeekLast(analyzedTokens);
-            var next = PeekNext();
+        if (intMatch && intMatch.length > 0) {
+            token.type = Token.INT_LITERAL;
+        } else {
+            var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
+            var match = token.value.match(regex).length > 0;
 
-            if (last.value === "CHIP") {
-                token.type = Token.CHIPDEF;
-            }
-            else if (next.value === "(") {
-                token.type = Token.CHIP_INVOKE;
-            } else {
-                token.type = Token.VARIABLE;
-            }
-        }
-        else {
-            var last = PeekLast(analyzedTokens);
-            if (last.value === "CHIP") {
-                throw new Error("Syntax error in chip name, line " + token.line + ", column " + token.column + ": " + token.value);
+            if (match) {
+                var last = PeekLast(analyzedTokens);
+                var next = PeekNext();
+
+                if (parseInt(token.value)) {
+                    token.type = Token.INT_LITERAL;
+                } else if (last.value === "CHIP") {
+                    token.type = Token.CHIPDEF;
+                } else if (next.value === "(") {
+                    token.type = Token.CHIP_INVOKE;
+                } else {
+                    if (next.value === '=') {
+                        token.type = Token.CHIP_INVOKE_PARAM
+                    } else {
+                        token.type = Token.VARIABLE;
+                    }
+                }
             }
             else {
-                throw new Error("Syntax error in variable name, line " + token.line + ", column " + token.column + ": " + token.value);
-            }
+                var last = PeekLast(analyzedTokens);
+                if (last.value === "CHIP") {
+                    throw new Error("Syntax error in chip name, line " + token.line + ", column " + token.column + ": " + token.value);
+                }
+                else {
+                    throw new Error("Syntax error in variable name, line " + token.line + ", column " + token.column + ": " + token.value);
+                }
 
+            }
         }
         analyzedTokens.push(token);
         Consume();

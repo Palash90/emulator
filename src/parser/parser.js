@@ -13,9 +13,9 @@ function parse(content) {
     console.log(tokens);
 
     var ast = astGenerator.AstGenerator.generate(tokens);
-    //console.log(ast);
+    console.log(ast);
 
-    return program;
+    return ast;
 }
 
 

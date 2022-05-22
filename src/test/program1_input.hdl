@@ -4,10 +4,10 @@
 import Nor.hdl
 
 CHIP Not {
-    IN a;
-    OUT out;
+    IN a[2];
+    OUT                   out;
 
-    PARTS:
+    PARTS          :
      
-     Nor(a=a, b=a, out=out); // If we short two inputs of nor gate, we essentially get a not gate.
+     Nor     (a=a, b=a, out=out); // If we short two inputs of nor gate, we essentially get a not gate.                                                                                         
 }
