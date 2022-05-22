@@ -46,6 +46,14 @@ const Tokenizer = () => {
                 }
                 if (currChar == '\n') {
                     line++;
+
+                    var newLineToken =
+                    {
+                        value: currChar,
+                        line: line,
+                        column: column
+                    };
+                    tokens.push(newLineToken);
                 }
             } else {
                 tokenPart = tokenPart + currChar;
@@ -63,6 +71,8 @@ const Tokenizer = () => {
             var currToken = Peek();
             if (currToken.type === Token.EOF) {
                 break;
+            } else if (currToken.value === '\n') {
+                Consume();
             } else if (currToken.value === '/') {
                 Consume();
                 var nextToken = Peek();
@@ -86,8 +96,6 @@ const Tokenizer = () => {
                         Consume();
                         var commentCurrToken = Peek();
                         stop = commentCurrToken.type === Token.EOF || commentCurrToken.value === '\n';
-
-                        console.log("Single line comment", commentCurrToken)
                     }
                 }
             } else if (currToken.value === '=') {

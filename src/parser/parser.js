@@ -7,7 +7,6 @@ function parse(content) {
         return handleFailure("No content to simulate");
     }
     
-    var program = content.replaceAll(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, "");
     console.log(content);
 
     var tokens = tokenizer.Tokenizer.tokenize(content)
