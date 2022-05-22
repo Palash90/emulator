@@ -5,13 +5,8 @@ const Tokenizer = () => {
     const KEYWORD = 3;
     const START = 4;
     const EOF = 5;
-    const INT_LITERAL = 6;
-    const DOUBLE_LITERAL = 7;
-    const STRING_LITERAL = 8;
     const FUNCDEF = 9;
     const FUNC_INVOKE = 10;
-    const NA = 11
-    const ASSIGNMENT = 12;
     var Separators = [' ', '\t', '\n', ','];
     var Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':'];
     var Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'IMPORT'];
@@ -179,17 +174,6 @@ const Tokenizer = () => {
         analyzedTokens.push(token);
         Consume();
     }
-
-    /* Token Structure
-    Token {
-        public string value { get; set; }
-            public int line { get; set; }
-            public int column { get; set; }
-            public Type type { get; set; }
-            public double doubleValue { get; set; }
-            public Meaning meaning { get; set; }
-        }
-        */
 }
 
 module.exports = {
