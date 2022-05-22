@@ -1,18 +1,16 @@
+const tokenize = require('./Tokenizer')
+
 function simulate(content) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
     var program = content.replaceAll(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, "");
+    console.log(program);
+    var tokens = tokenize(program)
+    console.log(tokens)
     return program;
 }
 
-function tokenize(content) {
-    var validTokens = getValidTokens();
-}
-
-const getSeparators = () => [" ", "\n"];
-
-const getValidTokens = () => ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'IMPORT', '{', '}', ';', ':', '(', ')', "//", "/*", '*/'];
 
 function handleFailure(errorMessage) {
     return {
