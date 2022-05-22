@@ -4,7 +4,7 @@
 import Nor.hdl
 
 CHIP Not {
-    IN a[2];
+    IN a[26];
     OUT                   out;
 
     PARTS          :

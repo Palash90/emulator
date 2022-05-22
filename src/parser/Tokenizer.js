@@ -169,7 +169,7 @@ const Tokenizer = () => {
 
         var token = Peek();
 
-        var intRegex = /[0-9]*/;
+        var intRegex = /\d/;
         var intMatch = token.value.match(intRegex);
 
         if (intMatch && intMatch.length > 0) {
