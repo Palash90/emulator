@@ -1,10 +1,9 @@
-    /*
+/*
 * Not CHIP
 */
-import Nor.hdl
 
 CHIP Not {
-    IN a[26];
+    IN b, a[26];
     OUT                   out;
 
     PARTS          :

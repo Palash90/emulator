@@ -1,0 +1,9 @@
+program: statement | statemenets | chip_definition
+statements: statement SEMICOLON statemenets
+statement: IMPORT IDENTIFIER | gate_operation
+gate_operation: IDENTIFIER L_PAREN parameters_list R_PAREN SEMICOLON
+parameters_list: IDENTIFIER EQ IDENTIFIER COMMA parameter
+parameters: IDENTIFIER EQ IDENTIFIER
+variable: program
+chip_definition: CHIPDEF IDENTIFIER L_CURLY_BRACES identifiers L_SQUARE_BRACKET INT_LITERAL Q_SQUARE_BRACKET PARTS statements
+identifiers: IN IDENTIFIER  identifiers | OUT IDENTIFIER identifiers

@@ -19,7 +19,7 @@ const Tokenizer = () => {
         while (index < text.length) {
             var currChar = text[index];
             column++;
-            if (currChar == '\n') {
+            if (currChar === '\n') {
                 column = 0;
             }
 
@@ -35,7 +35,7 @@ const Tokenizer = () => {
                     tokens.push(token);
                 }
 
-                if (isOperator(currChar) || currChar == ',') {
+                if (isOperator(currChar) || currChar === ',') {
                     var opearatorToken =
                     {
                         value: currChar,
@@ -44,7 +44,7 @@ const Tokenizer = () => {
                     };
                     tokens.push(opearatorToken);
                 }
-                if (currChar == '\n') {
+                if (currChar === '\n') {
                     line++;
 
                     var newLineToken =
@@ -107,7 +107,7 @@ const Tokenizer = () => {
 
                 if (currToken.value === "=") {
                     Consume();
-                    nextToken.value = newValue;
+                    //nextToken.value = newValue;
                     nextToken.type = Token.OPERATOR;
                 }
                 analyzedTokens.push(nextToken);
