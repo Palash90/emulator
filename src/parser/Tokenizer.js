@@ -5,11 +5,11 @@ const Tokenizer = () => {
     const KEYWORD = 3;
     const START = 4;
     const EOF = 5;
-    const FUNCDEF = 9;
-    const FUNC_INVOKE = 10;
+    const CHIPDEF = 9;
+    const CHIP_INVOKE = 10;
     var Separators = [' ', '\t', '\n', ','];
     var Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':'];
-    var Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'IMPORT'];
+    var Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
 
     var tokens = [];
     var pointer = 0;
@@ -114,7 +114,7 @@ const Tokenizer = () => {
     }
 
     const PeekLast = (tokens) => {
-        if (tokens.Count > 0)
+        if (tokens.length > 0)
             return tokens[tokens.length - 1];
         else
             return { type: START };
@@ -142,28 +142,30 @@ const Tokenizer = () => {
 
 
     const CheckVariableAndLiterals = (analyzedTokens) => {
+
         var token = Peek();
 
-        var regex = /^[a-zA-Z_$][a-zA-Z_$0-9]*$/;
-        var match = token.value.match(regex);
+        var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
+        var match = token.value.match(regex).length>0;
+
+        console.log("checking type of " + token.value + ", matched regex " + match)
 
         if (match) {
             var last = PeekLast(analyzedTokens);
             var next = PeekNext();
 
-            if (last.value == "CHIP") {
-                token.type = FUNCDEF;
+            if (last.value === "CHIP") {
+                token.type = CHIPDEF;
             }
-            else if (next.value == "(") {
-                token.type = FUNC_INVOKE;
-            }
-            else {
+            else if (next.value === "(") {
+                token.type = CHIP_INVOKE;
+            } else {
                 token.type = VARIABLE;
             }
         }
         else {
             var last = PeekLast(analyzedTokens);
-            if (last.value == "CHIP") {
+            if (last.value === "CHIP") {
                 throw new Error("Syntax error in chip name, line " + token.line + ", column " + token.column + ": " + token.value);
             }
             else {
