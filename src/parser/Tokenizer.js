@@ -28,7 +28,7 @@ const Tokenizer = () => {
                     var token = {
                         value: tokenPart,
                         line: line,
-                        column: column
+                        column: tokenStartColumn + 1
                     };
                     tokenPart = "";
                     tokenStartColumn = column;
@@ -63,19 +63,46 @@ const Tokenizer = () => {
             var currToken = Peek();
             if (currToken.type === Token.EOF) {
                 break;
+            } else if (currToken.value === '/') {
+                Consume();
+                var nextToken = Peek();
+
+                if (nextToken.value === '*') {
+                    var stop = false;
+                    while (!stop) {
+                        Consume();
+                        var commentCurrToken = Peek();
+                        var commentNextToken = PeekNext();
+                        stop = commentCurrToken.type === Token.EOF || (commentCurrToken.value === '*' && commentNextToken.value === '/');
+                        if (stop) {
+                            Consume();
+                        }
+                    }
+                }
+
+                if (nextToken.value === '/') {
+                    var stop = false;
+                    while (!stop) {
+                        Consume();
+                        var commentCurrToken = Peek();
+                        stop = commentCurrToken.type === Token.EOF || commentCurrToken.value === '\n';
+
+                        console.log("Single line comment", commentCurrToken)
+                    }
+                }
             } else if (currToken.value === '=') {
                 var currToken;
-                var tempToken = Peek();
-                tempToken.type = Token.OPERATOR;
+                var nextToken = Peek();
+                nextToken.type = Token.OPERATOR;
                 Consume();
                 currToken = Peek();
 
                 if (currToken.value === "=") {
                     Consume();
-                    tempToken.value = newValue;
-                    tempToken.type = Token.OPERATOR;
+                    nextToken.value = newValue;
+                    nextToken.type = Token.OPERATOR;
                 }
-                analyzedTokens.push(tempToken);
+                analyzedTokens.push(nextToken);
             } else if (isOperator(currToken.value)) {
                 var token = Peek();
                 token.type = Token.OPERATOR;

@@ -7,7 +7,7 @@ const EOF = 5;
 const CHIPDEF = 6;
 const CHIP_INVOKE = 7;
 var Separators = [' ', '\t', '\n', ','];
-var Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':'];
+var Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':', '/', '\\', '*'];
 var Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
 
 module.exports = {
