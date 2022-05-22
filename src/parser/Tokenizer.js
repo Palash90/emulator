@@ -109,7 +109,6 @@ const Tokenizer = () => {
             }
         }
 
-        console.log(analyzedTokens);
         return analyzedTokens;
     }
 
@@ -147,8 +146,6 @@ const Tokenizer = () => {
 
         var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
         var match = token.value.match(regex).length>0;
-
-        console.log("checking type of " + token.value + ", matched regex " + match)
 
         if (match) {
             var last = PeekLast(analyzedTokens);
