@@ -1,11 +1,13 @@
 /*
 * Not CHIP
 */
-CHIP Not {
-    IN a;
-    OUT out;
+import Nor.hdl
 
-    PARTS:
+CHIP Not {
+    IN a
+    OUT out
+
+    PARTS
      
      Nor(a=a, b=a, out=out); // If we short two inputs of nor gate, we essentially get a not gate.
 }
