@@ -39,23 +39,25 @@ const Tokenizer = () => {
             }
 
             if (isSeparator(currChar) || isOperator(currChar)) {
-                var token = {
-                    value: tokenPart,
-                    line: line,
-                    column: column
-                };
-                tokenPart = "";
-                tokenStartColumn = column;
-                tokens.push(token);
+                if (tokenPart !== '') {
+                    var token = {
+                        value: tokenPart,
+                        line: line,
+                        column: column
+                    };
+                    tokenPart = "";
+                    tokenStartColumn = column;
+                    tokens.push(token);
+                }
 
                 if (isOperator(currChar) || currChar == ',') {
                     var opearatorToken =
                     {
-                        value: currChar.ToString(),
+                        value: currChar,
                         line: line,
                         column: column
                     };
-                    tokens.Add(opearatorToken);
+                    tokens.push(opearatorToken);
                 }
                 if (currChar == '\n') {
                     line++;
@@ -65,9 +67,9 @@ const Tokenizer = () => {
             }
             index++;
         }
-console.log('Returning tokens')
         return tokens;
     }
+    Tokenizer.tokenize = tokenize;
 
     /* Token Structure
     Token {
@@ -82,5 +84,5 @@ console.log('Returning tokens')
 }
 
 module.exports = {
-    tokenizer: Tokenizer
+    Tokenizer: Tokenizer
 }
