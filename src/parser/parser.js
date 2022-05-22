@@ -1,5 +1,7 @@
-const tokenize = require('./Tokenizer')
+const tokenizer = require('./Tokenizer')
 
+tokenizer()
+console.log(tokenizer)
 function simulate(content) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");

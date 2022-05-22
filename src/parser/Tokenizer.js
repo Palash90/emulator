@@ -82,5 +82,5 @@ console.log('Returning tokens')
 }
 
 module.exports = {
-    tokenize: Tokenizer.Tokenize
+    tokenizer: Tokenizer
 }
