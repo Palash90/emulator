@@ -37,7 +37,7 @@ export const EditorPane = (props) => {
             minSize={400}
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            <div >
+            <div style ={{margin:"5px"}} >
                 <p className="text-white file-header">{fileName}</p>
                 <Editor
                     className="editor border border-light"

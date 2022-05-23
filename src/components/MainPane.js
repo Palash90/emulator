@@ -15,7 +15,7 @@ export default function MainPane() {
         setFiles([])
         return localStorage.setItem('files', JSON.stringify([]));
     }
-    return <SplitPane split="horizontal" minSize={30}
+    return <SplitPane split="horizontal" minSize={35}
         defaultSize={parseInt(localStorage.getItem('splitPosMainPane') || 35)}
         onChange={(size) => localStorage.setItem('splitPosMainPane', size)}>
         {ButtonPane(files, currFile, setSimulationResult, deleteProject)}

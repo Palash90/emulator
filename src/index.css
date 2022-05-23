@@ -114,6 +114,8 @@ a.nav-link {
 }
 
 .file-header {
+  margin-left: 0px;
+  padding: 2px;
   background-color: var(--bs-gray);
   text-align: left;
 }
