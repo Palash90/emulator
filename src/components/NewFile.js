@@ -57,6 +57,8 @@ class NewFile extends Component {
                 alert("File name already exists");
             }
             this.setState({ label: 'New File', edit: true })
+        } else if(e.key === 'Escape'){
+            this.setState({ label: 'New File', edit: false })
         }
     }
 
@@ -85,6 +87,7 @@ class NewFile extends Component {
     }
 
     render() {
+        
         return this.state.edit ? this.renderEdit() : this.renderLabel();
     }
 }

@@ -29,6 +29,7 @@ export default function MainPane() {
 }
 function ButtonPane(files, currFile, setSimulationResult, deleteProject) {
     return <div className="btn-group btn-block btn-group-xs buttonPane" role="group">
+        <Button className="btn-dark btn-sm" type="button" onClick={() => deleteProject()}>New</Button>
         <Button className="btn-dark btn-sm" type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save</Button>
         <Button className="btn-dark btn-sm" type="button" onClick={() => runSimulation(currFile, files, (result) => setSimulationResult(result))}>Run</Button>
         <Button className="btn-dark btn-sm" type="button" href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(files))}`} download="project.json">Download</Button>

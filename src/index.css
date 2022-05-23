@@ -118,6 +118,7 @@ a.nav-link {
   padding: 2px;
   background-color: var(--bs-gray);
   text-align: left;
+  height: 20px;
 }
 
 .output {

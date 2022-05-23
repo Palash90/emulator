@@ -4,7 +4,6 @@ import SimulationContext from "./SimulationContext";
 function OutputWindow() {
     const { simulationResult } = useContext(SimulationContext);
 
-    console.log(simulationResult)
     if (simulationResult && Object.keys(simulationResult).length === 0 && Object.getPrototypeOf(simulationResult) === Object.prototype) {
         return <></>
     }

@@ -5,8 +5,10 @@ import { useState } from "react";
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainPane from "./MainPane";
+import defaultFiles from './defaultFiles';
 
-const existingFiles = JSON.parse(localStorage.getItem('files')) ? JSON.parse(localStorage.getItem('files')) || [] : [];
+const storedFiles = JSON.parse(localStorage.getItem('files'));
+const existingFiles = storedFiles && storedFiles.length > 0 ? storedFiles || defaultFiles : defaultFiles;
 
 function App() {
   const [simulationResult, setSimulationResult] = useState({});
