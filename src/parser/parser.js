@@ -12,6 +12,8 @@ function parse(content) {
     var tokens = tokenizer.Tokenizer.tokenize(content)
     console.log(tokens);
 
+    return tokens;
+
     try {
         var ast = astGenerator.AstGenerator.generate(tokens);
         console.log(ast);

@@ -78,17 +78,18 @@ a.nav-link {
 }
 
 .Resizer.horizontal {
-  height: 11px;
+  background:var(--font-color);
+  height: 1px;
   margin: -5px 0;
-  border-top: 5px solid rgba(255, 255, 255, 0);
-  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  border-top: 1px solid rgba(255, 255, 255, 0);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
   cursor: row-resize;
   width: 100%;
 }
 
 .Resizer.horizontal:hover {
-  border-top: 5px solid rgba(0, 0, 0, 0.5);
-  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+  border-top: 2px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 }
 
 .Resizer.vertical {

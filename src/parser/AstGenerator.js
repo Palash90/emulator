@@ -50,8 +50,12 @@ const AstGenerator = () => {
                     throw new Error("Incorrect syntax at line " + in_statement.line + " column " + in_statement.column + ". Expected ';', got EOF");
                 }
 
-                if (input_variable_token.type === token.OPERATOR && input_variable_token.value === ';') {
+                if (input_variable_token.type === Token.OPERATOR && input_variable_token.value === ';') {
                     break;
+                }
+
+                if(input_variable_token.type !== Token.VARIABLE){
+                    throw new Error("Incorrect syntax at line " + in_statement.line + " column " + in_statement.column + ". Expected ';', got EOF");
                 }
 
                 Consume();

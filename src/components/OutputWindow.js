@@ -10,9 +10,9 @@ function OutputWindow() {
     }
 
     if (simulationResult && simulationResult.error) {
-        return <div className="alert alert-warning" role="alert">{simulationResult.errorMessage}</div>
+        return <div className="text-warning  border border-secondary" role="output">{simulationResult.errorMessage}</div>
     } else {
-        return <div className="alert alert-success" role="alert">{JSON.stringify(simulationResult.result)}</div>
+        return <div className="text-info  border border-secondary" role="output">{JSON.stringify(simulationResult.result)}</div>
     }
 
 }

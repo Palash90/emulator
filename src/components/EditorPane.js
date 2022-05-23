@@ -6,8 +6,9 @@ import "./Editor.css";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-vhdl";
-import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-dark.css";
 import OutputWindow from "./OutputWindow";
+
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles } = useContext(FileContext);
@@ -37,9 +38,9 @@ export const EditorPane = (props) => {
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
             <div >
-                <p className="file-header">{fileName}</p>
+                <p className="text-white file-header">{fileName}</p>
                 <Editor
-                    className="editor"
+                    className="editor border border-light"
                     value={content}
                     onValueChange={(content) => saveNewCode(content)}
                     highlight={(content) => highlight(content, languages.vhdl)}
@@ -50,7 +51,7 @@ export const EditorPane = (props) => {
                     }}
                 />
             </div>
-            <div>
+            <div className="editor">
                 <h6 className="output">Simulation Output</h6>
                 <OutputWindow />
             </div>
