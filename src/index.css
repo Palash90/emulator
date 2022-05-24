@@ -154,3 +154,12 @@ a.nav-link {
 .btn-dark {
   background-color: var(--bs-dark);
 }
+
+.modal-backdrop {
+  background-color: var(--bs-dark);
+}
+
+.special_modal .modal-content {
+  background-color: var(--bs-dark);
+  color:var(--bs-warning)
+}

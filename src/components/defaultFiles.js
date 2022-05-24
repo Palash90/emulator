@@ -2,7 +2,7 @@ const defaultFiles = [
   {
     "key": 2,
     "name": "And.hdl",
-    "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=notA);\n    Not(a=b, out=notB);\n    Nor(a=notA, b=notB, out=out);\n}"
+    "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notab;\n    Nor(a=nota, b=notb, out=out);\n}"
   },
   {
     "key": 5,
@@ -17,7 +17,7 @@ const defaultFiles = [
   {
     "key": 1,
     "name": "Or.hdl",
-    "content": "/*\n* The Nor output needs to go through the Not gate to get Or gate\n*/\nimport Not.hdl;\n\nCHIP Or {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Nor(a=a, b=b, out=norOut);\n    Not(a=norOut, out=out);\n}"
+    "content": "/*\n* The Nor output needs to go through the Not gate to get Or gate\n*/\nimport Not.hdl;\n\nCHIP Or {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Nor(a=a, b=b, out=norOut);\n    Not(a=norOut, out=out); \n}"
   },
   {
     "key": 4,
