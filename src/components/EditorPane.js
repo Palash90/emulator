@@ -10,21 +10,37 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { javascript } from '@codemirror/lang-javascript';
 
 export const EditorPane = (props) => {
-    const { files, currFile, setFiles } = useContext(FileContext);
+    const { files, currFile, setFiles, openFiles, setOpenFiles } = useContext(FileContext);
     const file = files.find((el) => el.key === currFile);
-    var fileName = '';
+    const propFile = { ...file }
 
-    var content = "";
-    if (file) {
-        content = file.content;
-        fileName = file.name
+    console.log(typeof (openFiles), typeof (files))
+
+    var fileOpen = openFiles ? openFiles.filter(el => el.key === currFile).length > 0 : false;
+
+    if (!fileOpen) {
+        if (openFiles) {
+            var newOpenFiles = [...openFiles]
+            newOpenFiles.push(file)
+            console.log(newOpenFiles)
+            setOpenFiles(newOpenFiles)
+        } else {
+            if (file) {
+                var newOpenFiles = []
+                newOpenFiles.push(file)
+                console.log(newOpenFiles)
+                setOpenFiles(newOpenFiles);
+            }
+        }
     }
 
+    console.log(openFiles)
 
-    var saveNewCode = (code) => {
-        var newFile = { key: file.key, name: file.name, content: code };
+    var saveNewCode = (key, code) => {
+        console.log("File content changed", key, code, currFile, file.key)
+        var newFile = { key: key, name: file.name, content: code };
         var newFiles = files.filter(function (f) {
-            return f.key !== file.key;
+            return f.key !== key;
         });
 
         newFiles.push(newFile);
@@ -37,7 +53,7 @@ export const EditorPane = (props) => {
             minSize={400}
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            {file ? EditorWindow(fileName, content, saveNewCode) : <></>}
+            <MultipleEditors openFiles={openFiles} save={saveNewCode} />
             <div className="editor">
                 <h6 className="output">Simulation Output</h6>
                 <OutputWindow />
@@ -46,22 +62,33 @@ export const EditorPane = (props) => {
     );
 };
 
-function EditorWindow(fileName, content, saveNewCode) {
-    return <div style={{ margin: "5px" }}>
-        <p className="text-white file-header">{fileName}</p>
-        <div className="editor">
-                    <CodeMirror
-                        value={content}
-                        theme={oneDark}
-                        extensions={[javascript({ jsx: true })]}
-                        height="35vh"
-                        width="87vw"
-                        onChange={(value, viewUpdate) => {
-                            saveNewCode(value);
-                        }}
-                    />
-                </div>
+function MultipleEditors(props) {
+    console.log(props);
+    if (props.openFiles && props.openFiles.length > 0)
+        return <div style={{ display: "flex", flexDirection: "row" }}>{
+            props.openFiles.map(element => {
+                console.log("Opening window for ", element);
+                return <EditorWindow key={element.key} file={element} save={props.save} />
+            })
+        }</div>
+    else
+        return <div>No file is open</div>
+}
 
+function EditorWindow(props) {
+    console.log(props.file)
+    return <div style={{ margin: "5px" }}>
+        <p className="text-white">{props.file.name}</p>
+        <CodeMirror
+            value={props.file.content}
+            theme={oneDark}
+            extensions={[javascript({ jsx: true })]}
+            height="35vh"
+            width="87vw"
+            onChange={(value, viewUpdate) => {
+                props.save(value);
+            }}
+        />
     </div>;
 }
 

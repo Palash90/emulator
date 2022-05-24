@@ -7,6 +7,8 @@ function FilesPane() {
   var newFiles = [...files]
   var sortedFiles = newFiles.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
+  console.log(files)
+
   return (
     <div  >
       <h6>Files:</h6>

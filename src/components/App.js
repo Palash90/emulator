@@ -14,11 +14,12 @@ function App() {
   const [simulationResult, setSimulationResult] = useState({});
   const [currFile, setCurrFile] = useState(1);
   const [files, setFiles] = useState(existingFiles);
+  const [openFiles, setOpenFiles] = useState();
 
   return (
     <div className="App">
       <SimulationContext.Provider value={{ simulationResult, setSimulationResult }}>
-        <FileContext.Provider value={{ files, currFile, setCurrFile, setFiles }}>
+        <FileContext.Provider value={{ files, setFiles, currFile, setCurrFile, openFiles, setOpenFiles }}>
           <MainPane />
         </FileContext.Provider>
       </SimulationContext.Provider>

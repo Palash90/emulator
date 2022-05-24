@@ -49,14 +49,14 @@ class NewFile extends Component {
             }
             if (matchedFileNames.length < 1) {
                 var newFileKey = files.length;
-                files.push({ key: newFileKey, id: files.length, name: this.state.label, content: '' });
+                files.push({ key: newFileKey, name: this.state.label, content: '' });
                 this.context.setFiles([...files]);
                 this.context.setCurrFile(newFileKey);
             } else {
                 alert("File name already exists");
             }
             this.setState({ label: 'New File', edit: true })
-        } else if(e.key === 'Escape'){
+        } else if (e.key === 'Escape') {
             this.setState({ label: 'New File', edit: false })
         }
     }
@@ -86,7 +86,7 @@ class NewFile extends Component {
     }
 
     render() {
-        
+
         return this.state.edit ? this.renderEdit() : this.renderLabel();
     }
 }
