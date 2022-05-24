@@ -1,6 +1,7 @@
 import NewFile from "./NewFile";
 import FileContext from "./FileContext";
 import { useContext } from "react";
+import { CloseButton } from "react-bootstrap";
 
 function FilesPane() {
   const { files, currFile, setCurrFile } = useContext(FileContext);
@@ -22,11 +23,14 @@ function FilesPane() {
 
 function FileDisplay(i, currFile, setCurrFile, el) {
   if (el && el.name && el.name !== '') {
-    return <a key={i} href="#" onClick={() => setCurrFile(el.key)}>
+    return <div key={el.key}>
       <li className={el.key == currFile ? "selectedFile" : "unselectedFile"}>
-        {el.name}
+        <a key={i} href="#" onClick={() => setCurrFile(el.key)}>
+          {el.name}
+        </a >
+        <CloseButton className="btn-close btn-close-white" style={{  width: '2px', height: '2px', verticalAlign: 'top', margin: '7px', padding: '0.3em 0.3em' }} onClick={() => alert("Delete File " + el.key)} />
       </li>
-    </a>;
+    </div>
   } else {
     return <></>
   }

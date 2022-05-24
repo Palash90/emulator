@@ -86,7 +86,7 @@ function MultipleEditors(props) {
 
                     return <div key={element} className="text-white file-header" >
                         <span onClick={() => chooseOrCloseFile(element, false)}>{file.name}</span>
-                        <CloseButton style={{ zIndex: 10, width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
+                        <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
                     </div>
                 })
             }</div>
