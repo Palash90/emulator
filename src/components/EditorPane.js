@@ -27,6 +27,8 @@ export const EditorPane = (props) => {
         setOpenFiles([...newOpenfiles]);
     };
 
+    console.log("Open Files", openFiles, currFile);
+
     if (!fileOpen) {
         if (openFiles && openFiles.length > 0) {
             var newOpenFiles = [...openFiles]
@@ -71,9 +73,11 @@ function MultipleEditors(props) {
 
     const chooseOrCloseFile = (element, closeFile) => {
         if (!closeFile) {
+            console.log("Setting el to", element);
             props.setCurrFile(element)
         } else {
             console.log("File Close Button Called");
+            props.closeFile(element)
         }
     }
 
