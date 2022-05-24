@@ -78,7 +78,7 @@ a.nav-link {
 }
 
 .Resizer.horizontal {
-  background:var(--font-color);
+  background: var(--font-color);
   height: 1px;
   margin: -5px 0;
   border-top: 1px solid rgba(255, 255, 255, 0);
@@ -114,11 +114,17 @@ a.nav-link {
 }
 
 .file-header {
-  margin-left: 0px;
-  padding: 2px;
+  margin-top: 6px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+  margin-left: 1px;
+  padding: 3px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   background-color: var(--bs-gray);
   text-align: left;
   height: 20px;
+  cursor: pointer;
 }
 
 .output {
@@ -146,6 +152,3 @@ a.nav-link {
 .btn-dark {
   background-color: var(--bs-dark);
 }
-
-
-

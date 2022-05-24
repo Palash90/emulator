@@ -10,7 +10,7 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { javascript } from '@codemirror/lang-javascript';
 
 export const EditorPane = (props) => {
-    const { files, currFile, setFiles, openFiles, setOpenFiles } = useContext(FileContext);
+    const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
     const file = files.find((el) => el.key === currFile);
     const propFile = { ...file }
 
@@ -53,7 +53,7 @@ export const EditorPane = (props) => {
             minSize={400}
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            <MultipleEditors openFiles={openFiles} currFile={currFile} save={saveNewCode} />
+            <MultipleEditors openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} />
             <div className="editor">
                 <h6 className="output">Simulation Output</h6>
                 <OutputWindow />
@@ -68,18 +68,17 @@ function MultipleEditors(props) {
         return <div>
             <div style={{ display: "flex", flexDirection: "row" }}>{
                 props.openFiles.map(element => {
-                    console.log("Opening window for ", element, props.currFile);
-                    return <div className="text-white file-header">{element.name}</div>
+                    return <div className="text-white file-header" onClick={() => props.setCurrFile(element.key)}>{element.name}</div>
                 })
             }</div>
             <div style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
-                    return <div style={{ margin: "5px", position: "absolute", zIndex: props.currFile === element.key ? 10 : 0 }}>
+                    return <div style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element.key ? 10 : 0 }}>
                         <CodeMirror
                             value={element.content}
                             theme={oneDark}
                             extensions={[javascript({ jsx: true })]}
-                            height="35vh"
+                            height="50vh"
                             width="87vw"
                             onChange={(value, viewUpdate) => {
                                 props.save(value);
@@ -95,9 +94,3 @@ function MultipleEditors(props) {
     }
 
 }
-
-function EditorWindow(props) {
-    console.log(props.file)
-    return;
-}
-
