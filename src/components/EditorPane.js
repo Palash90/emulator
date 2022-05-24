@@ -17,25 +17,20 @@ export const EditorPane = (props) => {
     var fileOpen = openFiles ? openFiles.filter(el => el === currFile).length > 0 : false;
 
     var closeFile = (key) => {
-        console.log("Closing", key, openFiles)
-
         var newOpenfiles = openFiles.filter(el => el !== key);
 
-        console.log("Removed", newOpenfiles);
-
-        if (key === currFile) {
-            setCurrFile(-1)
+        if (openFiles.length > 1) {
+            setCurrFile(openFiles[openFiles.length - 1]);
+        } else {
+            setCurrFile(-1);
         }
-
         setOpenFiles([...newOpenfiles]);
-
-        console.log("New Open Files", openFiles);
     };
 
-    console.log("Open Files", openFiles);
+    console.log("Open Files", openFiles, currFile);
 
     if (!fileOpen) {
-        if (openFiles) {
+        if (openFiles && openFiles.length > 0) {
             var newOpenFiles = [...openFiles]
             newOpenFiles.push(file.key)
             setOpenFiles(newOpenFiles)
@@ -75,15 +70,26 @@ export const EditorPane = (props) => {
 
 function MultipleEditors(props) {
     const { files } = useContext(FileContext);
+
+    const chooseOrCloseFile = (element, closeFile) => {
+        if (!closeFile) {
+            console.log("Setting el to", element);
+            props.setCurrFile(element)
+        } else {
+            console.log("File Close Button Called");
+            props.closeFile(element)
+        }
+    }
+
     if (props.openFiles && props.openFiles.length > 0) {
         return <div>
             <div style={{ display: "flex", flexDirection: "row" }}>{
                 props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
 
-                    return <div key={element} className="text-white file-header" onClick={() => props.setCurrFile(element)}>
+                    return <div key={element} className="text-white file-header" onDoubleClick={() => chooseOrCloseFile(element, false)}>
                         {file.name}
-                        <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => props.closeFile(element)} />
+                        <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
                     </div>
                 })
             }</div>
