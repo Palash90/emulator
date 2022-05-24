@@ -8,36 +8,47 @@ import CodeMirror from '@uiw/react-codemirror';
 import "codemirror/lib/codemirror.css";
 import { oneDark } from '@codemirror/theme-one-dark';
 import { javascript } from '@codemirror/lang-javascript';
+import { CloseButton } from "react-bootstrap";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
     const file = files.find((el) => el.key === currFile);
-    const propFile = { ...file }
 
-    console.log(typeof (openFiles), typeof (files))
+    var fileOpen = openFiles ? openFiles.filter(el => el === currFile).length > 0 : false;
 
-    var fileOpen = openFiles ? openFiles.filter(el => el.key === currFile).length > 0 : false;
+    var closeFile = (key) => {
+        console.log("Closing", key, openFiles)
+
+        var newOpenfiles = openFiles.filter(el => el !== key);
+
+        console.log("Removed", newOpenfiles);
+
+        if (key === currFile) {
+            setCurrFile(-1)
+        }
+
+        setOpenFiles([...newOpenfiles]);
+
+        console.log("New Open Files", openFiles);
+    };
+
+    console.log("Open Files", openFiles);
 
     if (!fileOpen) {
         if (openFiles) {
             var newOpenFiles = [...openFiles]
-            newOpenFiles.push(file)
-            console.log(newOpenFiles)
+            newOpenFiles.push(file.key)
             setOpenFiles(newOpenFiles)
         } else {
             if (file) {
                 var newOpenFiles = []
-                newOpenFiles.push(file)
-                console.log(newOpenFiles)
+                newOpenFiles.push(file.key)
                 setOpenFiles(newOpenFiles);
             }
         }
     }
 
-    console.log(openFiles)
-
     var saveNewCode = (key, code) => {
-        console.log("File content changed", key, code, currFile, file.key)
         var newFile = { key: key, name: file.name, content: code };
         var newFiles = files.filter(function (f) {
             return f.key !== key;
@@ -53,7 +64,7 @@ export const EditorPane = (props) => {
             minSize={400}
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            <MultipleEditors openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} />
+            <MultipleEditors openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} closeFile={closeFile} />
             <div className="editor">
                 <h6 className="output">Simulation Output</h6>
                 <OutputWindow />
@@ -63,25 +74,31 @@ export const EditorPane = (props) => {
 };
 
 function MultipleEditors(props) {
-    console.log(props);
+    const { files } = useContext(FileContext);
     if (props.openFiles && props.openFiles.length > 0) {
         return <div>
             <div style={{ display: "flex", flexDirection: "row" }}>{
                 props.openFiles.map(element => {
-                    return <div className="text-white file-header" onClick={() => props.setCurrFile(element.key)}>{element.name}</div>
+                    var file = files.filter(el => el.key === element)[0];
+
+                    return <div key={element} className="text-white file-header" onClick={() => props.setCurrFile(element)}>
+                        {file.name}
+                        <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => props.closeFile(element)} />
+                    </div>
                 })
             }</div>
             <div style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
-                    return <div style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element.key ? 10 : 0 }}>
+                    var file = files.filter(el => el.key === element)[0];
+                    return <div key={file.key} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element ? 10 : 0 }}>
                         <CodeMirror
-                            value={element.content}
+                            value={file.content}
                             theme={oneDark}
                             extensions={[javascript({ jsx: true })]}
                             height="50vh"
                             width="87vw"
                             onChange={(value, viewUpdate) => {
-                                props.save(value);
+                                props.save(element, value);
                             }}
                         />
                     </div>
