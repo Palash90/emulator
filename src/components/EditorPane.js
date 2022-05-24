@@ -20,6 +20,7 @@ export const EditorPane = (props) => {
         fileName = file.name
     }
 
+
     var saveNewCode = (code) => {
         var newFile = { key: file.key, name: file.name, content: code };
         var newFiles = files.filter(function (f) {
@@ -36,9 +37,19 @@ export const EditorPane = (props) => {
             minSize={400}
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            <div style={{ margin: "5px" }} >
-                <p className="text-white file-header">{fileName}</p>
-                <div className="editor">
+            {file ? EditorWindow(fileName, content, saveNewCode) : <></>}
+            <div className="editor">
+                <h6 className="output">Simulation Output</h6>
+                <OutputWindow />
+            </div>
+        </SplitPane>
+    );
+};
+
+function EditorWindow(fileName, content, saveNewCode) {
+    return <div style={{ margin: "5px" }}>
+        <p className="text-white file-header">{fileName}</p>
+        <div className="editor">
                     <CodeMirror
                         value={content}
                         theme={oneDark}
@@ -51,12 +62,6 @@ export const EditorPane = (props) => {
                     />
                 </div>
 
-            </div>
-            <div className="editor">
-                <h6 className="output">Simulation Output</h6>
-                <OutputWindow />
-            </div>
-        </SplitPane>
-    );
-};
+    </div>;
+}
 

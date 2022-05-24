@@ -4,12 +4,14 @@ import { useContext } from "react";
 
 function FilesPane() {
   const { files, currFile, setCurrFile } = useContext(FileContext);
+  var newFiles = [...files]
+  var sortedFiles = newFiles.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
   return (
     <div  >
       <h6>Files:</h6>
       <ul>
-        {files.map((el, i) => {
+        {sortedFiles.map((el, i) => {
           return FileDisplay(i, currFile, setCurrFile, el);
         })}
       </ul>

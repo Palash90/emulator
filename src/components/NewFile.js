@@ -50,8 +50,7 @@ class NewFile extends Component {
             if (matchedFileNames.length < 1) {
                 var newFileKey = files.length;
                 files.push({ key: newFileKey, id: files.length, name: this.state.label, content: '' });
-                var sortedFiles = files.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
-                this.context.setFiles([...sortedFiles]);
+                this.context.setFiles([...files]);
                 this.context.setCurrFile(newFileKey);
             } else {
                 alert("File name already exists");
