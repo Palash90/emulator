@@ -84,16 +84,16 @@ function MultipleEditors(props) {
                 props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
 
-                    return <div key={element} className="text-white file-header" >
+                    return file ? <div key={element} className="text-white file-header" >
                         <span onClick={() => chooseOrCloseFile(element, false)}>{file.name}</span>
                         <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
-                    </div>
+                    </div> : <></>
                 })
             }</div>
             <div style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-                    return <div key={file.key} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element ? 10 : 0 }}>
+                    return file ? <div key={file.key} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element ? 10 : 0 }}>
                         <CodeMirror
                             value={file.content}
                             theme={oneDark}
@@ -104,7 +104,7 @@ function MultipleEditors(props) {
                                 props.save(element, value);
                             }}
                         />
-                    </div>
+                    </div> : <></>
                 })}
             </div>
         </div>
