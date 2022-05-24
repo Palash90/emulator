@@ -3,12 +3,11 @@ import FileContext from "./FileContext";
 import SplitPane from "react-split-pane";
 
 import "./Editor.css";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-vhdl";
-import "prismjs/themes/prism-dark.css";
 import OutputWindow from "./OutputWindow";
-
+import CodeMirror from '@uiw/react-codemirror';
+import "codemirror/lib/codemirror.css";
+import { oneDark } from '@codemirror/theme-one-dark';
+import { javascript } from '@codemirror/lang-javascript';
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles } = useContext(FileContext);
@@ -37,19 +36,21 @@ export const EditorPane = (props) => {
             minSize={400}
             defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
             onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            <div style ={{margin:"5px"}} >
+            <div style={{ margin: "5px" }} >
                 <p className="text-white file-header">{fileName}</p>
-                <Editor
-                    className="editor border border-light"
-                    value={content}
-                    onValueChange={(content) => saveNewCode(content)}
-                    highlight={(content) => highlight(content, languages.vhdl)}
-                    padding={10}
-                    style={{
-                        fontFamily: '"Fira code", "Fira Mono", monospace',
-                        fontSize: 12,
-                    }}
-                />
+                <div className="editor">
+                    <CodeMirror
+                        value={content}
+                        theme={oneDark}
+                        extensions={[javascript({ jsx: true })]}
+                        height="35vh"
+                        width="87vw"
+                        onChange={(value, viewUpdate) => {
+                            saveNewCode(value);
+                        }}
+                    />
+                </div>
+
             </div>
             <div className="editor">
                 <h6 className="output">Simulation Output</h6>
