@@ -10,3 +10,7 @@ CHIP Not {
      
      Nor     (a=a, b=a, out=out); // If we short two inputs of nor gate, we essentially get a not gate.                                                                                         
 }
+
+<EditorWindow key={element.key} file={element} save={props.save} />
+
+  <div style={{ zIndex: props.currFile === element.key ? 10 : 0 }}> <EditorWindow key={element.key} file={element} save={props.save} /></div>
