@@ -12,68 +12,50 @@ const AstGenerator = () => {
             var token = Peek();
             if (token.type === Token.EOF) {
                 break;
-            } else if (token.type === Token.KEYWORD && token.value === 'CHIP') {
-                handleChipDefinition();
+            } else if (token.type === Token.KEYWORD && token.value === 'import') {
+                handleImportStatement();
             } else {
                 Consume();
             }
         }
 
-        return ast;
-
-        function handleChipDefinition() {
-            Consume();
-
-            var chipName = Peek();
-            Consume();
-
-            if (chipName.type !== Token.CHIPDEF) {
-                throw new Error("Incorrect syntax at line " + chipName.line + " column " + chipName.column + ". Expected CHIP name, got " + chipName.value);
-            }
-
-            var l_brace = Peek();
-            Consume();
-            if (l_brace.type !== Token.OPERATOR || l_brace.value != '{') {
-                throw new Error("Incorrect syntax at line " + l_brace.line + " column " + l_brace.column + ". Expected '{', got " + l_brace.value);
-            }
-
-            var in_statement = Peek();
-            Consume();
-            if (in_statement.type !== Token.KEYWORD || in_statement.value !== 'IN') {
-                throw new Error("Incorrect syntax at line " + in_statement.line + " column " + in_statement.column + ". Expected 'IN', got " + in_statement.value);
-            }
-
-            var inputs = [];
-            while (true) {
-                var input_variable_token = Peek();
-                if (input_variable_token.type === Token.EOF) {
-                    throw new Error("Incorrect syntax at line " + in_statement.line + " column " + in_statement.column + ". Expected ';', got EOF");
-                }
-
-                if (input_variable_token.type === Token.OPERATOR && input_variable_token.value === ';') {
-                    break;
-                }
-
-                if (input_variable_token.type !== Token.VARIABLE) {
-                    throw new Error("Incorrect syntax at line " + in_statement.line + " column " + in_statement.column + ". Expected ';', got EOF");
-                }
-
-                Consume();
-            }
-
-            var node = {
-                name: chipName.value,
-                type: 'CHIP'
-            };
-
-            ast.push(node);
-        }
+        var returnAst = JSON.parse(JSON.stringify(ast));
+        clear();
+        return returnAst;
     }
-
-
 
     AstGenerator.generate = generate;
 
+    var handleImportStatement = () => {
+        Consume();
+
+        // Next token should be the file name variable.
+        var token = Peek();
+        Consume();
+
+        if (token.type !== Token.VARIABLE) {
+            reset("Expected variable but got '" + token.value + "', line number:" + token.line + ", column:" + token.column);
+        }
+
+        ast.push({ type: Token.IMPORT, fileName: token.value });
+
+        // Next token should be the semicolon operator
+        token = Peek();
+        if (token.type !== Token.OPERATOR || token.value !== ';') {
+            reset("Expected ';' but got '" + token.value + "', line number:" + token.line + ", column:" + token.column);
+        }
+        Consume();
+    };
+
+    const clear = () => {
+        pointer = 0;
+        ast = [];
+    }
+
+    const reset = (err) => {
+        clear();
+        throw err;
+    }
 
     const PeekLast = (tokens) => {
         if (tokens.length > 0)

@@ -8,10 +8,12 @@ const CHIPDEF = 6;
 const CHIP_INVOKE = 7;
 const CHIP_INVOKE_PARAM = 8;
 const INT_LITERAL = 9;
-var Separators = [' ', '\t', '\n', ','];
-var Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':', '/', '\\', '*'];
-var Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
+const Separators = [' ', '\t', '\n', ','];
+const Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':', '/', '\\', '*'];
+const Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
+const IMPORT = "IMPORT"
+
 
 module.exports = {
-    OPERATOR, SEPARATOR, VARIABLE, KEYWORD, START, EOF, CHIPDEF, CHIP_INVOKE, Separators, Operators, Keywords, CHIP_INVOKE_PARAM, INT_LITERAL
+    OPERATOR, SEPARATOR, VARIABLE, KEYWORD, START, EOF, CHIPDEF, CHIP_INVOKE, Separators, Operators, Keywords, CHIP_INVOKE_PARAM, INT_LITERAL, IMPORT
 }

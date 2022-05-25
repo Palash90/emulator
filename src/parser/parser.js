@@ -7,19 +7,17 @@ function parse(content) {
         return handleFailure("No content to simulate");
     }
 
-    console.log(content);
-
     var tokens = tokenizer.Tokenizer.tokenize(content)
-    console.log(tokens);
 
-    return tokens;
+    //console.log(tokens);
 
     try {
         var ast = astGenerator.AstGenerator.generate(tokens);
-        console.log(ast);
-        return ast;
+        return {
+            error: false,
+            ast: ast
+        };
     } catch (error) {
-        console.log("Error caught", error)
         return handleFailure(error);
     }
 }
