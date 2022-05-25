@@ -1,6 +1,6 @@
 Expression: Import Statement? Chip Definition?
 
-Import Statement: IMPORT VARIABLE SEMICOLON
+Import Statement: IMPORT VARIABLE SEMICOLON        ----------------> Implemented
 
 Chip Definition: CHIP VARIABLE L_CURLY_BRACE statements R_CURLY_BRACE
 
@@ -8,7 +8,7 @@ statemenets: IN variables SEMICOLON OUT variables SEMICOLON PARTS COLON | Chip C
 
 variables: variable Definition (COMMA variable Definition)? SEMICOLON
 
-variable Definition: VARIABLE ('['NUMBER_LITERAL']')?
+variable Definition: CLOCK | VARIABLE ('['NUMBER_LITERAL']')?
 
 Chip Call Statements: VARIABLE L_Brace parameters R_BRACE SEMICOLON (VARIABLE L_Brace parameters R_BRACE SEMICOLON)?
 

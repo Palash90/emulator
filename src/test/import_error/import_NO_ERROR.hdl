@@ -8,7 +8,7 @@ import Or.hdl;
 import Not.hdl;
 
 CHIP Xor {
-  IN a[16], b[16];
+  IN a1, b1;
   OUT out[16];
 
   PARTS:
