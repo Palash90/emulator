@@ -4,31 +4,27 @@ import { useContext, useState } from "react";
 import { CloseButton } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { Button } from "react-bootstrap";
+import ModalContext from "./ModalContext";
 
 function FilesPane() {
   const { files, setFiles, currFile, setCurrFile } = useContext(FileContext);
-  const [showModal, setShowModal] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState();
+  const { setModalOptions } = useContext(ModalContext);
 
-  var file = files.filter(el => el.key === fileToDelete);
-  const handleClose = () => {
-    setFileToDelete(-1);
-    setShowModal(false);
+  const handleClose = (key) => {
+    deleteFile(key);
   }
 
   const handleShow = (key) => {
-    console.log("file to delete", key)
-    setFileToDelete(key);
-    setShowModal(true);
+    var file = files.filter(el => el.key === key)[0];
+    var modalTitle = "Delete " + (file ? file.name : "") + "?";
+    setModalOptions({ confirmAction: () => handleClose(key), showModal: true, title: modalTitle, body: "If you delete this file, you will not be able to retrieve it and all other files which import this file will fail." });
   }
 
-  var deleteFile = () => {
-    console.log("deleting ", fileToDelete)
-    if (currFile === fileToDelete) {
+  var deleteFile = (key) => {
+    if (currFile === key) {
       setCurrFile(-1);
     }
-    var newFiles = files.filter(el => el.key !== fileToDelete);
-    console.log(newFiles, fileToDelete);
+    var newFiles = files.filter(el => el.key !== key);
     setFiles([...newFiles]);
   };
 
@@ -44,27 +40,6 @@ function FilesPane() {
         })}
       </ul>
       <NewFile></NewFile>
-      <Modal
-        show={showModal}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        size='sm'
-        className="special_modal"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm delete {file ? file.name : ''}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          If you delete this file, you will not be able to recover it and all other files importing this file will start failing.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={() => { deleteFile(); handleClose(); }}>Understood</Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }
@@ -72,7 +47,7 @@ function FilesPane() {
 function FileDisplay(i, currFile, setCurrFile, el, handleShow) {
   if (el && el.name && el.name !== '') {
     return <div key={el.key}>
-      <li className={el.key == currFile ? "selectedFile" : "unselectedFile"}>
+      <li className={el.key === currFile ? "selectedFile" : "unselectedFile"}>
         <a key={i} href="#" onClick={() => setCurrFile(el.key)}>
           {el.name}
         </a >
