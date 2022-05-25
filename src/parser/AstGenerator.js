@@ -54,7 +54,7 @@ const AstGenerator = () => {
                     break;
                 }
 
-                if(input_variable_token.type !== Token.VARIABLE){
+                if (input_variable_token.type !== Token.VARIABLE) {
                     throw new Error("Incorrect syntax at line " + in_statement.line + " column " + in_statement.column + ". Expected ';', got EOF");
                 }
 

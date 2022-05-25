@@ -1,9 +1,7 @@
 import NewFile from "./NewFile";
 import FileContext from "./FileContext";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { CloseButton } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
-import { Button } from "react-bootstrap";
 import ModalContext from "./ModalContext";
 
 function FilesPane() {

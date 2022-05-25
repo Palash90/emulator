@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import FileContext from "./FileContext";
 import SplitPane from "react-split-pane";
 
@@ -26,19 +26,15 @@ export const EditorPane = (props) => {
         setOpenFiles([...newOpenfiles]);
     };
 
+    var newOpenFiles;
+
     if (!fileOpen) {
         if (openFiles && openFiles.length > 0) {
-            var newOpenFiles = [...openFiles]
-            if (file) {
-                newOpenFiles.push(file.key)
-                setOpenFiles(newOpenFiles)
-            }
+            newOpenFiles = [...openFiles]
+            handleNewOpenFiles();
         } else {
-            if (file) {
-                var newOpenFiles = []
-                newOpenFiles.push(file.key)
-                setOpenFiles(newOpenFiles);
-            }
+            newOpenFiles = []
+            handleNewOpenFiles();
         }
     }
 
@@ -65,6 +61,13 @@ export const EditorPane = (props) => {
             </div>
         </SplitPane>
     );
+
+    function handleNewOpenFiles() {
+        if (file) {
+            newOpenFiles.push(file.key);
+            setOpenFiles(newOpenFiles);
+        }
+    }
 };
 
 function MultipleEditors(props) {

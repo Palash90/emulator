@@ -9,9 +9,9 @@ import { useContext } from "react";
 import SimulationContext from "./SimulationContext";
 
 export default function MainPane() {
-    const { files, currFile, setCurrFile, setFiles } = useContext(FileContext);
+    const { files, currFile, setFiles } = useContext(FileContext);
     const { setSimulationResult } = useContext(SimulationContext);
-    
+
     function deleteProject() {
         setFiles([])
         return localStorage.setItem('files', JSON.stringify([]));
