@@ -1,3 +1,9 @@
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 const defaultFiles = [
   {
     "key": 2,
@@ -7,7 +13,7 @@ const defaultFiles = [
   {
     "key": 5,
     "name": "Nand.hdl",
-    "content": "/*\n* Nand Chip\n*/\n\nimport And.hdl;\nimport Not.hdl\n\nCHIP Nand {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    And(a=a, b=b, out=and);\n    Not(a=and, out=out);\n}"
+    "content": "/*\n* Nand Chip\n*/\n\nimport And.hdl;\nimport Not.hdl;\n\nCHIP Nand {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    And(a=a, b=b, out=and);\n    Not(a=and, out=out);\n}"
   },
   {
     "key": 0,
@@ -31,4 +37,5 @@ const defaultFiles = [
   }
 ]
 
-export default defaultFiles;
+var _default = defaultFiles;
+exports.default = _default;

@@ -1,11 +1,12 @@
 const Token = require("./Token");
+const Tokenizer = require("./Tokenizer");
 
 const AstGenerator = () => {
     var ast = [];
     var tokens;
     var pointer = 0;
 
-    var generate = (tokenArr) => {
+    var generate = (file, tokenArr, getFileContent) => {
         tokens = tokenArr;
 
         while (true) {
@@ -13,7 +14,7 @@ const AstGenerator = () => {
             if (token.type === Token.EOF) {
                 break;
             } else if (token.type === Token.KEYWORD && token.value === 'import') {
-                handleImportStatement();
+                handleImportStatement(getFileContent);
             } else {
                 Consume();
             }
@@ -21,12 +22,12 @@ const AstGenerator = () => {
 
         var returnAst = JSON.parse(JSON.stringify(ast));
         clear();
-        return returnAst;
+        return { file: file, ast: returnAst };
     }
 
     AstGenerator.generate = generate;
 
-    var handleImportStatement = () => {
+    var handleImportStatement = (getFileContent) => {
         Consume();
 
         // Next token should be the file name variable.
@@ -37,7 +38,13 @@ const AstGenerator = () => {
             reset("Expected variable but got '" + token.value + "', line number:" + token.line + ", column:" + token.column);
         }
 
-        ast.push({ type: Token.IMPORT, fileName: token.value });
+        var importedFileContent = getFileContent(token.value);
+        var importedFileTokens = Tokenizer.Tokenizer.tokenize(importedFileContent)
+
+        AstGenerator();
+        var parsedHdlFileContent = AstGenerator.generate(token.value, importedFileTokens, getFileContent);
+
+        ast.push({ type: Token.IMPORT, ast: parsedHdlFileContent });
 
         // Next token should be the semicolon operator
         token = Peek();

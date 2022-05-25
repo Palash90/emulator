@@ -1,4 +1,5 @@
 import { parse } from '../parser/parser';
+import defaultFiles from './defaultFiles';
 
 export default function runSimulation(currFileId, files, callback) {
     var result;
@@ -13,7 +14,7 @@ export default function runSimulation(currFileId, files, callback) {
         } else {
             result = {
                 error: false,
-                result: parse(file.content)
+                result: parse(file.name, file.content, defaultFiles)
             }
         }
     } else {
