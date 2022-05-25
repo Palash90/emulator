@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import FileContext from "./FileContext";
 import SplitPane from "react-split-pane";
 
@@ -12,6 +12,9 @@ import { CloseButton } from "react-bootstrap";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
+
+    const [editorHeight, setEditorHeight] = useState(parseInt(localStorage.getItem('splitPosEditorPane') || "400"));
+
     const file = files.find((el) => el.key === currFile);
 
     var fileOpen = openFiles ? openFiles.filter(el => el === currFile).length > 0 : false;
@@ -52,14 +55,14 @@ export const EditorPane = (props) => {
     return (
         <SplitPane split="horizontal"
             minSize={400}
-            defaultSize={parseInt(localStorage.getItem('splitPosEditorPane') || "400")}
-            onChange={(size) => localStorage.setItem('splitPosEditorPane', size)}>
-            <MultipleEditors openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} closeFile={closeFile} />
+            defaultSize={editorHeight}
+            onChange={(size) => { setEditorHeight(size); localStorage.setItem('splitPosEditorPane', size); }}>
+            <MultipleEditors editorHeight={editorHeight} openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} closeFile={closeFile} />
             <div className="editor">
                 <h6 className="output">Simulation Output</h6>
                 <OutputWindow />
             </div>
-        </SplitPane>
+        </SplitPane >
     );
 
     function handleNewOpenFiles() {
@@ -101,7 +104,7 @@ function MultipleEditors(props) {
                             value={file.content}
                             theme={oneDark}
                             extensions={[javascript({ jsx: true })]}
-                            height="50vh"
+                            height={(props.editorHeight * 90 / 100) + "px"}
                             width="87vw"
                             onChange={(value, viewUpdate) => {
                                 props.save(element, value);
