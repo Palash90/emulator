@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import FileContext from "./FileContext";
 import SplitPane from "react-split-pane";
-
 import "./Editor.css";
 import OutputWindow from "./OutputWindow";
 import CodeMirror from '@uiw/react-codemirror';
@@ -12,11 +11,8 @@ import { CloseButton } from "react-bootstrap";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
-
     const [editorHeight, setEditorHeight] = useState(parseInt(localStorage.getItem('splitPosEditorPane') || "400"));
-
     const file = files.find((el) => el.key === currFile);
-
     var fileOpen = openFiles ? openFiles.filter(el => el === currFile).length > 0 : false;
 
     var closeFile = (key) => {
@@ -52,12 +48,23 @@ export const EditorPane = (props) => {
         setFiles(newFiles);
     };
 
+    var handleEditorHeightResize = (size) => {
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+        if (size < vh * 70 / 100) {
+            setEditorHeight(size);
+            localStorage.setItem('splitPosEditorPane', size);
+        } else {
+            setEditorHeight(editorHeight)
+        }
+    };
+
     return (
         <SplitPane split="horizontal"
             minSize={400}
             defaultSize={editorHeight}
-            onChange={(size) => { setEditorHeight(size); localStorage.setItem('splitPosEditorPane', size); }}>
-            <MultipleEditors editorHeight={editorHeight} openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} closeFile={closeFile} />
+            onChange={(size) => handleEditorHeightResize(size)}>
+            <MultipleEditors editorWidth={props.editorWidth} editorHeight={editorHeight} openFiles={openFiles} currFile={currFile} setCurrFile={setCurrFile} save={saveNewCode} closeFile={closeFile} />
             <div className="editor">
                 <h6 className="output">Simulation Output</h6>
                 <OutputWindow />
@@ -75,6 +82,7 @@ export const EditorPane = (props) => {
 
 function MultipleEditors(props) {
     const { files } = useContext(FileContext);
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 
     const chooseOrCloseFile = (element, closeFile) => {
         if (!closeFile) {
@@ -89,7 +97,6 @@ function MultipleEditors(props) {
             <div style={{ display: "flex", flexDirection: "row" }}>{
                 props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-
                     return file ? <div key={element} className="text-white file-header" >
                         <span onClick={() => chooseOrCloseFile(element, false)}>{file.name}</span>
                         <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
@@ -105,7 +112,7 @@ function MultipleEditors(props) {
                             theme={oneDark}
                             extensions={[javascript({ jsx: true })]}
                             height={(props.editorHeight * 90 / 100) + "px"}
-                            width="87vw"
+                            width={(vw * 99 / 100 - props.editorWidth) + "px"}
                             onChange={(value, viewUpdate) => {
                                 props.save(element, value);
                             }}
@@ -118,5 +125,4 @@ function MultipleEditors(props) {
     else {
         return <></>
     }
-
 }

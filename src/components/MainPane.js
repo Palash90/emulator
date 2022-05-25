@@ -4,7 +4,7 @@ import { EditorPane } from "./EditorPane";
 import Button from 'react-bootstrap/Button';
 import runSimulation from "./hdlSimulator";
 import FileContext from "./FileContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import SimulationContext from "./SimulationContext";
 import ModalContext from "./ModalContext";
@@ -12,6 +12,18 @@ import ModalContext from "./ModalContext";
 export default function MainPane() {
     const { files, currFile } = useContext(FileContext);
     const { setSimulationResult } = useContext(SimulationContext);
+    const [editorWidth, setEditorWidth] = useState(parseInt(localStorage.getItem('splitPosBottomPane') || 230));
+
+    const handleEditorWidthResize = (size) => {
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+
+        if (size < vw * 70 / 100) {
+            setEditorWidth(size);
+            localStorage.setItem('splitPosBottomPane', size)
+        } else {
+            setEditorWidth(editorWidth);
+        }
+    }
 
     return <SplitPane split="horizontal" minSize={35}
         defaultSize={parseInt(localStorage.getItem('splitPosMainPane') || 35)}
@@ -19,10 +31,10 @@ export default function MainPane() {
         {ButtonPane(files, currFile, setSimulationResult)}
         <SplitPane split="vertical"
             minSize={230}
-            defaultSize={parseInt(localStorage.getItem('splitPosBottomPane') || 230)}
-            onChange={(size) => localStorage.setItem('splitPosBottomPane', size)}>
+            defaultSize={editorWidth}
+            onChange={(size) => handleEditorWidthResize(size)}>
             <FilesPane />
-            <EditorPane />
+            <EditorPane editorWidth={editorWidth} />
         </SplitPane></SplitPane>;
 }
 function ButtonPane(files, currFile, setSimulationResult) {
