@@ -21,6 +21,10 @@ const getFilesFromPath = (path) => {
 
 const pathsToTest = [
     {
+        desc: "Tests for files that have nothing to parse",
+        dir: "NoParsableContetTest"
+    },
+    {
         desc: "Import Stament Tests",
         dir: "ImportStatementTest"
     },

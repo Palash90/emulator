@@ -5,10 +5,11 @@ const AstGenerator = () => {
     var ast = [];
     var tokens;
     var pointer = 0;
+    var fileName = '';
 
     var generate = (file, tokenArr, getFileContent) => {
         tokens = tokenArr;
-
+        fileName = file;
         try {
             while (true) {
                 var token = Peek();
@@ -23,7 +24,7 @@ const AstGenerator = () => {
                 }
             }
         } catch (err) {
-            throw file + ":" + err;
+            throw err;
         }
 
         var returnAst = JSON.parse(JSON.stringify(ast));
@@ -53,7 +54,17 @@ const AstGenerator = () => {
             handleParseError("IN", token);
         }
 
+        handleVariableDefinitions();
+
     };
+
+    var handleVariableDefinitions = () => {
+        var token = Peek();
+
+        if (token.type !== Token.VARIABLE) {
+            handleParseError("Variable Definition", token);
+        }
+    }
 
     var handleImportStatement = (getFileContent) => {
         Consume();
@@ -89,7 +100,7 @@ const AstGenerator = () => {
 
     const handleParseError = (exptected, token) => {
         clear();
-        var err = "Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
+        var err = fileName + ":" + "Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
         err = err + (token.type === Token.EOF ? "'" : ("' at line:" + token.line + " column:" + token.column));
         throw err;
     }
