@@ -9,17 +9,21 @@ const AstGenerator = () => {
     var generate = (file, tokenArr, getFileContent) => {
         tokens = tokenArr;
 
-        while (true) {
-            var token = Peek();
-            if (token.type === Token.EOF) {
-                break;
-            } else if (token.type === Token.KEYWORD && token.value === 'import') {
-                handleImportStatement(getFileContent);
-            } else if (token.type === Token.KEYWORD && token.value === 'CHIP') {
-                handleChipDefinition();
-            } else {
-                Consume();
+        try {
+            while (true) {
+                var token = Peek();
+                if (token.type === Token.EOF) {
+                    break;
+                } else if (token.type === Token.KEYWORD && token.value === 'import') {
+                    handleImportStatement(getFileContent);
+                } else if (token.type === Token.KEYWORD && token.value === 'CHIP') {
+                    handleChipDefinition();
+                } else {
+                    Consume();
+                }
             }
+        } catch (err) {
+            throw file + ":" + err;
         }
 
         var returnAst = JSON.parse(JSON.stringify(ast));
@@ -37,10 +41,18 @@ const AstGenerator = () => {
             handleParseError("Chip Name", token);
         }
 
-        token = Peek()
+        token = Peek();
+        Consume();
         if (token.value !== '{') {
             handleParseError("{", token);
         }
+
+        token = Peek();
+        Consume();
+        if (token.value !== 'IN') {
+            handleParseError("IN", token);
+        }
+
     };
 
     var handleImportStatement = (getFileContent) => {

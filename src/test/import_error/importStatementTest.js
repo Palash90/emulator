@@ -14,34 +14,23 @@ const getInputOutput = (input) => {
 }
 
 function testImport() {
+    const testFile = (fileName) => {
+        var io = getInputOutput(fileName);
+        expect(parser.parse(fileName, io.input, defaultFiles)).to.deep.equal(io.output.result);
+    }
     describe("HDL import statement Test", function () {
         describe("Should throw Import Error", function () {
-            it("Should return error object for IN Statement instead of hdl file", function () {
-                var io = getInputOutput("import_KEYWORD_INSTEAD_OF_FILE");
-                expect(parser.parse("import_KEYWORD_INSTEAD_OF_FILE", io.input, defaultFiles)).to.deep.equal(io.output.result);
-            });
+            it("Should return error object for IN Statement instead of hdl file", () => testFile("import_KEYWORD_INSTEAD_OF_FILE"));
 
-            it("Should return error object for missing file", function () {
-                var io = getInputOutput("import_MISSING_FILE");
-                expect(parser.parse("import_MISSING_FILE", io.input, defaultFiles)).to.deep.equal(io.output.result);
-            });
+            it("Should return error object for missing file", () => testFile("import_MISSING_FILE"));
 
-            it("Should return error object for no semicolon found", function () {
-                var io = getInputOutput("import_NOT_SEMICOLON");
-                expect(parser.parse("import_MISSING_FILE", io.input, defaultFiles)).to.deep.equal(io.output.result);
-            });
+            it("Should return error object for no semicolon found", () => testFile("import_NOT_SEMICOLON"));
 
-            it("Should return error when only import is used", function () {
-                var io = getInputOutput("ONLY_IMPORT");
-                expect(parser.parse("ONLY_IMPORT", io.input, defaultFiles)).to.deep.equal(io.output.result);
-            });
+            it("Should return error when only import is used", () => testFile("ONLY_IMPORT"));
         });
 
         describe("Should return ast with file import", function () {
-            it("Should return ast", function () {
-                var io = getInputOutput("import_NO_ERROR");
-                expect(parser.parse("import_NO_ERROR", io.input, defaultFiles)).to.deep.equal(io.output.result);
-            });
+            it("Should return ast", testFile("import_NO_ERROR"));
         });
     });
 }
