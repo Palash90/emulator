@@ -30,6 +30,11 @@ function testImport() {
                 var io = getInputOutput("import_NOT_SEMICOLON");
                 expect(parser.parse("import_MISSING_FILE", io.input, defaultFiles)).to.deep.equal(io.output.result);
             });
+
+            it("Should return error when only import is used", function () {
+                var io = getInputOutput("ONLY_IMPORT");
+                expect(parser.parse("ONLY_IMPORT", io.input, defaultFiles)).to.deep.equal(io.output.result);
+            });
         });
 
         describe("Should return ast with file import", function () {
