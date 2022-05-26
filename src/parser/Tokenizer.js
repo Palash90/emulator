@@ -169,10 +169,7 @@ const Tokenizer = () => {
 
         var token = Peek();
 
-        var intRegex = /\d/;
-        var intMatch = token.value.match(intRegex);
-
-        if (intMatch && intMatch.length > 0) {
+        if (!isNaN(parseInt(token.value))) {
             token.type = Token.INT_LITERAL;
         } else {
             var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
@@ -182,9 +179,7 @@ const Tokenizer = () => {
                 var last = PeekLast(analyzedTokens);
                 var next = PeekNext();
 
-                if (parseInt(token.value)) {
-                    token.type = Token.INT_LITERAL;
-                } else if (last.value === "CHIP") {
+                if (last.value === "CHIP") {
                     token.type = Token.CHIPDEF;
                 } else if (next.value === "(") {
                     token.type = Token.CHIP_INVOKE;

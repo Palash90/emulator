@@ -11,7 +11,7 @@ function parse(file, content, files) {
 
     const getFileContent = (fileName) => files.filter(el => el.name === fileName)[0].content;
 
-    //console.log(tokens);
+    console.log(tokens);
 
     try {
         var ast = astGenerator.AstGenerator.generate(file, tokens, getFileContent);
