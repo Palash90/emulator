@@ -33,7 +33,7 @@ const AstGenerator = () => {
         Consume();
         var token = Peek();
         if (token.type !== Token.CHIPDEF) {
-            reset("Chip Name", token);
+            handleParseError("Chip Name", token);
         }
     };
 
@@ -45,7 +45,7 @@ const AstGenerator = () => {
         Consume();
 
         if (token.type !== Token.VARIABLE) {
-            reset("Variable", token);
+            handleParseError("Variable", token);
         }
 
         var importedFileContent = getFileContent(token.value);
@@ -59,7 +59,7 @@ const AstGenerator = () => {
         // Next token should be the semicolon operator
         token = Peek();
         if (token.type !== Token.OPERATOR || token.value !== ';') {
-            reset(";", token);
+            handleParseError(";", token);
         }
         Consume();
     };
@@ -69,7 +69,7 @@ const AstGenerator = () => {
         ast = [];
     }
 
-    const reset = (exptected, token) => {
+    const handleParseError = (exptected, token) => {
         clear();
         var err = "Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
         err = err + (token.type === Token.EOF ? "'" : ("' at line:" + token.line + " column:" + token.column));
