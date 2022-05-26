@@ -32,8 +32,14 @@ const AstGenerator = () => {
     var handleChipDefinition = () => {
         Consume();
         var token = Peek();
+        Consume();
         if (token.type !== Token.CHIPDEF) {
             handleParseError("Chip Name", token);
+        }
+
+        token = Peek()
+        if (token.value !== '{') {
+            handleParseError("{", token);
         }
     };
 

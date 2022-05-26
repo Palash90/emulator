@@ -24,6 +24,15 @@ function testChipDefinition() {
                 var io = getInputOutput("ONLY_CHIP_KEYWORD");
                 expect(parser.parse("ONLY_CHIP_KEYWORD", io.input, defaultFiles)).to.deep.equal(io.output.result);
             });
+            it("Should return error object for IN after chip def", function () {
+                var io = getInputOutput("CHIP_DEF_NO_BRACE");
+                expect(parser.parse("CHIP_DEF_NO_BRACE", io.input, defaultFiles)).to.deep.equal(io.output.result);
+            });
+
+            it("Should return error object for IN after chip def", function () {
+                var io = getInputOutput("CHIP_DEF_BRACE");
+                expect(parser.parse("CHIP_DEF_BRACE", io.input, defaultFiles)).to.deep.equal(io.output.result);
+            });
 
         });
 
