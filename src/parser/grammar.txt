@@ -2,7 +2,7 @@ Expression: Import Statement? Chip Definition?
 
 Import Statement: IMPORT VARIABLE SEMICOLON        ----------------> Implemented
 
-Chip Definition: CHIP VARIABLE L_CURLY_BRACE statements R_CURLY_BRACE
+Chip Definition: CHIP CHIPDEF L_CURLY_BRACE statements R_CURLY_BRACE
 
 statemenets: IN variables SEMICOLON OUT variables SEMICOLON PARTS COLON | Chip Call Statements
 

@@ -4,6 +4,8 @@ const Tokenizer = () => {
     var tokens = [];
     var pointer = 0;
 
+
+
     const isSeparator = (value) => Token.Separators.some(el => el === value);
     const isOperator = (value) => Token.Operators.some(el => el === value);
     const isKeyword = (value) => Token.Keywords.some(el => el === value);
@@ -11,6 +13,7 @@ const Tokenizer = () => {
     const tokenize = (text) => {
         var line = 1;
         var column = 0;
+        
         var index = 0;
         var tokenStartColumn = 0;
 
@@ -21,6 +24,7 @@ const Tokenizer = () => {
             column++;
             if (currChar === '\n') {
                 column = 0;
+                tokenStartColumn = 0;
             }
 
             if (isSeparator(currChar) || isOperator(currChar)) {
@@ -46,6 +50,8 @@ const Tokenizer = () => {
                 }
                 if (currChar === '\n') {
                     line++;
+                    column = 0;
+                    tokenStartColumn = 0;
 
                     var newLineToken =
                     {
@@ -57,9 +63,19 @@ const Tokenizer = () => {
                 }
             } else {
                 tokenPart = tokenPart + currChar;
+                if (tokenPart !== '' && index === (text.length - 1)) {
+                    var remainingToken =
+                    {
+                        value: tokenPart,
+                        line: line,
+                        column: tokenStartColumn
+                    };
+                    tokens.push(remainingToken);
+                }
             }
             index++;
         }
+
         return analyzeTokens();
     }
 
@@ -69,6 +85,7 @@ const Tokenizer = () => {
         var analyzedTokens = [];
         while (true) {
             var currToken = Peek();
+
             if (currToken.type === Token.EOF) {
                 break;
             } else if (currToken.value === '\n') {
@@ -133,7 +150,6 @@ const Tokenizer = () => {
                 CheckVariableAndLiterals(analyzedTokens);
             }
         }
-
         return analyzedTokens;
     }
 
@@ -147,8 +163,7 @@ const Tokenizer = () => {
     const Peek = () => {
         if (pointer < tokens.length) {
             return tokens[pointer];
-        }
-        else {
+        } else {
             return { type: Token.EOF };
         }
     }

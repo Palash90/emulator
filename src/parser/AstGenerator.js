@@ -15,6 +15,8 @@ const AstGenerator = () => {
                 break;
             } else if (token.type === Token.KEYWORD && token.value === 'import') {
                 handleImportStatement(getFileContent);
+            } else if (token.type === Token.KEYWORD && token.value === 'CHIP') {
+                handleChipDefinition();
             } else {
                 Consume();
             }
@@ -27,6 +29,14 @@ const AstGenerator = () => {
 
     AstGenerator.generate = generate;
 
+    var handleChipDefinition = () => {
+        Consume();
+        var token = Peek();
+        if (token.type !== Token.CHIPDEF) {
+            reset("Chip Name", token);
+        }
+    };
+
     var handleImportStatement = (getFileContent) => {
         Consume();
 
@@ -35,7 +45,7 @@ const AstGenerator = () => {
         Consume();
 
         if (token.type !== Token.VARIABLE) {
-            reset("Expected variable but got '" + token.value + "', line number:" + token.line + ", column:" + token.column);
+            reset("Variable", token);
         }
 
         var importedFileContent = getFileContent(token.value);
@@ -49,7 +59,7 @@ const AstGenerator = () => {
         // Next token should be the semicolon operator
         token = Peek();
         if (token.type !== Token.OPERATOR || token.value !== ';') {
-            reset("Expected ';' but got '" + token.value + "', line number:" + token.line + ", column:" + token.column);
+            reset(";", token);
         }
         Consume();
     };
@@ -59,8 +69,10 @@ const AstGenerator = () => {
         ast = [];
     }
 
-    const reset = (err) => {
+    const reset = (exptected, token) => {
         clear();
+        var err = "Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
+        err = err + (token.type === Token.EOF ? "'" : ("' at line:" + token.line + " column:" + token.column));
         throw err;
     }
 
