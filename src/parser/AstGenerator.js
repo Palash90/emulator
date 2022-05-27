@@ -54,7 +54,28 @@ const AstGenerator = () => {
             handleParseError("IN", token);
         }
 
-        var variables = handleVariableDefinitions();
+        var inputVariables = handleVariableDefinitions();
+
+        var inputVariablesNode = {
+            type: Token.INPUT_VARIABLES,
+            value: inputVariables
+        };
+
+        token = Peek();
+        Consume();
+        if (token.value !== 'OUT') {
+            handleParseError("OUT", token);
+        }
+
+        var outputVariables = handleVariableDefinitions();
+
+        var outputVariablesNode = {
+            type: Token.INPUT_VARIABLES,
+            value: outputVariables
+        };
+
+        
+
     };
 
     var handleVariableDefinitions = () => {

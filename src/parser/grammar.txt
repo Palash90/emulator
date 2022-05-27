@@ -4,7 +4,7 @@ Import Statement: IMPORT VARIABLE SEMICOLON        ----------------> Implemented
 
 Chip Definition: CHIP CHIPDEF L_CURLY_BRACE statements R_CURLY_BRACE
 
-statemenets: IN variables SEMICOLON OUT variables SEMICOLON PARTS COLON | Chip Call Statements
+statemenets: IN variables OUT variables PARTS COLON | Chip Call Statements
 
 variables: variable Definition (COMMA variable Definition)? SEMICOLON  ----------------> Implemented
 

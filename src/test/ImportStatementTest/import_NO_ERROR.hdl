@@ -9,7 +9,7 @@ import Not.hdl;
 
 CHIP Xor {
   IN a1, b1;
-  OUT out[16];
+  OUT out16;
 
   PARTS:
     Not(a=a[0], out=nota[0]);
