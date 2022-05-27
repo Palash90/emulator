@@ -12,8 +12,8 @@ variable_Definition: VARIABLE                                                   
 
 Chip_Call_Statements: Chip_Call_Statement (Chip_Call_Statement)? R_CURLY_BRACE                          Implemented
 
-Chip_Call_Statement: CHIP_INVOKE L_BRACE parameters                                                     
+Chip_Call_Statement: CHIP_INVOKE L_BRACE parameters SEMICOLON                                            
 
-parameters: parameter (COMMA parameter)? R_BRACE SEMICOLON                                              
+parameters: parameter (COMMA parameter)? R_BRACE                                             
 
 parameter: variable_Definition EQUAL variable_Definition 

@@ -121,12 +121,14 @@ const AstGenerator = () => {
         var token = Peek();
         Consume();
 
+        console.log(fileName, "handleChipCallStatements", token)
+
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
         }
 
         chipNode.chip = token;
-        chipCalls.push(chipNode);
+
 
         var token = Peek();
         Consume();
@@ -135,14 +137,63 @@ const AstGenerator = () => {
             handleParseError("(", token);
         }
 
+        var parameters = handleParameters();
+
+        chipNode.parameters = parameters;
+
+        chipCalls.push(chipNode);
+
+        var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
+            console.log("Calling handle parameters recusively")
             variables.push(handleChipCallStatements()[0]);
         } else if (token.type === Token.OPERATOR && token.value === "}") {
             Consume();
         }
 
         return chipCalls;
+    }
+
+
+    var handleParameters = () => {
+        var parameters = [];
+
+        var parameter = {};
+        var token = Peek();
+        if (token.type !== Token.CHIP_INVOKE_PARAM) {
+            handleParseError("Chip Parameter", token);
+        }
+
+        parameter.destination = token;
+        Consume();
+
+        token = Peek();
+        if (token.type !== Token.OPERATOR && token.value !== '=') {
+            handleParseError("=", token);
+        }
+
+        Consume();
+
+        token = Peek();
+        if (token.type !== Token.VARIABLE) {
+            handleParseError("Variable", token);
+        }
+
+        parameter.source = token;
+
+
+        token = Peek();
+        if (token.type === Token.SEPARATOR && token.value === ",") {
+            Consume();
+            console.log("Calling handle parameters recusively")
+            parameters.push(handleParameters()[0]);
+        } else if (token.type === Token.OPERATOR && token.value === ")") {
+            Consume();
+        }
+
+        parameters.push(parameter)
+        return parameters;
     }
 
     var handleVariableDefinitions = () => {

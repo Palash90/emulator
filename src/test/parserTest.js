@@ -60,10 +60,13 @@ const testFiles = () => {
         describe(pathsToTest[i].desc, () => {
             for (var j = 0; j < files.length; j++) {
                 currFile = files[j];
-                testCallBack()
+                testCallBack();
+                console.log("\n");
             }
         });
     }
 }
 
-testFiles();
+var ast = parser.parse("And.hdl", "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notab;\n    Nor(a=nota, b=notb, out=out);\n}", defaultFiles)
+
+console.log(JSON.stringify(ast, null, 2))
