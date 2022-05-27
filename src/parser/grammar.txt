@@ -1,17 +1,17 @@
-Expression: Import Statement? Chip Definition?
+Expression: Import Statement? Chip Definition?                                                                                              Implemented
 
-Import Statement: IMPORT VARIABLE SEMICOLON        ----------------> Implemented
+Import Statement: IMPORT VARIABLE SEMICOLON                                                                                                 Implemented
 
-Chip Definition: CHIP CHIPDEF L_CURLY_BRACE statements R_CURLY_BRACE
+Chip Definition: CHIP CHIPDEF L_CURLY_BRACE statements                                                                                      Implemented
 
-statemenets: IN CLOCK? variables  OUT variables PARTS COLON | Chip Call Statements
+statemenets: IN CLOCK? variables  OUT variables PARTS COLON Chip Call Statements                                                            Implemented
 
-variables: variable Definition (COMMA variable Definition)? SEMICOLON  ----------------> Implemented
+variables: variable Definition (COMMA variable Definition)? SEMICOLON                                                                       Implemented
 
-variable Definition: VARIABLE ---------> Implemented
+variable Definition: VARIABLE                                                                                                               Implemented
 
-Chip Call Statements: VARIABLE L_Brace parameters R_BRACE SEMICOLON (VARIABLE L_Brace parameters R_BRACE SEMICOLON)?
+Chip Call Statements: VARIABLE L_Brace parameters (VARIABLE L_Brace parameters)? R_CURLY_BRACE
 
-parameters: parameter (COMMA parameter)?
+parameters: parameter (COMMA parameter)? R_BRACE SEMICOLON
 
 parameter: variable Definition EQUAL variable Definition 

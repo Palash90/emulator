@@ -101,6 +101,15 @@ const AstGenerator = () => {
         if (token.type !== Token.OPERATOR || token.value !== ':') {
             handleParseError(":", token);
         }
+
+        ast.push(inputVariablesNode);
+        ast.push(outputVariablesNode);
+
+        handleChipCallStatements();
+    };
+
+    var handleChipCallStatements = () => {
+
     };
 
     var handleVariableDefinitions = () => {
