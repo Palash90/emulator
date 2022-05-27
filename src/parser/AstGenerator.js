@@ -54,29 +54,32 @@ const AstGenerator = () => {
             handleParseError("IN", token);
         }
 
-        handleVariableDefinitions();
-
+        var variables = handleVariableDefinitions();
     };
 
     var handleVariableDefinitions = () => {
+        var variables = [];
         var token = Peek();
 
         if (token.type !== Token.VARIABLE) {
             handleParseError("Variable Definition", token);
         }
 
+        variables.push(token);
         Consume();
 
         var token = Peek();
-        console.log("handleVariableDefinition",token)
+
         if (token.type === Token.SEPARATOR && token.value === ",") {
             Consume();
-            handleVariableDefinitions();
+            variables.push(handleVariableDefinitions()[0]);
         } else if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
         } else {
             handleParseError("Variable Definition or Semicolon", token);
         }
+
+        return variables;
     }
 
     var handleImportStatement = (getFileContent) => {
