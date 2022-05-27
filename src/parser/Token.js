@@ -9,7 +9,7 @@ const CHIP_INVOKE = 7;
 const CHIP_INVOKE_PARAM = 8;
 const INT_LITERAL = 9;
 const Separators = [' ', '\t', '\n', ','];
-const Operators = ['=', '(', ')', '{', '}', '[', ']', ';', ':', '/', '\\', '*'];
+const Operators = ['=', '(', ')', '{', '}', ';', ':', '/', '\\', '*'];
 const Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
 const IMPORT = "IMPORT";
 const INPUT_VARIABLES = "INPUT_VARIABLES";

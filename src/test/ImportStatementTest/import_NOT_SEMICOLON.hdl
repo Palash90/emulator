@@ -8,11 +8,11 @@ import Or.hdl;
 import Not.hdl;
 
 CHIP Xor {
-  IN a[16], b[16];
-  OUT out[16];
+  IN a16, b16;
+  OUT out16;
 
   PARTS:
-    Not(a=a[0], out=nota[0]);
+    Not(a=a0, out=nota0);
     Not(a=b, out=notb);
     And(a=a, b=notb, out=anotb);
     And(a=b, b=nota, out=bnota);
