@@ -1,7 +1,7 @@
 const parser = require('../parser/parser');
 const fs = require('fs');
 const path = require('path');
-const { default: defaultFiles } = require('../components/defaultFiles');
+const { default: defaultFiles } = require('./testDefaultFiles');
 const expect = require('chai').expect;
 
 const getInputOutput = (input) => {
