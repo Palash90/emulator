@@ -72,11 +72,11 @@ const AstGenerator = () => {
         }
 
         inputVariables = inputVariables.concat(handleVariableDefinitions());
-
         var inputVariablesNode = {
             type: Token.INPUT_VARIABLES,
             value: inputVariables
         };
+
 
         token = Peek();
         Consume();
@@ -85,14 +85,22 @@ const AstGenerator = () => {
         }
 
         var outputVariables = handleVariableDefinitions();
-
         var outputVariablesNode = {
             type: Token.OUTPUT_VARIABLES,
             value: outputVariables
         };
 
+        token = Peek();
+        Consume();
+        if (token.type !== Token.KEYWORD || token.value !== 'PARTS') {
+            handleParseError("PARTS", token);
+        }
 
-
+        token = Peek();
+        Consume();
+        if (token.type !== Token.OPERATOR || token.value !== ':') {
+            handleParseError(":", token);
+        }
     };
 
     var handleVariableDefinitions = () => {

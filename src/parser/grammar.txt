@@ -8,7 +8,7 @@ statemenets: IN CLOCK? variables  OUT variables PARTS COLON | Chip Call Statemen
 
 variables: variable Definition (COMMA variable Definition)? SEMICOLON  ----------------> Implemented
 
-variable Definition: VARIABLE
+variable Definition: VARIABLE ---------> Implemented
 
 Chip Call Statements: VARIABLE L_Brace parameters R_BRACE SEMICOLON (VARIABLE L_Brace parameters R_BRACE SEMICOLON)?
 
