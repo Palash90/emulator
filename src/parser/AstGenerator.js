@@ -121,7 +121,10 @@ const AstGenerator = () => {
         var token = Peek();
         Consume();
 
-        console.log(fileName, "handleChipCallStatements", token)
+
+        if (token.type === Token.OPERATOR && token.value === "}") {
+            return chipCalls;
+        }
 
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
@@ -143,16 +146,17 @@ const AstGenerator = () => {
 
         chipCalls.push(chipNode);
 
+        console.log(JSON.stringify(chipCalls, null, 2))
+
         var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
-            console.log("Calling handle parameters recusively")
-            variables.push(handleChipCallStatements()[0]);
-        } else if (token.type === Token.OPERATOR && token.value === "}") {
-            Consume();
-        }
+            var nextChiipCalls = handleChipCallStatements();
+            if (nextChiipCalls && nextChiipCalls.length > 0) {
+                chipCalls.push(handleChipCallStatements()[0]);
+            }
 
-        return chipCalls;
+        }
     }
 
 
@@ -181,12 +185,11 @@ const AstGenerator = () => {
         }
 
         parameter.source = token;
-
+        Consume();
 
         token = Peek();
         if (token.type === Token.SEPARATOR && token.value === ",") {
             Consume();
-            console.log("Calling handle parameters recusively")
             parameters.push(handleParameters()[0]);
         } else if (token.type === Token.OPERATOR && token.value === ")") {
             Consume();
