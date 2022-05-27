@@ -7,5 +7,5 @@ CHIP Not {
   OUT out;
 
   PARTS:
-    IN
+    Nor IN
 }

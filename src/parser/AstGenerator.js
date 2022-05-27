@@ -128,6 +128,13 @@ const AstGenerator = () => {
         chipNode.chip = token;
         chipCalls.push(chipNode);
 
+        var token = Peek();
+        Consume();
+
+        if (token.type !== Token.OPERATOR && token.value !== '(') {
+            handleParseError("(", token);
+        }
+
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
             variables.push(handleChipCallStatements()[0]);
