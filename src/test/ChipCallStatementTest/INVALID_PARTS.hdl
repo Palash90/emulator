@@ -1,0 +1,11 @@
+/*
+* Not Chip
+*/
+
+CHIP Not {
+  IN a;
+  OUT out;
+
+  PARTS:
+    IN
+}

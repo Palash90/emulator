@@ -1,17 +1,19 @@
-Expression: Import Statement? Chip Definition?                                                                                              Implemented
+Expression: Import_Statement? Chip_Definition?                                                          Implemented
 
-Import Statement: IMPORT VARIABLE SEMICOLON                                                                                                 Implemented
+Import_Statement: IMPORT VARIABLE SEMICOLON                                                             Implemented
 
-Chip Definition: CHIP CHIPDEF L_CURLY_BRACE statements                                                                                      Implemented
+Chip_Definition: CHIP CHIPDEF L_CURLY_BRACE statements                                                  Implemented
 
-statemenets: IN CLOCK? variables  OUT variables PARTS COLON Chip Call Statements                                                            Implemented
+statemenets: IN CLOCK? variables  OUT variables PARTS COLON Chip_Call_Statements                        Implemented
 
-variables: variable Definition (COMMA variable Definition)? SEMICOLON                                                                       Implemented
+variables: variable_Definition (COMMA variable Definition)? SEMICOLON                                   Implemented
 
-variable Definition: VARIABLE                                                                                                               Implemented
+variable_Definition: VARIABLE                                                                           Implemented
 
-Chip Call Statements: VARIABLE L_Brace parameters (VARIABLE L_Brace parameters)? R_CURLY_BRACE
+Chip_Call_Statements: Chip_Call_Statement (Chip_Call_Statement)? R_CURLY_BRACE                          Implemented
 
-parameters: parameter (COMMA parameter)? R_BRACE SEMICOLON
+Chip_Call_Statement: CHIP_INVOKE L_BRACE parameters                                                     Implemented
 
-parameter: variable Definition EQUAL variable Definition 
+parameters: parameter (COMMA parameter)? R_BRACE SEMICOLON                                              Implemented
+
+parameter: variable_Definition EQUAL variable_Definition 

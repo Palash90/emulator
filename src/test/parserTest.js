@@ -35,6 +35,10 @@ const pathsToTest = [
     {
         desc: "Chip Definition Stament Tests",
         dir: "ChipDefinitionTest"
+    },
+    {
+        desc: "Chip Call Stament Tests",
+        dir: "ChipCallStatementTest"
     }
 
 ];
