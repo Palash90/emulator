@@ -6,14 +6,20 @@ function parse(file, content, files) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
-
-    var tokens = tokenizer.Tokenizer.tokenize(content);
-
     const getFileContent = (fileName) => files.filter(el => el.name === fileName)[0].content;
 
-   // console.log("tokens", tokens);
+    var tokens;
 
     try {
+        tokens = tokenizer.Tokenizer.tokenize(content);
+
+    } catch (error) {
+        return handleFailure(file + ":" + error);
+    }
+
+    try {
+        // console.log("tokens", tokens);
+
         var ast = astGenerator.AstGenerator.generate(file, tokens, getFileContent);
         return {
             error: false,

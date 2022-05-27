@@ -4,8 +4,6 @@ const Tokenizer = () => {
     var tokens = [];
     var pointer = 0;
 
-
-
     const isSeparator = (value) => Token.Separators.some(el => el === value);
     const isOperator = (value) => Token.Operators.some(el => el === value);
     const isKeyword = (value) => Token.Keywords.some(el => el === value);
@@ -13,7 +11,7 @@ const Tokenizer = () => {
     const tokenize = (text) => {
         var line = 1;
         var column = 0;
-        
+
         var index = 0;
         var tokenStartColumn = 0;
 
@@ -188,7 +186,8 @@ const Tokenizer = () => {
             token.type = Token.INT_LITERAL;
         } else {
             var regex = /^[a-zA-Z_$][a-zA-Z_$.0-9]*$/;
-            var match = token.value.match(regex).length > 0;
+            var matched = token.value.match(regex);
+            var match = matched && matched.length > 0;
 
             if (match) {
                 var last = PeekLast(analyzedTokens);
@@ -209,10 +208,14 @@ const Tokenizer = () => {
             else {
                 var last = PeekLast(analyzedTokens);
                 if (last.value === "CHIP") {
-                    throw new Error("Syntax error in chip name, line " + token.line + ", column " + token.column + ": " + token.value);
+                    tokens = [];
+                    pointer = 0;
+                    throw "Syntax error in chip name, line " + token.line + ", column " + token.column + ": " + token.value;
                 }
                 else {
-                    throw new Error("Syntax error in variable name, line " + token.line + ", column " + token.column + ": " + token.value);
+                    tokens = [];
+                    pointer = 0;
+                    throw "Syntax error in variable name, line " + token.line + ", column " + token.column + ": " + token.value;
                 }
 
             }
