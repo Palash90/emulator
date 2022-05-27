@@ -4,11 +4,11 @@ Import Statement: IMPORT VARIABLE SEMICOLON        ----------------> Implemented
 
 Chip Definition: CHIP CHIPDEF L_CURLY_BRACE statements R_CURLY_BRACE
 
-statemenets: IN variables OUT variables PARTS COLON | Chip Call Statements
+statemenets: IN CLOCK? variables  OUT variables PARTS COLON | Chip Call Statements
 
 variables: variable Definition (COMMA variable Definition)? SEMICOLON  ----------------> Implemented
 
-variable Definition: CLOCK | VARIABLE ('['NUMBER_LITERAL']')?
+variable Definition: VARIABLE
 
 Chip Call Statements: VARIABLE L_Brace parameters R_BRACE SEMICOLON (VARIABLE L_Brace parameters R_BRACE SEMICOLON)?
 

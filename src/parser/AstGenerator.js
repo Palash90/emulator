@@ -54,7 +54,24 @@ const AstGenerator = () => {
             handleParseError("IN", token);
         }
 
-        var inputVariables = handleVariableDefinitions();
+        token = Peek();
+
+        var inputVariables = [];
+
+        if (token.type === Token.KEYWORD && token.value === 'CLOCK') {
+            Consume();
+            token = Peek();
+
+            if (token.type !== Token.SEPARATOR || token.value !== ',') {
+                handleParseError(",", token);
+            } else {
+                Consume();
+            }
+
+            inputVariables.push(token);
+        }
+
+        inputVariables = inputVariables.concat(handleVariableDefinitions());
 
         var inputVariablesNode = {
             type: Token.INPUT_VARIABLES,
@@ -70,11 +87,11 @@ const AstGenerator = () => {
         var outputVariables = handleVariableDefinitions();
 
         var outputVariablesNode = {
-            type: Token.INPUT_VARIABLES,
+            type: Token.OUTPUT_VARIABLES,
             value: outputVariables
         };
 
-        
+
 
     };
 

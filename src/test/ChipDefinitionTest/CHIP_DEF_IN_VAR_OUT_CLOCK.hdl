@@ -1,0 +1,4 @@
+CHIP NOT {
+    IN CLOCK;
+    OUT a;
+}
