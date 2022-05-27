@@ -96,8 +96,6 @@ const AstGenerator = () => {
             variables.push(handleVariableDefinitions()[0]);
         } else if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
-        } else {
-            handleParseError("Variable Definition or Semicolon", token);
         }
 
         return variables;
