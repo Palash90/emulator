@@ -1,0 +1,11 @@
+import Not.hdl;
+
+CHIP And {
+  IN a, b;
+  OUT out;
+  
+  PARTS:
+    Not(a=a, out=nota); 
+    Not(a=b, out=notab;
+    Nor(a=nota, b=notb, out=out);
+}

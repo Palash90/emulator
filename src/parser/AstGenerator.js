@@ -103,101 +103,39 @@ const AstGenerator = () => {
         }
 
         var parts = handleChipCallStatements();
+        var partsNode = {
+            type: Token.PARTS,
+            value: parts
+        };
 
         ast.push(inputVariablesNode);
         ast.push(outputVariablesNode);
-        ast.push(parts);
+        ast.push(partsNode);
     };
 
     var handleChipCallStatements = () => {
         var chipCalls = [];
 
-        chipCalls = handleChipCallStatement();
+        var chipNode = {};
 
         var token = Peek();
         Consume();
 
-        if (token.type === Token.OPERATOR && token.value === '}') {
-            return chipCalls;
-        }
-
-        handleChipCallStatement();
-    };
-
-
-    // VARIABLE L_BRACE parameters R_BRACE SEMICOLON
-    var handleChipCallStatement = () => {
-        var token = Peek();
-        Consume();
-
-        console.log(token)
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
         }
 
-        token = Peek();
-        Consume();
+        chipNode.chip = token;
+        chipCalls.push(chipNode);
 
-        if (token.type !== Token.OPERATOR || token.value !== '(') {
-            handleParseError("(", token);
-        }
-
-        handleParameters();
-
-    }
-
-    var handleParameters = () => {
-        var parameters = [];
-        parameters.push(handleParameter());
-        console.log("done checking first param")      
-        
-
-        return parameters;
-    }
-
-    var handleParameter = () => {
-        var parameters = [];
-
-        var token = Peek();
-        Consume();
-        console.log("bfr ", token)
-        if (token.type !== Token.CHIP_INVOKE_PARAM) {
-            handleParseError("Parameter", token);
-        }
-
-        var parameter = {};
-        parameter.out = token;
-
-        token = Peek();
-        Consume();
-        console.log("aft ", token)
-        if (token.type !== Token.OPERATOR || token.value !== '=') {
-            handleParseError("=", token);
-        }
-
-        token = Peek();
-        Consume();
-        console.log("avrlft ", token)
-        if (token.type !== Token.VARIABLE) {
-            handleParseError("Parameter", token);
-        }
-        parameter.out = token;
-
-        var token = Peek();
-        Consume();
-        console.log("check comma", token)
-        if (token.type === Token.SEPARATOR && token.value === ',') {
-            parameters.push(handleParameter()[0]);
-        } else if (token.type === Token.OPERATOR && token.value === ")") {
-            var token = Peek();
+        if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
-            if (token.type !== Token.OPERATOR || token.value !== ';') {
-                handleParseError(";", token)
-            }
+            variables.push(handleChipCallStatements()[0]);
+        } else if (token.type === Token.OPERATOR && token.value === "}") {
+            Consume();
         }
 
-        parameters.push(parameter)
-        return parameters;
+        return chipCalls;
     }
 
     var handleVariableDefinitions = () => {

@@ -14,6 +14,7 @@ const Keywords = ['CHIP', 'IN', 'OUT', 'PARTS', 'CLOCK', 'import'];
 const IMPORT = "IMPORT";
 const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
+const PARTS = "PARTS"
 
 
 module.exports = {
@@ -32,5 +33,6 @@ module.exports = {
     INT_LITERAL,
     IMPORT,
     INPUT_VARIABLES,
-    OUTPUT_VARIABLES
+    OUTPUT_VARIABLES,
+    PARTS
 }
