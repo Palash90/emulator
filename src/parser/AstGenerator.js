@@ -64,6 +64,19 @@ const AstGenerator = () => {
         if (token.type !== Token.VARIABLE) {
             handleParseError("Variable Definition", token);
         }
+
+        Consume();
+
+        var token = Peek();
+        console.log("handleVariableDefinition",token)
+        if (token.type === Token.SEPARATOR && token.value === ",") {
+            Consume();
+            handleVariableDefinitions();
+        } else if (token.type === Token.OPERATOR && token.value === ";") {
+            Consume();
+        } else {
+            handleParseError("Variable Definition or Semicolon", token);
+        }
     }
 
     var handleImportStatement = (getFileContent) => {
@@ -74,7 +87,7 @@ const AstGenerator = () => {
         Consume();
 
         if (token.type !== Token.VARIABLE) {
-            handleParseError("Variable", token);
+            handleParseError("File Name", token);
         }
 
         var importedFileContent = getFileContent(token.value);
