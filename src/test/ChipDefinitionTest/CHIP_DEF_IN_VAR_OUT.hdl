@@ -1,0 +1,4 @@
+CHIP NOT {
+    IN a;
+    OUT
+}
