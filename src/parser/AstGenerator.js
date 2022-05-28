@@ -121,11 +121,6 @@ const AstGenerator = () => {
         var token = Peek();
         Consume();
 
-        if (token.type === Token.OPERATOR && token.value === "}") {
-          return chipCalls
-        }
-
-
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
         }
@@ -145,13 +140,17 @@ const AstGenerator = () => {
         chipNode.parameters = parameters;
 
         chipCalls.push(chipNode);
-
+        Consume()
         var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
             var nextChiipCalls = handleChipCallStatements();
             chipCalls = chipCalls.concat(nextChiipCalls);
-        }  
+        } else if (token.type === Token.OPERATOR && token.value === "}") {
+            Consume();
+        } else {
+            handleParseError("Chip invocation or }", token)
+        }
         return chipCalls;
     }
 
@@ -201,8 +200,6 @@ const AstGenerator = () => {
 
         var variables = [];
         var token = Peek();
-
-        console.log(fileName, "handleVariableDefinitions", token)
 
         if (token.type !== Token.VARIABLE) {
             handleParseError("Variable Definition", token);
