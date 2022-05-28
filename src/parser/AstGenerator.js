@@ -121,10 +121,10 @@ const AstGenerator = () => {
         var token = Peek();
         Consume();
 
-
         if (token.type === Token.OPERATOR && token.value === "}") {
-            return chipCalls;
+          return chipCalls
         }
+
 
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
@@ -146,17 +146,13 @@ const AstGenerator = () => {
 
         chipCalls.push(chipNode);
 
-        console.log(JSON.stringify(chipCalls, null, 2))
-
         var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
             var nextChiipCalls = handleChipCallStatements();
-            if (nextChiipCalls && nextChiipCalls.length > 0) {
-                chipCalls.push(handleChipCallStatements()[0]);
-            }
-
-        }
+            chipCalls = chipCalls.concat(nextChiipCalls);
+        }  
+        return chipCalls;
     }
 
 
@@ -190,9 +186,11 @@ const AstGenerator = () => {
         token = Peek();
         if (token.type === Token.SEPARATOR && token.value === ",") {
             Consume();
-            parameters.push(handleParameters()[0]);
+            parameters = parameters.concat(handleParameters());
         } else if (token.type === Token.OPERATOR && token.value === ")") {
             Consume();
+        } else {
+            handleParseError("Parameter or )", token)
         }
 
         parameters.push(parameter)
@@ -200,8 +198,11 @@ const AstGenerator = () => {
     }
 
     var handleVariableDefinitions = () => {
+
         var variables = [];
         var token = Peek();
+
+        console.log(fileName, "handleVariableDefinitions", token)
 
         if (token.type !== Token.VARIABLE) {
             handleParseError("Variable Definition", token);
@@ -214,7 +215,8 @@ const AstGenerator = () => {
 
         if (token.type === Token.SEPARATOR && token.value === ",") {
             Consume();
-            variables.push(handleVariableDefinitions()[0]);
+            var recursiveVariables = handleVariableDefinitions();
+            variables = variables.concat(recursiveVariables);
         } else if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
         }
