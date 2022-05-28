@@ -1,5 +1,3 @@
-const Token = require("../../parser/Token")
-
 const result = {
 
     "error": false,
