@@ -11,7 +11,7 @@ function OutputWindow() {
     if (simulationResult && simulationResult.error) {
         return <pre className="text-warning  border border-secondary" role="output">{simulationResult.errorMessage}</pre>
     } else {
-        return <pre className="text-info  border border-secondary" style={{ overflowY: "scroll", height: "200px" }} role="output">{JSON.stringify(simulationResult.result, null, 2)}</pre>
+        return <pre className="text-info  border border-secondary" style={{ overflowY: "scroll", height: "150px" }} role="output">{JSON.stringify(simulationResult.result, null, 2)}</pre>
     }
 
 }

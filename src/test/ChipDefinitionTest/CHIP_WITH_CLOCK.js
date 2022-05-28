@@ -2,7 +2,7 @@ const result = {
 
     "error": false,
     "ast": {
-        "file": "New File",
+        "file": "CHIP_WITH_CLOCK.hdl",
         "ast": [
             {
                 "type": "INPUT_VARIABLES",
