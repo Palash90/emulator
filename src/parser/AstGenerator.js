@@ -56,19 +56,7 @@ const AstGenerator = () => {
 
         var inputVariables = [];
 
-        if (token.type === Token.KEYWORD && token.value === 'CLOCK') {
-            Consume();
-            token = Peek();
-
-            if (token.type !== Token.SEPARATOR || token.value !== ',') {
-                handleParseError(",", token);
-            } else {
-                Consume();
-            }
-
-            inputVariables.push(token);
-        }
-
+        
         inputVariables = inputVariables.concat(handleVariableDefinitions());
         var inputVariablesNode = {
             type: Token.INPUT_VARIABLES,
@@ -127,12 +115,8 @@ const AstGenerator = () => {
         }
 
         chipNode.chip = token;
+        // CHIP_INVOKE ensures ( is present next
         Consume();
-
-        token = Peek();
-        if (token.type !== Token.OPERATOR && token.value !== '(') {
-            handleParseError("(", token);
-        }
         Consume();
 
         var parameters = handleParameters();
@@ -155,9 +139,7 @@ const AstGenerator = () => {
                 chipCalls = chipCalls.concat(nextChiipCalls);
             }
 
-        } else {
-            handleParseError("Chip invocation or }", token)
-        }
+        } 
         return chipCalls;
     }
 
@@ -172,13 +154,8 @@ const AstGenerator = () => {
         }
 
         parameter.destination = token;
+        // CHIP_INVOKE_PARAM ensures = is present
         Consume();
-
-        token = Peek();
-        if (token.type !== Token.OPERATOR && token.value !== '=') {
-            handleParseError("=", token);
-        }
-
         Consume();
 
         token = Peek();
@@ -267,13 +244,6 @@ const AstGenerator = () => {
         throw err;
     }
 
-    const PeekLast = (tokens) => {
-        if (tokens.length > 0)
-            return tokens[tokens.length - 1];
-        else
-            return { type: Token.START };
-    };
-
     const Peek = () => {
         if (pointer < tokens.length) {
             return tokens[pointer];
@@ -282,16 +252,7 @@ const AstGenerator = () => {
             return { type: Token.EOF };
         }
     }
-
-    const PeekNext = () => {
-        if (pointer + 1 < tokens.length) {
-            return tokens[pointer + 1];
-        }
-        else {
-            return { type: Token.EOF };
-        }
-    }
-
+    
     const Consume = () => pointer++;
 }
 

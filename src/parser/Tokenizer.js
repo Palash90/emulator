@@ -104,11 +104,7 @@ const Tokenizer = () => {
                 Consume();
                 currToken = Peek();
 
-                if (currToken.value === "=") {
-                    Consume();
-                    //nextToken.value = newValue;
-                    nextToken.type = Token.OPERATOR;
-                }
+                
                 analyzedTokens.push(nextToken);
             } else if (isOperator(currToken.value)) {
                 var token = Peek();
