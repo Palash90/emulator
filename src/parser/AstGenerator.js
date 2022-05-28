@@ -117,7 +117,6 @@ const AstGenerator = () => {
         var chipNode = {};
 
         var token = Peek();
-        console.log(fileName, "handleChipCallStatements", token)
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
         }
@@ -125,7 +124,7 @@ const AstGenerator = () => {
         chipNode.chip = token;
         Consume();
 
-        var token = Peek();
+        token = Peek();
         if (token.type !== Token.OPERATOR && token.value !== '(') {
             handleParseError("(", token);
         }
@@ -136,21 +135,17 @@ const AstGenerator = () => {
         chipNode.parameters = parameters;
 
         chipCalls.push(chipNode);
-        console.log(chipNode)
 
-        var token = Peek();
+        token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
 
 
             var nextToken = Peek();
-            console.log(nextToken)
             if (nextToken.type === Token.OPERATOR && nextToken.value === '}') {
                 Consume();
-                console.log("End of chip cals")
                 return chipCalls;
             } else {
-                console.log("Recursive call of chip")
                 var nextChiipCalls = handleChipCallStatements();
                 chipCalls = chipCalls.concat(nextChiipCalls);
             }
@@ -215,7 +210,7 @@ const AstGenerator = () => {
         variables.push(token);
         Consume();
 
-        var token = Peek();
+        token = Peek();
 
         if (token.type === Token.SEPARATOR && token.value === ",") {
             Consume();
@@ -262,7 +257,7 @@ const AstGenerator = () => {
 
     const handleParseError = (exptected, token) => {
         clear();
-        var err = fileName + ":" + "Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
+        var err = fileName + ":Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
         err = err + (token.type === Token.EOF ? "'" : ("' at line:" + token.line + " column:" + token.column));
         throw err;
     }
