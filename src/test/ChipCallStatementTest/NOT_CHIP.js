@@ -4,6 +4,7 @@ const result = {
     error: false,
     ast: {
         file: "NOT_CHIP.hdl",
+        chipDefinition: "Not",
         ast: [
             {
                 type: Token.INPUT_VARIABLES,

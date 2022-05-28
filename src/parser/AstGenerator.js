@@ -6,6 +6,7 @@ const AstGenerator = () => {
     var tokens;
     var pointer = 0;
     var fileName = '';
+    var chip;
 
     var generate = (file, tokenArr, getFileContent) => {
         tokens = tokenArr;
@@ -27,7 +28,13 @@ const AstGenerator = () => {
 
         var returnAst = JSON.parse(JSON.stringify(ast));
         clear();
-        return { file: file, ast: returnAst };
+        var returnAst = { file: file, ast: returnAst };
+
+        if (chip && chip.length > 0) {
+            returnAst.chipDefinition = chip;
+        }
+
+        return returnAst;
     }
 
     AstGenerator.generate = generate;
@@ -39,6 +46,7 @@ const AstGenerator = () => {
         if (token.type !== Token.CHIPDEF) {
             handleParseError("Chip Name", token);
         }
+        chip = token.value;
 
         token = Peek();
         Consume();
@@ -56,7 +64,7 @@ const AstGenerator = () => {
 
         var inputVariables = [];
 
-        
+
         inputVariables = inputVariables.concat(handleVariableDefinitions());
         var inputVariablesNode = {
             type: Token.INPUT_VARIABLES,
@@ -139,7 +147,7 @@ const AstGenerator = () => {
                 chipCalls = chipCalls.concat(nextChiipCalls);
             }
 
-        } 
+        }
         return chipCalls;
     }
 
@@ -252,7 +260,7 @@ const AstGenerator = () => {
             return { type: Token.EOF };
         }
     }
-    
+
     const Consume = () => pointer++;
 }
 

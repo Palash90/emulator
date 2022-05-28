@@ -3,16 +3,19 @@ const result = {
     "error": false,
     "ast": {
         "file": "import_NO_ERROR.hdl",
+        "chipDefinition": "Xor",
         "ast": [
             {
                 "type": "IMPORT",
                 "ast": {
                     "file": "And.hdl",
+                    "chipDefinition": "And",
                     "ast": [
                         {
                             "type": "IMPORT",
                             "ast": {
                                 "file": "Not.hdl",
+                                "chipDefinition": "Not",
                                 "ast": [
                                     {
                                         "type": "INPUT_VARIABLES",
@@ -235,11 +238,13 @@ const result = {
                 "type": "IMPORT",
                 "ast": {
                     "file": "Or.hdl",
+                    "chipDefinition": "Or",
                     "ast": [
                         {
                             "type": "IMPORT",
                             "ast": {
                                 "file": "Not.hdl",
+                                "chipDefinition": "Not",
                                 "ast": [
                                     {
                                         "type": "INPUT_VARIABLES",
@@ -429,6 +434,7 @@ const result = {
                 "type": "IMPORT",
                 "ast": {
                     "file": "Not.hdl",
+                    "chipDefinition": "Not",
                     "ast": [
                         {
                             "type": "INPUT_VARIABLES",

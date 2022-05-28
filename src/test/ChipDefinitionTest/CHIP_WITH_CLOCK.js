@@ -3,6 +3,7 @@ const result = {
     "error": false,
     "ast": {
         "file": "CHIP_WITH_CLOCK.hdl",
+        "chipDefinition": "Bit",
         "ast": [
             {
                 "type": "INPUT_VARIABLES",
