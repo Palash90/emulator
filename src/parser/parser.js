@@ -18,8 +18,6 @@ function parse(file, content, files) {
     }
 
     try {
-        // console.log("tokens", tokens);
-
         var ast = astGenerator.AstGenerator.generate(file, tokens, getFileContent);
         return {
             error: false,

@@ -10,33 +10,19 @@ const Tokenizer = () => {
 
     const tokenize = (text) => {
         var line = 1;
-        var column = 0;
-
         var index = 0;
-        var tokenStartColumn = 0;
-
         var tokenPart = "";
 
         while (index < text.length) {
             var currChar = text[index];
-            console.log(currChar, line, column)
-            column++;
-            if (currChar === '\n') {
-                console.log(column, currChar, line)
-                column = 0;
-              //  tokenStartColumn = 0;
-            }
 
             if (isSeparator(currChar) || isOperator(currChar)) {
                 if (tokenPart !== '') {
                     var token = {
                         value: tokenPart,
                         line: line,
-                        column: column + 1
                     };
                     tokenPart = "";
-                    tokenStartColumn = column;
-                    console.log("38", token, line, column)
                     tokens.push(token);
                 }
 
@@ -45,23 +31,17 @@ const Tokenizer = () => {
                     {
                         value: currChar,
                         line: line,
-                        column: column
                     };
-                    console.log("49", token, line, column)
                     tokens.push(opearatorToken);
                 }
                 if (currChar === '\n') {
                     line++;
-                    column = 0;
-                    tokenStartColumn = 0;
 
                     var newLineToken =
                     {
                         value: currChar,
-                        line: line,
-                        column: column
+                        line: line
                     };
-                    console.log("63", newLineToken, line, column)
                     tokens.push(newLineToken);
                 }
             } else {
@@ -71,9 +51,7 @@ const Tokenizer = () => {
                     {
                         value: tokenPart,
                         line: line,
-                        column: tokenStartColumn
                     };
-                    console.log("75", remainingToken, line, column)
                     tokens.push(remainingToken);
                 }
             }
@@ -216,12 +194,12 @@ const Tokenizer = () => {
                 if (last.value === "CHIP") {
                     tokens = [];
                     pointer = 0;
-                    throw "Syntax error in chip name, line " + token.line + ", column " + token.column + ": " + token.value;
+                    throw "Syntax error in chip name, line " + token.line + ": " + token.value;
                 }
                 else {
                     tokens = [];
                     pointer = 0;
-                    throw "Syntax error in variable name, line " + token.line + ", column " + token.column + ": " + token.value;
+                    throw "Syntax error in variable name, line " + token.line + ": " + token.value;
                 }
 
             }

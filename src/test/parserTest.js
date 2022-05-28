@@ -23,8 +23,7 @@ const pathsToTest = [
     {
         desc: "Tests for Tokenizer",
         dir: "TokenizerTest"
-    }
-    /*,
+    },
     {
         desc: "Tests for files that have nothing to parse",
         dir: "NoParsableContetTest"
@@ -40,7 +39,7 @@ const pathsToTest = [
     {
         desc: "Chip Call Stament Tests",
         dir: "ChipCallStatementTest"
-    }*/
+    }
 
 ];
 

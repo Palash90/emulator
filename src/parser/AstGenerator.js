@@ -258,7 +258,7 @@ const AstGenerator = () => {
     const handleParseError = (exptected, token) => {
         clear();
         var err = fileName + ":Expected " + exptected + ", but got '" + (token.type === Token.EOF ? 'EOF' : token.value);
-        err = err + (token.type === Token.EOF ? "'" : ("' at line:" + token.line + " column:" + token.column));
+        err = err + (token.type === Token.EOF ? "'" : ("' at line:" + token.line));
         throw err;
     }
 
