@@ -37,18 +37,18 @@ const result = {
                                 destination: {
                                     line: 7,
                                     type: Token.CHIP_INVOKE_PARAM,
-                                    value: 'a'
+                                    value: 'out'
                                 },
                                 source: {
                                     line: 7,
                                     type: Token.VARIABLE,
-                                    value: 'a'
+                                    value: 'out'
                                 }
                             },
                             {
                                 destination: {
                                     line: 7,
-                                    type: Token.VARIABLE,
+                                    type: Token.CHIP_INVOKE_PARAM,
                                     value: 'b'
                                 },
                                 source: {
@@ -61,12 +61,12 @@ const result = {
                                 destination: {
                                     line: 7,
                                     type: Token.CHIP_INVOKE_PARAM,
-                                    value: 'out'
+                                    value: 'a'
                                 },
                                 source: {
                                     line: 7,
                                     type: Token.VARIABLE,
-                                    value: 'out'
+                                    value: 'a'
                                 }
                             }
                         ]
