@@ -230,7 +230,7 @@ const AstGenerator = () => {
         AstGenerator();
         var parsedHdlFileContent = AstGenerator.generate(token.value, importedFileTokens, getFileContent);
 
-        ast.push({ type: Token.IMPORT, ast: parsedHdlFileContent });
+        ast.push({ type: Token.IMPORT, importedAst: parsedHdlFileContent });
 
         // Next token should be the semicolon operator
         token = Peek();

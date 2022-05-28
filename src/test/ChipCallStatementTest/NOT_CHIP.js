@@ -1,4 +1,4 @@
-const Token = require("../../parser/Token")
+const Token = require("../../interpreter/Token")
 
 const result = {
     error: false,

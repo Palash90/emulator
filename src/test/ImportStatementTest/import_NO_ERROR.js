@@ -1,21 +1,17 @@
 const result = {
-
     "error": false,
     "ast": {
         "file": "import_NO_ERROR.hdl",
-        "chipDefinition": "Xor",
         "ast": [
             {
                 "type": "IMPORT",
-                "ast": {
+                "importedAst": {
                     "file": "And.hdl",
-                    "chipDefinition": "And",
                     "ast": [
                         {
                             "type": "IMPORT",
-                            "ast": {
+                            "importedAst": {
                                 "file": "Not.hdl",
-                                "chipDefinition": "Not",
                                 "ast": [
                                     {
                                         "type": "INPUT_VARIABLES",
@@ -87,7 +83,8 @@ const result = {
                                             }
                                         ]
                                     }
-                                ]
+                                ],
+                                "chipDefinition": "Not"
                             }
                         },
                         {
@@ -165,7 +162,7 @@ const result = {
                                                 "type": 8
                                             },
                                             "source": {
-                                                "value": "notab",
+                                                "value": "notb",
                                                 "line": 12,
                                                 "type": 2
                                             }
@@ -231,20 +228,19 @@ const result = {
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "chipDefinition": "And"
                 }
             },
             {
                 "type": "IMPORT",
-                "ast": {
+                "importedAst": {
                     "file": "Or.hdl",
-                    "chipDefinition": "Or",
                     "ast": [
                         {
                             "type": "IMPORT",
-                            "ast": {
+                            "importedAst": {
                                 "file": "Not.hdl",
-                                "chipDefinition": "Not",
                                 "ast": [
                                     {
                                         "type": "INPUT_VARIABLES",
@@ -316,7 +312,8 @@ const result = {
                                             }
                                         ]
                                     }
-                                ]
+                                ],
+                                "chipDefinition": "Not"
                             }
                         },
                         {
@@ -427,14 +424,14 @@ const result = {
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "chipDefinition": "Or"
                 }
             },
             {
                 "type": "IMPORT",
-                "ast": {
+                "importedAst": {
                     "file": "Not.hdl",
-                    "chipDefinition": "Not",
                     "ast": [
                         {
                             "type": "INPUT_VARIABLES",
@@ -506,7 +503,8 @@ const result = {
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "chipDefinition": "Not"
                 }
             },
             {
@@ -740,10 +738,7 @@ const result = {
                     }
                 ]
             }
-        ]
+        ],
+        "chipDefinition": "Xor"
     }
-};
-
-module.exports = {
-    result
 }

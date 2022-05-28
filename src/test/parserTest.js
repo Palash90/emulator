@@ -1,4 +1,4 @@
-const parser = require('../parser/parser');
+const parser = require('../interpreter/parser');
 const fs = require('fs');
 const path = require('path');
 const { default: defaultFiles } = require('./testDefaultFiles');
