@@ -61,7 +61,6 @@ const testFiles = () => {
             for (var j = 0; j < files.length; j++) {
                 currFile = files[j];
                 testCallBack();
-                console.log("\n");
             }
         });
     }
