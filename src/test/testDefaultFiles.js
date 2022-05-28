@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", {
     {
       "key": 2,
       "name": "And.hdl",
-      "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notab);\n    Nor(a=nota, b=notb, out=out);\n}"
+      "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notb);\n    Nor(a=nota, b=notb, out=out);\n}"
     },
     {
       "key": 5,

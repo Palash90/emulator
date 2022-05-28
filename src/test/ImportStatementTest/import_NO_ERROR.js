@@ -741,4 +741,7 @@ const result = {
         ],
         "chipDefinition": "Xor"
     }
+};
+module.exports = {
+    result
 }
