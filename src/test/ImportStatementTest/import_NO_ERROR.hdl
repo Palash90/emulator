@@ -12,7 +12,7 @@ CHIP Xor {
   OUT out16;
 
   PARTS:
-    Not(a=a0, out=nota0);
+    Not(a=a1, out=nota0);
     Not(a=b, out=notb);
     And(a=a, b=notb, out=anotb);
     And(a=b, b=nota, out=bnota);

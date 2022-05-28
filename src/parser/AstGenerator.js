@@ -121,6 +121,8 @@ const AstGenerator = () => {
         var token = Peek();
         Consume();
 
+        console.log(fileName, "handlechipcallstatement", token)
+
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
         }
@@ -144,6 +146,7 @@ const AstGenerator = () => {
         var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
+            console.log("Recursive call of chip")
             var nextChiipCalls = handleChipCallStatements();
             chipCalls = chipCalls.concat(nextChiipCalls);
         } else if (token.type === Token.OPERATOR && token.value === "}") {
