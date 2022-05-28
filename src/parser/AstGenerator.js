@@ -83,6 +83,11 @@ const AstGenerator = () => {
         }
 
         var outputVariables = handleVariableDefinitions();
+
+        var clockInOutputVariable = outputVariables.filter(el => el.value === 'CLOCK');
+        if (clockInOutputVariable && clockInOutputVariable.length > 0) {
+            handleParseError("No CLOCK in OUT", clockInOutputVariable[0]);
+        }
         var outputVariablesNode = {
             type: Token.OUTPUT_VARIABLES,
             value: outputVariables

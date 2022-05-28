@@ -1,4 +1,4 @@
-CHIP NOT {
+CHIP SEQ {
     IN CLOCK;
     OUT a;
 }
