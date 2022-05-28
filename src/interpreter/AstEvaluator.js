@@ -1,8 +1,14 @@
 const Token = require("./Token");
 
-const evaluate = () => {
+const evaluate = (ast) => {
 
-    
+    return {
+        error: true,
+        ast: ast,
+        result: "eval",
+        errorMessage:"Bad happened"
+    }
+
 
 }
 

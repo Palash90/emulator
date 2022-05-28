@@ -13,9 +13,10 @@ export default function runSimulation(currFileId, files, callback) {
 
         } else {
             var ast = parse(file.name, file.content, files);
-            result = {
-                error: false,
-                result: ast
+            if (ast.error) {
+                result = ast;
+            } else {
+                result = evaluate(ast);
             }
         }
     } else {
