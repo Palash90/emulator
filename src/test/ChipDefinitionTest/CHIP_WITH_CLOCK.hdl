@@ -1,0 +1,7 @@
+CHIP Bit {
+    IN CLOCK, d;
+    OUT dout, dnot;
+
+    PARTS:
+        Dff(d=d, ddout=dout, CLOCK=CLOCK, dnot=dnot);
+}

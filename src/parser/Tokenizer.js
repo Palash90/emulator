@@ -124,7 +124,14 @@ const Tokenizer = () => {
             }
             else if (isKeyword(currToken.value)) {
                 var token = Peek();
-                token.type = Token.KEYWORD;
+                var next = PeekNext();
+
+                if (currToken.value === 'CLOCK') {
+                    token.type = next.value === '=' ? Token.CHIP_INVOKE_PARAM : Token.VARIABLE;
+                } else {
+                    token.type = Token.KEYWORD;
+                }
+
                 analyzedTokens.push(token);
                 Consume();
             }
