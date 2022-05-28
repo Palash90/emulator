@@ -19,10 +19,12 @@ const Tokenizer = () => {
 
         while (index < text.length) {
             var currChar = text[index];
+            console.log(currChar, line, column)
             column++;
             if (currChar === '\n') {
+                console.log(column, currChar, line)
                 column = 0;
-                tokenStartColumn = 0;
+              //  tokenStartColumn = 0;
             }
 
             if (isSeparator(currChar) || isOperator(currChar)) {
@@ -30,10 +32,11 @@ const Tokenizer = () => {
                     var token = {
                         value: tokenPart,
                         line: line,
-                        column: tokenStartColumn + 1
+                        column: column + 1
                     };
                     tokenPart = "";
                     tokenStartColumn = column;
+                    console.log("38", token, line, column)
                     tokens.push(token);
                 }
 
@@ -44,6 +47,7 @@ const Tokenizer = () => {
                         line: line,
                         column: column
                     };
+                    console.log("49", token, line, column)
                     tokens.push(opearatorToken);
                 }
                 if (currChar === '\n') {
@@ -57,6 +61,7 @@ const Tokenizer = () => {
                         line: line,
                         column: column
                     };
+                    console.log("63", newLineToken, line, column)
                     tokens.push(newLineToken);
                 }
             } else {
@@ -68,6 +73,7 @@ const Tokenizer = () => {
                         line: line,
                         column: tokenStartColumn
                     };
+                    console.log("75", remainingToken, line, column)
                     tokens.push(remainingToken);
                 }
             }
