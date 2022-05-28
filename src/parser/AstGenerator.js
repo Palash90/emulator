@@ -19,8 +19,6 @@ const AstGenerator = () => {
                     handleImportStatement(getFileContent);
                 } else if (token.type === Token.KEYWORD && token.value === 'CHIP') {
                     handleChipDefinition();
-                } else {
-                    Consume();
                 }
             }
         } catch (err) {
@@ -143,7 +141,7 @@ const AstGenerator = () => {
         var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
-           
+
 
             var nextToken = Peek();
             console.log(nextToken)
