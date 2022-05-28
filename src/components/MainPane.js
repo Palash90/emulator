@@ -8,8 +8,10 @@ import { useContext, useState } from "react";
 
 import SimulationContext from "./SimulationContext";
 import ModalContext from "./ModalContext";
+import OutputWindow from "./OutputWindow";
 
 export default function MainPane() {
+    const [editorEnabled, setEditorEnabled] = useState(true);
     const { files, currFile } = useContext(FileContext);
     const { setSimulationResult } = useContext(SimulationContext);
     const [editorWidth, setEditorWidth] = useState(parseInt(localStorage.getItem('splitPosBottomPane') || 230));
@@ -28,16 +30,19 @@ export default function MainPane() {
     return <SplitPane split="horizontal" minSize={35}
         defaultSize={parseInt(localStorage.getItem('splitPosMainPane') || 35)}
         onChange={(size) => localStorage.setItem('splitPosMainPane', size)}>
-        {ButtonPane(files, currFile, setSimulationResult)}
+        {ButtonPane(files, currFile, setSimulationResult, setEditorEnabled)}
         <SplitPane split="vertical"
             minSize={230}
             defaultSize={editorWidth}
             onChange={(size) => handleEditorWidthResize(size)}>
-            <FilesPane />
-            <EditorPane editorWidth={editorWidth} />
-        </SplitPane></SplitPane>;
+            <FilesPane setEditorEnabled={setEditorEnabled} />
+            {
+                editorEnabled ? <EditorPane editorWidth={editorWidth} /> : <OutputWindow editorWidth={editorWidth} />
+            }
+        </SplitPane>
+    </SplitPane>;
 }
-function ButtonPane(files, currFile, setSimulationResult) {
+function ButtonPane(files, currFile, setSimulationResult, setEditorEnabled) {
 
     const { setModalOptions } = useContext(ModalContext);
     const { setFiles } = useContext(FileContext);
@@ -54,9 +59,10 @@ function ButtonPane(files, currFile, setSimulationResult) {
     return <div className="btn-group btn-block btn-group-xs buttonPane" role="group">
         <Button className="btn-dark btn-sm" type="button" onClick={() => showNewProjectModal()}>New</Button>
         <Button className="btn-dark btn-sm" type="button" onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save</Button>
-        <Button className="btn-dark btn-sm" type="button" onClick={() => runSimulation(currFile, files, (result) => setSimulationResult(result))}>Run</Button>
+        <Button className="btn-dark btn-sm" type="button" onClick={() => setEditorEnabled(true)}>Edit</Button>
+        <Button className="btn-dark btn-sm" type="button" onClick={() => { setEditorEnabled(false); runSimulation(currFile, files, (result) => setSimulationResult(result)) }}>Run</Button>
         <Button className="btn-dark btn-sm" type="button" href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(files))}`} download="project.json">Download</Button>
         <Button className="btn-dark btn-sm" type="button" onClick={() => showDeleteProjectModal()}>Delete</Button>
-    </div>;
+    </div >;
 }
 

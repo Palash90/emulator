@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { CloseButton } from "react-bootstrap";
 import ModalContext from "./ModalContext";
 
-function FilesPane() {
+function FilesPane(props) {
   const { files, setFiles, currFile, setCurrFile } = useContext(FileContext);
   const { setModalOptions } = useContext(ModalContext);
 
@@ -34,7 +34,7 @@ function FilesPane() {
       <h6>Files:</h6>
       <ul>
         {sortedFiles.map((el, i) => {
-          return FileDisplay(i, currFile, setCurrFile, el, handleShow);
+          return FileDisplay(i, currFile, setCurrFile, el, handleShow, props.setEditorEnabled);
         })}
       </ul>
       <NewFile></NewFile>
@@ -42,11 +42,11 @@ function FilesPane() {
   );
 }
 
-function FileDisplay(i, currFile, setCurrFile, el, handleShow) {
+function FileDisplay(i, currFile, setCurrFile, el, handleShow, setEditorEnabled) {
   if (el && el.name && el.name !== '') {
     return <div key={el.key}>
       <li className={el.key === currFile ? "selectedFile" : "unselectedFile"}>
-        <a key={i} href="#" onClick={() => setCurrFile(el.key)}>
+        <a key={i} href="#" onClick={() => { setEditorEnabled(true); setCurrFile(el.key) }}>
           {el.name}
         </a >
         <CloseButton key={"Close-" + el.key} className="btn-close btn-close-white" style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '7px', padding: '0.3em 0.3em' }} onClick={() => handleShow(el.key)} />

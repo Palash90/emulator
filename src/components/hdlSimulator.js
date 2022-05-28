@@ -1,3 +1,4 @@
+import { evaluate } from '../interpreter/AstEvaluator';
 import { parse } from '../interpreter/parser';
 
 export default function runSimulation(currFileId, files, callback) {
@@ -11,9 +12,10 @@ export default function runSimulation(currFileId, files, callback) {
             }
 
         } else {
+            var ast = parse(file.name, file.content, files);
             result = {
                 error: false,
-                result: parse(file.name, file.content, files)
+                result: ast
             }
         }
     } else {
