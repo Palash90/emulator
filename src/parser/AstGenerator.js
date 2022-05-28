@@ -119,38 +119,44 @@ const AstGenerator = () => {
         var chipNode = {};
 
         var token = Peek();
-        Consume();
-
-        console.log(fileName, "handlechipcallstatement", token)
-
+        console.log(fileName, "handleChipCallStatements", token)
         if (token.type !== Token.CHIP_INVOKE) {
             handleParseError("CHIP Name", token);
         }
 
         chipNode.chip = token;
-
-
-        var token = Peek();
         Consume();
 
+        var token = Peek();
         if (token.type !== Token.OPERATOR && token.value !== '(') {
             handleParseError("(", token);
         }
+        Consume();
 
         var parameters = handleParameters();
 
         chipNode.parameters = parameters;
 
         chipCalls.push(chipNode);
-        Consume()
+        console.log(chipNode)
+
         var token = Peek();
         if (token.type === Token.OPERATOR && token.value === ";") {
             Consume();
-            console.log("Recursive call of chip")
-            var nextChiipCalls = handleChipCallStatements();
-            chipCalls = chipCalls.concat(nextChiipCalls);
-        } else if (token.type === Token.OPERATOR && token.value === "}") {
-            Consume();
+           
+
+            var nextToken = Peek();
+            console.log(nextToken)
+            if (nextToken.type === Token.OPERATOR && nextToken.value === '}') {
+                Consume();
+                console.log("End of chip cals")
+                return chipCalls;
+            } else {
+                console.log("Recursive call of chip")
+                var nextChiipCalls = handleChipCallStatements();
+                chipCalls = chipCalls.concat(nextChiipCalls);
+            }
+
         } else {
             handleParseError("Chip invocation or }", token)
         }
