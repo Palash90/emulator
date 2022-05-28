@@ -1,11 +1,19 @@
+import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import raw from '../constants/markdown.md';
 
 function HelpWindow(props) {
-    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 
-    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+    const [markdown, setMarkdown] = useState("Help");
+    fetch(raw)
+        .then(r => r.text())
+        .then(text => {
+            setMarkdown(text);
+        });
 
-    return <h5>Help</h5>
-
+    return <ReactMarkdown children={markdown} remarkPlugins={[remarkGfm]} />
 }
 
 export default HelpWindow;
