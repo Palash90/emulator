@@ -84,10 +84,10 @@ const evaluateAst = (fileName, chipName, ast) => {
             chipCall.parameters.map(el => {
                 if (chip.inputs.includes(el.destination.value)) {
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
-                    chip.variableMapping.push({ type: Token.INPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value });
+                    chip.variableMapping.push({ type: Token.INPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, chip: chip });
                 } else if (chip.outputs.includes(el.destination.value)) {
                     chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
-                    chip.variableMapping.push({ type: Token.OUTPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value });
+                    chip.variableMapping.push({ type: Token.OUTPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, chip: chip });
                 } else {
                     throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }
@@ -103,7 +103,36 @@ const evaluateAst = (fileName, chipName, ast) => {
         })
     });
 
-    console.log(chips)
+    var allVariables = [];
+    chips.map(el => allVariables = allVariables.concat(el.variableMapping))
+
+    var leveledInputs = { 0: [...evaluationResult.inputs] };
+    var level = 0;
+    var chipOutputs = [...evaluationResult.outputs];
+
+    var leveledOperations = [];
+
+    while (level in leveledInputs && chipOutputs.length !== 0) {
+        var levelInputs = leveledInputs[level];
+        var levelVariables = allVariables.filter(el => levelInputs.includes(el.source));
+        levelVariables.map(el => chipOutputs = chipOutputs.filter(chipEl => chipEl !== el.source));
+        var nextLevelVariables = [];
+
+        levelVariables.map(lv => {
+            lv.chip.outputs.map(op => {
+                var vars = lv.chip.variableMapping.filter(opl => opl.dest === op)
+                vars.map(el => nextLevelVariables.push(el.source))
+            });
+        });
+
+        if (nextLevelVariables.length > 0) {
+            leveledInputs[level + 1] = nextLevelVariables;
+        }
+
+        leveledOperations.push(level);
+
+        level++;
+    }
 
     evaluationResult.func = (parameters) => {
         var getParameter = (key) => {
