@@ -66,7 +66,14 @@ const evaluateAst = (fileName, chipName, ast) => {
             }
 
             if ((chip.inputs.length + chip.outputs.length) != chipCall.parameters.length) {
-                throw fileName + ":Mismatch in chip arguments and parameters at line:" + chipCall.chip.line + " chip " + chip.chip + " arguments are input:" + JSON.stringify(chip.inputs) + " output:" + JSON.stringify((chip.outputs));
+                throw fileName +
+                ":Mismatch in chip arguments and parameters at line:" +
+                chipCall.chip.line + " chip '" +
+                chip.chip +
+                "' arguments are input:" +
+                JSON.stringify(chip.inputs) +
+                " output:" +
+                JSON.stringify((chip.outputs));
             }
 
             chipCall.parameters.map(el => console.log(el))
