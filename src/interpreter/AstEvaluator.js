@@ -62,8 +62,14 @@ const evaluateAst = (fileName, chipName, ast) => {
                 console.log("Using built in chip for", chipCall.chip.value, builtinChip[0]);
                 chip = builtinChip[0];
             } else {
-                throw "Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
+                throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
             }
+
+            if ((chip.inputs.length + chip.outputs.length) != chipCall.parameters.length) {
+                throw fileName + ":Mismatch in chip arguments and parameters at line:" + chipCall.chip.line + " chip " + chip.chip + " arguments are input:" + JSON.stringify(chip.inputs) + " output:" + JSON.stringify((chip.outputs));
+            }
+
+            chipCall.parameters.map(el => console.log(el))
         })
     });
 
