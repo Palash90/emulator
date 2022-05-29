@@ -52,6 +52,8 @@ class NewFile extends Component {
                 files.push({ key: newFileKey, name: this.state.label, content: '' });
                 this.context.setFiles([...files]);
                 this.context.setCurrFile(newFileKey);
+                this.props.setHelpEnabled(false);
+                this.props.setEditorEnabled(true);
             } else {
                 alert("File name already exists");
             }

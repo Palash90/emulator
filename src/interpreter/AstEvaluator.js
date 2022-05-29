@@ -14,9 +14,7 @@ const evaluate = (ast) => {
         return result;
     }
 
-    result.result = {
-        ast: ast
-    }
+    result.result = {}
 
     var evaluationResult;
     try {
@@ -26,8 +24,6 @@ const evaluate = (ast) => {
         result.error = true;
         result.errorMessage = err;
     }
-
-
 
     return result;
 }
@@ -47,6 +43,8 @@ const evaluateAst = (fileName, chipName, ast) => {
     ast.filter(el => el.type === Token.OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
 
     var parts = ast.filter(el => el.type === Token.PARTS);
+
+    var variables = [];
 
     parts.map(part => {
         part.value.map((chipCall) => {
@@ -79,9 +77,30 @@ const evaluateAst = (fileName, chipName, ast) => {
                 JSON.stringify((chip.outputs));
             }
 
-            chipCall.parameters.map(el => console.log(el))
+            chipCall.parameters.map(el => {
+                console.log(el)
+                if (chip.inputs.includes(el.destination.value)) {
+                    variables.push({
+                        chip: chip,
+                        type: Token.INPUT,
+                        name: el.destination.value
+                    });
+                } else if (chip.outputs.includes(el.destination.value)) {
+                    variables.push({
+                        chip: chip,
+                        type: Token.OUTPUT,
+                        name: el.destination.value
+                    });
+                } else {
+                    throw "Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
+                }
+
+            });
+
         })
     });
+
+    evaluationResult.variables = variables;
 
     return evaluationResult;
 }

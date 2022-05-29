@@ -37,7 +37,7 @@ function FilesPane(props) {
           return FileDisplay(i, currFile, setCurrFile, el, handleShow, props.setEditorEnabled, props.setHelpEnabled);
         })}
       </ul>
-      <NewFile></NewFile>
+      <NewFile setEditorEnabled={props.setEditorEnabled} setHelpEnabled={props.setHelpEnabled}></NewFile>
     </div>
   );
 }

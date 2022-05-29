@@ -15,7 +15,8 @@ const IMPORT = "IMPORT";
 const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
-
+const INPUT = "INPUT"
+const OUTPUT = "OUTPUT"
 
 module.exports = {
     OPERATOR,
@@ -34,5 +35,7 @@ module.exports = {
     IMPORT,
     INPUT_VARIABLES,
     OUTPUT_VARIABLES,
-    PARTS
+    PARTS,
+    INPUT,
+    OUTPUT
 }
