@@ -103,36 +103,7 @@ const evaluateAst = (fileName, chipName, ast) => {
         })
     });
 
-    var allVariables = [];
-    chips.map(el => allVariables = allVariables.concat(el.variableMapping))
-
-    var leveledInputs = { 0: [...evaluationResult.inputs] };
-    var level = 0;
-    var chipOutputs = [...evaluationResult.outputs];
-
-    var leveledOperations = [];
-
-    while (level in leveledInputs && chipOutputs.length !== 0) {
-        var levelInputs = leveledInputs[level];
-        var levelVariables = allVariables.filter(el => levelInputs.includes(el.source));
-        levelVariables.map(el => chipOutputs = chipOutputs.filter(chipEl => chipEl !== el.source));
-        var nextLevelVariables = [];
-
-        levelVariables.map(lv => {
-            lv.chip.outputs.map(op => {
-                var vars = lv.chip.variableMapping.filter(opl => opl.dest === op)
-                vars.map(el => nextLevelVariables.push(el.source))
-            });
-        });
-
-        if (nextLevelVariables.length > 0) {
-            leveledInputs[level + 1] = nextLevelVariables;
-        }
-
-        leveledOperations.push(level);
-
-        level++;
-    }
+    
 
     evaluationResult.func = (parameters) => {
         var getParameter = (key) => {
