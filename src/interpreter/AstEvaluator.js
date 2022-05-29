@@ -99,14 +99,23 @@ const evaluateAst = (fileName, chipName, ast) => {
             if (chipOutputs.length > 0) {
                 throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
             }
-            console.log(chip)
             chips.push(chip);
         })
     });
 
     console.log(chips)
 
-    evaluationResult.variables = chips;
+    evaluationResult.func = (parameters) => {
+        var getParameter = (key) => {
+            if (key in parameters) {
+                return parameters[key];
+            } else {
+                throw "Value of parameter '" + key + "' is not present"
+            }
+        }
+
+        return chips[0].func(getParameter);
+    };
 
     return evaluationResult;
 }
