@@ -77,25 +77,41 @@ const evaluateAst = (fileName, chipName, ast) => {
                 JSON.stringify((chip.outputs));
             }
 
+            var chipInputs = [...chip.inputs];
+            var chipOutputs = [...chip.outputs];
+
             chipCall.parameters.map(el => {
-                console.log(el)
+                console.log(el, chipInputs, chipOutputs)
                 if (chip.inputs.includes(el.destination.value)) {
+                    chipInputs = chipInputs.filter(input => input !== el.destination.value);
                     variables.push({
                         chip: chip,
                         type: Token.INPUT,
                         name: el.destination.value
                     });
+
                 } else if (chip.outputs.includes(el.destination.value)) {
+                    chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
                     variables.push({
                         chip: chip,
                         type: Token.OUTPUT,
                         name: el.destination.value
                     });
                 } else {
-                    throw "Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
+                    throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }
 
             });
+
+            console.log(chipInputs, chipOutputs)
+
+            if (chipInputs.length > 0) {
+                throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipInputs;
+            }
+
+            if (chipOutputs.length > 0) {
+                throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
+            }
 
         })
     });
