@@ -54,13 +54,16 @@ const evaluateAst = (fileName, chipName, ast) => {
             var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
 
             var chip;
+            var imported;
 
             if (importedChip && importedChip.length > 0) {
                 console.log("Using imported chip for", chipCall.chip.value, importedChip[0]);
                 chip = importedChip[0];
+                imported = true;
             } else if (builtinChip && builtinChip.length > 0) {
                 console.log("Using built in chip for", chipCall.chip.value, builtinChip[0]);
                 chip = builtinChip[0];
+                imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
             }
@@ -70,7 +73,7 @@ const evaluateAst = (fileName, chipName, ast) => {
                 ":Mismatch in chip arguments and parameters at line:" +
                 chipCall.chip.line + " chip '" +
                 chip.chip +
-                "' arguments are input:" +
+                "'(" + (imported ? "imported" : "built in") + ") arguments are input:" +
                 JSON.stringify(chip.inputs) +
                 " output:" +
                 JSON.stringify((chip.outputs));
