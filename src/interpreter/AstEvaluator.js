@@ -26,19 +26,15 @@ const evaluateAst = (fileName, chipName, ast) => {
     console.log("Processing", fileName, chipName, ast)
     var evaluationResult = {
         fileName: fileName,
-        chip: chipName
+        chip: chipName,
+        importedChips: [],
+        inputs: [],
+        outputs: []
     }
 
-
-    var importedChips = [];
-
-    var imports = ast.filter(el => el.type === Token.IMPORT)
-
-    console.log("imports", imports)
-
-    imports.map(el => importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
-
-    evaluationResult.importedChips = importedChips;
+    ast.filter(el => el.type === Token.IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
+    ast.filter(el => el.type === Token.INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
+    ast.filter(el => el.type === Token.OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
 
     return evaluationResult;
 }
