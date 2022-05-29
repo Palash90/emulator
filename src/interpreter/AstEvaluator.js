@@ -29,7 +29,6 @@ const evaluate = (ast) => {
 }
 
 const evaluateAst = (fileName, chipName, ast) => {
-    console.log("Processing", fileName, chipName, ast)
     var evaluationResult = {
         fileName: fileName,
         chip: chipName,
@@ -45,7 +44,7 @@ const evaluateAst = (fileName, chipName, ast) => {
     var parts = ast.filter(el => el.type === Token.PARTS);
 
 
-    var chips = [];
+    var chips = {};
 
     parts.map(part => {
         part.value.map((chipCall) => {
@@ -56,12 +55,10 @@ const evaluateAst = (fileName, chipName, ast) => {
             var imported;
 
             if (importedChip && importedChip.length > 0) {
-                console.log("Using imported chip for", chipCall.chip.value, importedChip[0]);
-                chip = Object.assign({ variableMapping: [] }, importedChip[0]);
+                chip = Object.assign({}, importedChip[0]);
                 imported = true;
             } else if (builtinChip && builtinChip.length > 0) {
-                console.log("Using built in chip for", chipCall.chip.value, builtinChip[0]);
-                chip = Object.assign({ variableMapping: [] }, builtinChip[0]);
+                chip = Object.assign({}, builtinChip[0]);
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
@@ -82,12 +79,17 @@ const evaluateAst = (fileName, chipName, ast) => {
             var chipOutputs = [...chip.outputs];
 
             chipCall.parameters.map(el => {
+                console.log(fileName, el.destination.value, chip);
+
                 if (chip.inputs.includes(el.destination.value)) {
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
-                    chip.variableMapping.push({ type: Token.INPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, chip: chip });
+                    chips[el.source.value] = { func: chip.func, source: el.source.value }
+                    // chip.variableMapping.push({ type: Token.INPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, func: chip.func });
                 } else if (chip.outputs.includes(el.destination.value)) {
                     chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
-                    chip.variableMapping.push({ type: Token.OUTPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, chip: chip });
+
+                    chips[el.source.value] = { func: chip.func, source: el.source.value }
+                    // chip.variableMapping.push({ type: Token.OUTPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, func: chip.func });
                 } else {
                     throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }
@@ -99,31 +101,15 @@ const evaluateAst = (fileName, chipName, ast) => {
             if (chipOutputs.length > 0) {
                 throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
             }
-            chips.push(chip);
+            //  chips.push(chip);
         })
     });
 
-    
 
-    evaluationResult.func = (parameters) => {
-        var getParameter = (key) => {
-            if (key in parameters) {
-                if (typeof (parameters[key]) !== 'boolean') {
-                    throw "Value of parameter '" + key + "' is not boolean"
-                }
-                return parameters[key];
-            } else {
-                throw "Value of parameter '" + key + "' is not present"
-            }
-        }
 
-        try {
-            return chips[0].func(getParameter);
-        } catch (err) {
-            return err;
-        }
+    console.log(chips)
 
-    };
+    evaluationResult.chips = chips;
 
     return evaluationResult;
 }

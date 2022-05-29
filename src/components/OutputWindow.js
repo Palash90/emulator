@@ -16,7 +16,7 @@ function OutputWindow(props) {
     if (simulationResult && simulationResult.error) {
         return <pre className="text-warning  border border-secondary" style={{ textAlign: 'left', wordWrap: 'break-word', whiteSpace: 'pre-wrap', overflowY: "scroll", width: (vw * 99 / 100 - props.editorWidth) + "px", marginTop: '10px', height: vh * 85 / 100 + "px" }} role="output">{simulationResult.errorMessage}</pre>
     } else {
-        return <pre className="text-info  border border-secondary" style={{ textAlign: 'left', overflowY: "scroll", width: (vw * 99 / 100 - props.editorWidth) + "px", marginTop: '10px', height: vh * 85 / 100 + "px" }} role="output">{JSON.stringify(simulationResult.result.evaluationResult.func({ a: true, b: false }), null, 2)}</pre>
+        return <pre className="text-info  border border-secondary" style={{ textAlign: 'left', overflowY: "scroll", width: (vw * 99 / 100 - props.editorWidth) + "px", marginTop: '10px', height: vh * 85 / 100 + "px" }} role="output">{JSON.stringify(simulationResult.result, null, 2)}</pre>
     }
 
 }
