@@ -44,7 +44,8 @@ const evaluateAst = (fileName, chipName, ast) => {
 
     var parts = ast.filter(el => el.type === Token.PARTS);
 
-    var variables = [];
+
+    var chips = [];
 
     parts.map(part => {
         part.value.map((chipCall) => {
@@ -56,11 +57,11 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             if (importedChip && importedChip.length > 0) {
                 console.log("Using imported chip for", chipCall.chip.value, importedChip[0]);
-                chip = importedChip[0];
+                chip = Object.assign({ variableMapping: [] }, importedChip[0]);
                 imported = true;
             } else if (builtinChip && builtinChip.length > 0) {
                 console.log("Using built in chip for", chipCall.chip.value, builtinChip[0]);
-                chip = builtinChip[0];
+                chip = Object.assign({ variableMapping: [] }, builtinChip[0]);
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
@@ -81,42 +82,31 @@ const evaluateAst = (fileName, chipName, ast) => {
             var chipOutputs = [...chip.outputs];
 
             chipCall.parameters.map(el => {
-                console.log(el, chipInputs, chipOutputs)
                 if (chip.inputs.includes(el.destination.value)) {
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
-                    variables.push({
-                        chip: chip,
-                        type: Token.INPUT,
-                        name: el.destination.value
-                    });
-
+                    chip.variableMapping.push({ type: Token.INPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value });
                 } else if (chip.outputs.includes(el.destination.value)) {
                     chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
-                    variables.push({
-                        chip: chip,
-                        type: Token.OUTPUT,
-                        name: el.destination.value
-                    });
+                    chip.variableMapping.push({ type: Token.OUTPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value });
                 } else {
                     throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }
-
             });
-
-            console.log(chipInputs, chipOutputs)
 
             if (chipInputs.length > 0) {
                 throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipInputs;
             }
-
             if (chipOutputs.length > 0) {
                 throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
             }
-
+            console.log(chip)
+            chips.push(chip);
         })
     });
 
-    evaluationResult.variables = variables;
+    console.log(chips)
+
+    evaluationResult.variables = chips;
 
     return evaluationResult;
 }
