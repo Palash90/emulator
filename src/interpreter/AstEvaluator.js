@@ -108,13 +108,21 @@ const evaluateAst = (fileName, chipName, ast) => {
     evaluationResult.func = (parameters) => {
         var getParameter = (key) => {
             if (key in parameters) {
+                if (typeof (parameters[key]) !== 'boolean') {
+                    throw "Value of parameter '" + key + "' is not boolean"
+                }
                 return parameters[key];
             } else {
                 throw "Value of parameter '" + key + "' is not present"
             }
         }
 
-        return chips[0].func(getParameter);
+        try {
+            return chips[0].func(getParameter);
+        } catch (err) {
+            return err;
+        }
+
     };
 
     return evaluationResult;
