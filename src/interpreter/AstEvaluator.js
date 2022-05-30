@@ -79,17 +79,15 @@ const evaluateAst = (fileName, chipName, ast) => {
             var chipOutputs = [...chip.outputs];
 
             chipCall.parameters.map(el => {
-                console.log(fileName, el.destination.value, chip);
-
                 if (chip.inputs.includes(el.destination.value)) {
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
-                    chips[el.source.value] = { func: chip.func, source: el.source.value }
-                    // chip.variableMapping.push({ type: Token.INPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, func: chip.func });
+                    //   chips[el.destination.value] = el.source.value
                 } else if (chip.outputs.includes(el.destination.value)) {
                     chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
 
-                    chips[el.source.value] = { func: chip.func, source: el.source.value }
-                    // chip.variableMapping.push({ type: Token.OUTPUT_VARIABLE_MAPPING, source: el.source.value, dest: el.destination.value, func: chip.func });
+                    chips[el.source.value] = chip.chips[el.destination.value];
+
+                    console.log(fileName, chip, el.source, el.destination)
                 } else {
                     throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }
@@ -107,7 +105,7 @@ const evaluateAst = (fileName, chipName, ast) => {
 
 
 
-    console.log(chips)
+    console.log(fileName, chips)
 
     evaluationResult.chips = chips;
 

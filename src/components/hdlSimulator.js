@@ -16,7 +16,7 @@ export default function runSimulation(currFileId, files, callback) {
             if (ast.error) {
                 result = ast;
             } else {
-                result = evaluate(ast)["out"].func();
+                result = evaluate(ast);
             }
         }
     } else {
