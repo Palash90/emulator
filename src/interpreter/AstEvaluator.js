@@ -1,7 +1,7 @@
 const builtInChips = require("./builtInChips");
 const Token = require("./Token");
 
-const evaluate = (ast) => {
+const evaluate = (ast, input) => {
 
     var result = {};
 
@@ -18,7 +18,7 @@ const evaluate = (ast) => {
 
     var evaluationResult;
     try {
-        result.result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
+        result.result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast, input)
         result.error = false;
     } catch (err) {
         result.error = true;
@@ -28,7 +28,7 @@ const evaluate = (ast) => {
     return result;
 }
 
-const evaluateAst = (fileName, chipName, ast) => {
+const evaluateAst = (fileName, chipName, ast, input) => {
     var evaluationResult = {
         fileName: fileName,
         chip: chipName,
@@ -108,8 +108,17 @@ const evaluateAst = (fileName, chipName, ast) => {
         partOutputs.map(el => {
             console.log(el, partInputs)
             operations[el.source] = () => {
-                console.log(fileName, el.source + " got called", partFunction, partInputs);
-                partFunction[el.dest]({ a: true, b: true })
+                var values = {}
+                partInputs.map(pI => {
+                    if (pI.source in input) {
+                        values[pI.source] = input[pI.source]
+                    } else if (pI.source in operations) {
+                        values[pI.source] = operations[pI.source]()
+                    } else {
+                        throw "Variable not found " + pI.source;
+                    }
+                })
+              return  partFunction[el.dest](values)
             }
         })
 
