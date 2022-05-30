@@ -51,6 +51,8 @@ const evaluateAst = (fileName, chipName, ast) => {
             var importedChip = evaluationResult.importedChips.filter(el => el.chip === chipCall.chip.value);
             var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
 
+            console.log(chipCall)
+
             var chip;
             var imported;
 
@@ -80,14 +82,12 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             chipCall.parameters.map(el => {
                 if (chip.inputs.includes(el.destination.value)) {
+                    console.log(fileName, chip.chip, chipInputs, el.source, el.destination)
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
-                    //   chips[el.destination.value] = el.source.value
+
                 } else if (chip.outputs.includes(el.destination.value)) {
                     chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
-
                     chips[el.source.value] = chip.chips[el.destination.value];
-
-                    console.log(fileName, chip, el.source, el.destination)
                 } else {
                     throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }

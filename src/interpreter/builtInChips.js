@@ -4,7 +4,7 @@ module.exports = [
         inputs: ["a", "b"],
         outputs: ["out"],
         chips: {
-            out: (getParameter) => !(getParameter('a') || getParameter('b'))
+            out: (valueOf) => !(valueOf('a') || valueOf('b'))
         }
     },
     {
@@ -12,7 +12,7 @@ module.exports = [
         inputs: ["a", "b"],
         outputs: ["out"],
         chips: {
-            out: (getParameter) => (getParameter('a') && getParameter('b'))
+            out: (valueOf) => (valueOf('a') && valueOf('b'))
         }
     }
 ];

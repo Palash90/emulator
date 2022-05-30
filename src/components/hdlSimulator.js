@@ -16,7 +16,18 @@ export default function runSimulation(currFileId, files, callback) {
             if (ast.error) {
                 result = ast;
             } else {
-                result = evaluate(ast);
+                var evaluated = evaluate(ast);
+                var chips = evaluated.result.evaluationResult.chips;
+
+                var manyValues = [{ a: false, b: false }, { a: false, b: true }, { a: true, b: false }, { a: true, b: true }]
+
+                var resultstr = ""
+                for (var i = 0; i < 4; i++) {
+                    var values = manyValues[i];
+                    resultstr = resultstr.concat(" a:" + values.a + " b:" + values.b + " result:" + chips["out"](key => values[key]))
+                }
+
+                result = resultstr;
             }
         }
     } else {
