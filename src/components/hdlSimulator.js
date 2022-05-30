@@ -20,7 +20,7 @@ export default function runSimulation(currFileId, files, callback) {
                 var manyValues = [{ a: false, b: false }, { a: false, b: true }, { a: true, b: false }, { a: true, b: true }]
 
                 var resultstr = []
-                for (var i = 0; i < 4; i++) {
+                for (var i = 0; i < 1; i++) {
                     var values = manyValues[i];
 
                     var valueOf = (key) => {
@@ -28,7 +28,7 @@ export default function runSimulation(currFileId, files, callback) {
                         return values[key]
                     }
                     var evaluated = evaluate(ast, {}, valueOf);
-                    var chips = evaluated.result.evaluationResult.chips;
+                    var chips = evaluated.result.evaluationResult.operations;
 
                     resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"](key => values[key]) })
                 }

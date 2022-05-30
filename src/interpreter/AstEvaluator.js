@@ -43,15 +43,17 @@ const evaluateAst = (fileName, chipName, ast) => {
 
     var parts = ast.filter(el => el.type === Token.PARTS);
 
+    var operations = {}
 
-    var chips = {};
 
     parts.map(part => {
+        var partInputs = []
+        var partOutputs = [];
+        var partFunction;
+
         part.value.map((chipCall) => {
             var importedChip = evaluationResult.importedChips.filter(el => el.chip === chipCall.chip.value);
             var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
-
-            console.log(chipCall)
 
             var chip;
             var imported;
@@ -77,17 +79,18 @@ const evaluateAst = (fileName, chipName, ast) => {
                 JSON.stringify((chip.outputs));
             }
 
+
             var chipInputs = [...chip.inputs];
             var chipOutputs = [...chip.outputs];
 
             chipCall.parameters.map(el => {
                 if (chip.inputs.includes(el.destination.value)) {
-                    console.log(fileName, chip.chip, chipInputs, el.source, el.destination)
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
-
+                    partInputs.push({ source: el.source.value, dest: el.destination.value });
                 } else if (chip.outputs.includes(el.destination.value)) {
                     chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
-                    chips[el.source.value] = chip.chips[el.destination.value];
+                    partOutputs.push({ source: el.source.value, dest: el.destination.value });
+                    partFunction = chip.operations;
                 } else {
                     throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
                 }
@@ -99,16 +102,23 @@ const evaluateAst = (fileName, chipName, ast) => {
             if (chipOutputs.length > 0) {
                 throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
             }
-            //  chips.push(chip);
+
+        });
+
+        partOutputs.map(el => {
+            console.log(el, partInputs)
+            operations[el.source] = () => {
+                console.log(fileName, el.source + " got called", partFunction, partInputs);
+                partFunction[el.dest]({ a: true, b: true })
+            }
         })
+
     });
 
 
+    console.log(operations)
 
-    console.log(fileName, chips)
-
-    evaluationResult.chips = chips;
-
+    evaluationResult.operations = operations;
     return evaluationResult;
 }
 
