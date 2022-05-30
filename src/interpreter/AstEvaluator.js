@@ -1,7 +1,7 @@
 const builtInChips = require("./builtInChips");
 const Token = require("./Token");
 
-const evaluate = (ast, input) => {
+const evaluate = (ast) => {
 
     var result = {};
 
@@ -18,7 +18,7 @@ const evaluate = (ast, input) => {
 
     var evaluationResult;
     try {
-        result.result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast, input)
+        result.result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
         result.error = false;
     } catch (err) {
         result.error = true;
@@ -28,7 +28,7 @@ const evaluate = (ast, input) => {
     return result;
 }
 
-const evaluateAst = (fileName, chipName, ast, input) => {
+const evaluateAst = (fileName, chipName, ast) => {
     var evaluationResult = {
         fileName: fileName,
         chip: chipName,
@@ -106,26 +106,34 @@ const evaluateAst = (fileName, chipName, ast, input) => {
         });
 
         partOutputs.map(el => {
-            console.log(el, partInputs)
-            operations[el.source] = () => {
-                var values = {}
+            operations[el.source] = (input) => {
+                var values = Object.assign({}, input)
+
+                console.log("**********************\n")
+
                 partInputs.map(pI => {
+                    console.log(fileName, "Getting value of", pI.source)
                     if (pI.source in input) {
+                        console.log("var", pI.source, "is in src", input[pI.source])
                         values[pI.source] = input[pI.source]
                     } else if (pI.source in operations) {
-                        values[pI.source] = operations[pI.source]()
+                        console.log("var", pI.source, "is a variable", values)
+                        values[pI.source] = () => {
+                            var output = operations[pI.source](values)
+                            console.log("var", pI.source, "returned", output)
+                            return output;
+                        }
                     } else {
-                        throw "Variable not found " + pI.source;
+                        throw "Variable or input not found", pI.source
                     }
                 })
-              return  partFunction[el.dest](values)
+                var output = partFunction[el.dest]({ ...values })
+                console.log(el.source, "returned", output, "with input", values)
+                return output
             }
         })
 
     });
-
-
-    console.log(operations)
 
     evaluationResult.operations = operations;
     return evaluationResult;

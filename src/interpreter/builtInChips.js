@@ -4,7 +4,11 @@ module.exports = [
         inputs: ["a", "b"],
         outputs: ["out"],
         operations: {
-            out: (input) => !(input['a'] || input['b'])
+            out: (input) => {
+                var norResult = !(input['a'] || input['b'])
+                console.log("Received input in nor gate", input, "returning", norResult);
+                return norResult;
+            }
         }
     },
     {
