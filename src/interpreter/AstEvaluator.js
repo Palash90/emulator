@@ -43,15 +43,14 @@ const evaluateAst = (fileName, chipName, ast) => {
 
     var parts = ast.filter(el => el.type === Token.PARTS);
 
-    var operations = {}
-
+    var operations = {};
+    var chipDetails = {};
 
     parts.map(part => {
-        var partInputs = []
-        var partOutputs = [];
-        var partFunction;
 
-        part.value.map((chipCall) => {
+        var chipObject = {}
+
+        part.value.map(chipCall => {
             var importedChip = evaluationResult.importedChips.filter(el => el.chip === chipCall.chip.value);
             var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
 
@@ -83,6 +82,10 @@ const evaluateAst = (fileName, chipName, ast) => {
             var chipInputs = [...chip.inputs];
             var chipOutputs = [...chip.outputs];
 
+            var partInputs = []
+            var partOutputs = [];
+            var partFunction;
+
             chipCall.parameters.map(el => {
                 if (chip.inputs.includes(el.destination.value)) {
                     chipInputs = chipInputs.filter(input => input !== el.destination.value);
@@ -103,38 +106,40 @@ const evaluateAst = (fileName, chipName, ast) => {
                 throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
             }
 
-        });
-
-        partOutputs.map(el => {
-            operations[el.source] = (input) => {
-                var values = Object.assign({}, input)
-
-                console.log("**********************\n")
-
-                partInputs.map(pI => {
-                    console.log(fileName, "Getting value of", pI.source)
-                    if (pI.source in input) {
-                        console.log("var", pI.source, "is in src", input[pI.source])
-                        values[pI.source] = input[pI.source]
-                    } else if (pI.source in operations) {
-                        console.log("var", pI.source, "is a variable", values)
-                        values[pI.source] = () => {
-                            var output = operations[pI.source](values)
-                            console.log("var", pI.source, "returned", output)
-                            return output;
-                        }
-                    } else {
-                        throw "Variable or input not found", pI.source
-                    }
-                })
-                var output = partFunction[el.dest]({ ...values })
-                console.log(el.source, "returned", output, "with input", values)
-                return output
+            chipObject = {
+                partFunction, partInputs, partOutputs
             }
-        })
+            partOutputs.map(part => chipDetails[part.source] = chipObject)
 
+            partOutputs.map(output => {
+                operations[output.source] = (input) => {
+                    var values = {}
+
+                    partInputs.map(pI => {
+                        if (pI.source in input) {
+                            values[pI.dest] = input[pI.source]
+                        } else if (pI.source in operations) {
+                            chipDetails[pI.source].partInputs.map(inp => values[inp.dest] = input[inp.source])
+                            values[pI.dest] = operations[pI.source]({ ...values });
+
+                        } else {
+                            throw "Variable or input not found", pI.source
+                        }
+                    })
+
+                    console.log(output)
+
+                    var returnValue = chipObject.partFunction[output.dest]({ ...values })
+
+                    console.log("Operation", output.dest, "input", values, "output", returnValue)
+
+                    return returnValue;
+                }
+            })
+        })
     });
 
+    console.log(operations)
     evaluationResult.operations = operations;
     return evaluationResult;
 }
