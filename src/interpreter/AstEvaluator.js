@@ -112,19 +112,15 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             partOutputs.map(output => {
                 operations[output.source] = (input) => {
-                    console.log(fileName, output.source, "calling", output.dest)
-                    var returnValue = chipObject.partFunction[output.dest](getValues(input, output.source))
+                    console.log(fileName, output.source, "calling", output.dest, "from", chip.operations, "expected op", chip.operations[output.dest])
+                    var returnValue = chip.operations[output.dest](getValues(input, output.source))
                     return returnValue;
                 }
             })
 
             var getValues = (input, part) => {
-                console.log(fileName, part, "gets", input, "needs to resolve", chipDetails[part].partInputs)
-
                 var values = {}
-
                 chipDetails[part].partInputs.map(pi => {
-                    console.log(fileName, "resolving", pi)
                     if (pi.source in input) {
                         values[pi.dest] = input[pi.source]
                     } else if (pi.source in operations) {
@@ -132,9 +128,6 @@ const evaluateAst = (fileName, chipName, ast) => {
                         console.log(operations)
                     }
                 });
-
-                console.log(fileName, "Values identified", values)
-
                 return values
             }
 

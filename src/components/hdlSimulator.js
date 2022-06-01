@@ -23,10 +23,18 @@ export default function runSimulation(currFileId, files, callback) {
                 for (var i = 0; i < 4; i++) {
                     var values = manyValues[i];
 
-                    var evaluated = evaluate(ast, { a: values.a, b: values.b });
-                    var chips = evaluated.result.evaluationResult.operations;
+                    try {
+                        
+                        var evaluated = evaluate(ast, { a: values.a, b: values.b });
+                        console.log(evaluated)
+                        var chips = evaluated.result.evaluationResult.operations;
 
-                    resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"]({ ora: values.a, orb: values.b }) })
+                        resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"]({ a: values.a, b: values.b }) })
+
+                    } catch (err) {
+                        console.log(err)
+                    }
+
                     console.log("Done calculation\n\n\n")
                 }
                 console.table(resultstr)
