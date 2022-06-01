@@ -1,5 +1,4 @@
-import { evaluate } from '../interpreter/AstEvaluator';
-import { parse } from '../interpreter/parser';
+import parse from '../interpreter/parser';
 
 export default function runSimulation(currFileId, files, callback) {
     var result;
@@ -23,6 +22,7 @@ export default function runSimulation(currFileId, files, callback) {
     }
 
     if (callback) {
+        console.log(result)
         callback(result)
     } else {
         console.log("No callback specified for simulator. Simulation result", result);
