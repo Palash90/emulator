@@ -46,7 +46,7 @@ export default function TruthTable(props) {
             values.push(valueAndStack.values[key])
         }
 
-        return values.map(val => <td key={uuid()}>{JSON.stringify(val)}</td>);
+        return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
     };
 
     return <>
