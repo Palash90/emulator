@@ -1,5 +1,6 @@
 const tokenizer = require('./Tokenizer')
-const astGenerator = require('./AstGenerator')
+const astGenerator = require('./AstGenerator');
+const { evaluate } = require('./AstEvaluator');
 
 
 function parse(file, content, files) {
@@ -12,17 +13,13 @@ function parse(file, content, files) {
 
     try {
         tokens = tokenizer.Tokenizer.tokenize(content);
-
     } catch (error) {
         return handleFailure(file + ":" + error);
     }
 
     try {
         var ast = astGenerator.AstGenerator.generate(file, tokens, getFileContent);
-        return {
-            error: false,
-            ast: ast
-        };
+        return evaluate({ error: false, ast: ast })
     } catch (error) {
         return handleFailure(error);
     }

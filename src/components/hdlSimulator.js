@@ -13,33 +13,7 @@ export default function runSimulation(currFileId, files, callback) {
 
         } else {
             var ast = parse(file.name, file.content, files);
-            if (ast.error) {
-                result = ast;
-            } else {
-
-                var manyValues = [{ a: false, b: false }, { a: false, b: true }, { a: true, b: false }, { a: true, b: true }]
-
-                var resultstr = []
-                for (var i = 0; i < 4; i++) {
-                    var values = manyValues[i];
-
-                    try {
-                        
-                        var evaluated = evaluate(ast, { a: values.a, b: values.b });
-                        console.log(evaluated)
-                        var chips = evaluated.evaluationResult.operations;
-
-                        resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"]({ a: values.a, b: values.b }) })
-
-                    } catch (err) {
-                        console.log(err)
-                    }
-
-                    console.log("Done calculation\n\n\n")
-                }
-                console.table(resultstr)
-                result = resultstr;
-            }
+            result = ast;
         }
     } else {
         result = {

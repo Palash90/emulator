@@ -15,7 +15,7 @@ const evaluate = (ast) => {
     }
 
     try {
-        result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
+        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
         result.error = false;
     } catch (err) {
         result.error = true;

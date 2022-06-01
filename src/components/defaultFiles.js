@@ -8,7 +8,17 @@ const defaultFiles = [
   {
     "key": 2,
     "name": "And.hdl",
-    "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notab;\n    Nor(a=nota, b=notb, out=out);\n}"
+    "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notb);\n    Nor(a=nota, b=notb, out=out);\n}"
+  },
+  {
+    "key": 7,
+    "name": "FullAdder.hdl",
+    "content": "import HalfAdder.hdl;\nimport And.hdl;\nimport Or.hdl;\n\nCHIP FullAdder {\n\n  IN a, b, cin;\n  OUT s, cout;\n\n  PARTS:\n    HalfAdder(a=a, b=b, s=intermediateSum, c=intermediateCarry);\n    HalfAdder(a=intermediateSum, b=cin, s=s, c=c1);\n    Or(a=intermediateCarry, b=c1, out=cout);\n}"
+  },
+  {
+    "key": 6,
+    "name": "HalfAdder.hdl",
+    "content": "import Xor.hdl;\nimport And.hdl;\n\nCHIP HalfAdder{\n  IN a, b;\n  OUT s, c;\n\n  PARTS:\n    Xor(a=a, b=b, out=s);\n    And(a=a, b=b, out=c);\n}"
   },
   {
     "key": 5,

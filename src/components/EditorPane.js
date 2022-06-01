@@ -8,6 +8,7 @@ import "codemirror/lib/codemirror.css";
 import { oneDark } from '@codemirror/theme-one-dark';
 import { javascript } from '@codemirror/lang-javascript';
 import { CloseButton } from "react-bootstrap";
+import uuid from "react-uuid";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
@@ -74,20 +75,20 @@ function MultipleEditors(props) {
     }
 
     if (props.openFiles && props.openFiles.length > 0) {
-        return <div>
-            <div style={{ display: "flex", flexDirection: "row" }}>{
+        return <div key={uuid()}>
+            <div key={uuid()} style={{ display: "flex", flexDirection: "row" }}>{
                 props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-                    return file ? <div key={element} className="text-white file-header" >
-                        <span onClick={() => chooseOrCloseFile(element, false)}>{file.name}</span>
-                        <CloseButton style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
+                    return file ? <div key={uuid()} className="text-white file-header" >
+                        <span key={uuid()} onClick={() => chooseOrCloseFile(element, false)}>{file.name}</span>
+                        <CloseButton key={uuid()} style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
                     </div> : <></>
                 })
             }</div>
-            <div style={{ position: "relative" }}>
+            <div key={uuid()} style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-                    return file ? <div key={file.key} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element ? 10 : 0 }}>
+                    return file ? <div key={uuid()} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element ? 10 : 0 }}>
                         <CodeMirror
                             value={file.content}
                             theme={oneDark}
@@ -97,6 +98,7 @@ function MultipleEditors(props) {
                             onChange={(value, viewUpdate) => {
                                 props.save(element, value);
                             }}
+                            key={uuid()}
                         />
                     </div> : <></>
                 })}
