@@ -13,7 +13,16 @@ export default function runSimulation(currFileId, files, callback) {
         } else {
             var ast = parse(file.name, file.content, files);
             result = ast;
-            result['callStack'] = parse.getCallStack;
+            result['getValueAndStack'] = (input, ast) => getValueCallStack(input, ast)
+            function getValueCallStack(obj, ast) {
+                var values = {};
+                var callStacks = {};
+                ast.outputs.map(out => {
+                    values[out] = ast.operations[out](obj);
+                    callStacks[out] = parse.getCallStack();
+                });
+                return { values, callStacks };
+            }
         }
     } else {
         result = {

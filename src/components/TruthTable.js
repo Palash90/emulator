@@ -7,7 +7,7 @@ export default function TruthTable(props) {
     const { simulationResult } = useContext(SimulationContext);
     var inputs = [];
 
-    function generateAllBinaryStrings(n, arr, i) {
+    function generateAllBinaryCombinations(n, arr, i) {
         if (i == n) {
             var input = {};
 
@@ -22,10 +22,10 @@ export default function TruthTable(props) {
         }
 
         arr[i] = 0;
-        generateAllBinaryStrings(n, arr, i + 1);
+        generateAllBinaryCombinations(n, arr, i + 1);
 
         arr[i] = 1;
-        generateAllBinaryStrings(n, arr, i + 1);
+        generateAllBinaryCombinations(n, arr, i + 1);
     }
 
     let n = simulationResult.ast.inputs.length;
@@ -33,18 +33,19 @@ export default function TruthTable(props) {
     let arr = new Array(n);
     arr.fill(0);
 
-    generateAllBinaryStrings(n, arr, 0);
+    generateAllBinaryCombinations(n, arr, 0);
 
     const getTd = (obj) => {
         var values = [];
         for (const key in obj) {
             values.push(obj[key]);
         }
-        simulationResult.ast.outputs.map(out => {
-            values.push(simulationResult.ast.operations[out](obj));
-            console.log(simulationResult.callStack)
-            console.log(simulationResult.callStack())
-        });
+        var valueAndStack = simulationResult.getValueAndStack(obj, simulationResult.ast);
+
+        for (var key in valueAndStack.values) {
+            values.push(valueAndStack.values[key])
+        }
+
         return values.map(val => <td key={uuid()}>{JSON.stringify(val)}</td>);
     };
 
@@ -69,9 +70,10 @@ export default function TruthTable(props) {
                 {inputs.map(inp => {
                     return <tr key={uuid()}>
                         {getTd(inp)}
-                    </tr>;
+                    </tr>
                 })}
             </tbody>
         </Table>
-    </>;
+    </>
 }
+
