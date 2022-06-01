@@ -24,7 +24,6 @@ const evaluate = (ast) => {
         result.error = true;
         result.errorMessage = err;
     }
-
     return result;
 }
 

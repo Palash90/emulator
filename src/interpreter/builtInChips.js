@@ -1,11 +1,11 @@
 module.exports = [
     {
         chip: "Nor",
-        inputs: ["a", "b"],
-        outputs: ["out"],
+        inputs: ["norIna", "norInb"],
+        outputs: ["norOut"],
         operations: {
             out: (norInput) => {
-                var norResult = !(norInput['a'] || norInput['b'])
+                var norResult = !(norInput['norIna'] || norInput['norInb'])
                 console.log("Received input in nor gate", norInput, "returning", norResult);
                 return norResult;
             }
