@@ -14,11 +14,8 @@ const evaluate = (ast) => {
         return result;
     }
 
-    result.result = {}
-
-    var evaluationResult;
     try {
-        result.result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
+        result.evaluationResult = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
         result.error = false;
     } catch (err) {
         result.error = true;
@@ -124,6 +121,8 @@ const evaluateAst = (fileName, chipName, ast) => {
                         values[pi.dest] = input[pi.source]
                     } else if (pi.source in operations) {
                         values[pi.dest] = operations[pi.source](input)
+                    } else {
+                        throw "Input or varible not found: " + pi.source
                     }
                 });
                 return values

@@ -27,7 +27,7 @@ export default function runSimulation(currFileId, files, callback) {
                         
                         var evaluated = evaluate(ast, { a: values.a, b: values.b });
                         console.log(evaluated)
-                        var chips = evaluated.result.evaluationResult.operations;
+                        var chips = evaluated.evaluationResult.operations;
 
                         resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"]({ a: values.a, b: values.b }) })
 
