@@ -112,7 +112,6 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             partOutputs.map(output => {
                 operations[output.source] = (input) => {
-                    console.log(fileName, output.source, "calling", output.dest, "from", chip.operations, "expected op", chip.operations[output.dest])
                     var returnValue = chip.operations[output.dest](getValues(input, output.source))
                     return returnValue;
                 }
@@ -125,7 +124,6 @@ const evaluateAst = (fileName, chipName, ast) => {
                         values[pi.dest] = input[pi.source]
                     } else if (pi.source in operations) {
                         values[pi.dest] = operations[pi.source](input)
-                        console.log(operations)
                     }
                 });
                 return values
@@ -135,7 +133,6 @@ const evaluateAst = (fileName, chipName, ast) => {
         })
     });
 
-    console.log(operations)
     evaluationResult.operations = operations;
     return evaluationResult;
 }
