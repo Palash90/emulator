@@ -26,7 +26,7 @@ export default function runSimulation(currFileId, files, callback) {
                     var evaluated = evaluate(ast, { a: values.a, b: values.b });
                     var chips = evaluated.result.evaluationResult.operations;
 
-                    resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"]({ a: values.a, b: values.b }) })
+                    resultstr = resultstr.concat({ a: values.a, b: values.b, result: chips["out"]({ ora: values.a, orb: values.b }) })
                     console.log("Done calculation\n\n\n")
                 }
                 console.table(resultstr)

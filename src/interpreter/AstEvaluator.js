@@ -112,29 +112,33 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             partOutputs.map(output => {
                 operations[output.source] = (input) => {
-                    var values = {}
-
-                    partInputs.map(pI => {
-                        if (pI.source in input) {
-                            values[pI.dest] = input[pI.source]
-                        } else if (pI.source in operations) {
-                            chipDetails[pI.source].partInputs.map(inp => values[inp.dest] = input[inp.source])
-                            values[pI.dest] = operations[pI.source]({ ...values });
-
-                        } else {
-                            throw "Variable or input not found", pI.source
-                        }
-                    })
-
-                    console.log(output)
-
-                    var returnValue = chipObject.partFunction[output.dest]({ ...values })
-
-                    console.log("Operation", output.dest, "input", values, "output", returnValue)
-
+                    console.log(fileName, output.source, "calling", output.dest)
+                    var returnValue = chipObject.partFunction[output.dest](getValues(input, output.source))
                     return returnValue;
                 }
             })
+
+            var getValues = (input, part) => {
+                console.log(fileName, part, "gets", input, "needs to resolve", chipDetails[part].partInputs)
+
+                var values = {}
+
+                chipDetails[part].partInputs.map(pi => {
+                    console.log(fileName, "resolving", pi)
+                    if (pi.source in input) {
+                        values[pi.dest] = input[pi.source]
+                    } else if (pi.source in operations) {
+                        values[pi.dest] = operations[pi.source](input)
+                        console.log(operations)
+                    }
+                });
+
+                console.log(fileName, "Values identified", values)
+
+                return values
+            }
+
+
         })
     });
 
