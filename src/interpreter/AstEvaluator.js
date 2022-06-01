@@ -122,7 +122,7 @@ const evaluateAst = (fileName, chipName, ast) => {
                     } else if (pi.source in operations) {
                         values[pi.dest] = operations[pi.source](input)
                     } else {
-                        throw "Input or varible not found: " + pi.source
+                        throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
                     }
                 });
                 return values
