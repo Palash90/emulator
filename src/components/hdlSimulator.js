@@ -16,12 +16,12 @@ export default function runSimulation(currFileId, files, callback) {
             result['getValueAndStack'] = (input, ast) => getValueCallStack(input, ast)
             function getValueCallStack(obj, ast) {
                 var values = {};
-                var callStacks = {};
+                var stack = {};
                 ast.outputs.map(out => {
                     values[out] = ast.operations[out](obj);
-                    callStacks[out] = parse.getCallStack();
+                    stack[out] = parse.getCallStack();
                 });
-                return { values, callStacks };
+                return { values, stack };
             }
         }
     } else {
