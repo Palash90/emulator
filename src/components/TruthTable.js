@@ -8,7 +8,7 @@ export default function TruthTable(props) {
     var inputs = [];
 
     function generateAllBinaryCombinations(n, arr, i) {
-        if (i == n) {
+        if (i === n) {
             var input = {};
 
             var counter = 0;
@@ -45,6 +45,8 @@ export default function TruthTable(props) {
         for (var key in valueAndStack.values) {
             values.push(valueAndStack.values[key])
         }
+
+        console.log(valueAndStack.stack);
 
         return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
     };
