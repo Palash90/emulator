@@ -16,6 +16,8 @@ const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
 
+var chipCallStack = [];
+
 const Tokenizer = () => {
     var tokens = [];
     var pointer = 0;
@@ -237,14 +239,6 @@ const builtInChips = [
         operations: {
             out: (norInput) => !(norInput['a'] || norInput['b'])
         }
-    },
-    {
-        chip: "XAnd",
-        inputs: ["a", "b"],
-        outputs: ["out"],
-        operations: {
-            out: (input) => (input['a'] && input['b'])
-        }
     }
 ];
 
@@ -357,7 +351,9 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             partOutputs.map(output => {
                 operations[output.source] = (input) => {
-                    var returnValue = chip.operations[output.dest](getValues(input, output.source))
+                    var values = getValues(input, output.source);
+                    chipCallStack.push({ chip: chip, callName: output.source, values: values });
+                    var returnValue = chip.operations[output.dest](values)
                     return returnValue;
                 }
             })
@@ -664,16 +660,23 @@ export default function parse(file, content, files) {
     const getFileContent = (fileName) => files.filter(el => el.name === fileName)[0].content;
 
     var tokens;
-
     try {
         tokens = Tokenizer.tokenize(content);
     } catch (error) {
         return handleFailure(file + ":" + error);
     }
 
+    parse.getCallStack = () => {
+        var newCallStack = [...chipCallStack];
+        chipCallStack = [];
+        return newCallStack;
+    }
+
     try {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
-        return evaluate({ error: false, ast: ast })
+        var result = evaluate({ error: false, ast: ast })
+        chipCallStack = [];
+        return result;
     } catch (error) {
         return handleFailure(error);
     }

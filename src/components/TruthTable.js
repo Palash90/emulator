@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Container, Navbar, Table } from "react-bootstrap";
 import SimulationContext from "./SimulationContext";
 
-export default function TruthTable() {
+export default function TruthTable(props) {
     const { simulationResult } = useContext(SimulationContext);
     var inputs = [];
 
@@ -42,6 +42,8 @@ export default function TruthTable() {
         }
         simulationResult.ast.outputs.map(out => {
             values.push(simulationResult.ast.operations[out](obj));
+            console.log(simulationResult.callStack)
+            console.log(simulationResult.callStack())
         });
         return values.map(val => <td key={uuid()}>{JSON.stringify(val)}</td>);
     };
@@ -68,7 +70,6 @@ export default function TruthTable() {
                     return <tr key={uuid()}>
                         {getTd(inp)}
                     </tr>;
-
                 })}
             </tbody>
         </Table>

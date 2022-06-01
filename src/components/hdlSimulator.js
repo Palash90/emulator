@@ -13,6 +13,7 @@ export default function runSimulation(currFileId, files, callback) {
         } else {
             var ast = parse(file.name, file.content, files);
             result = ast;
+            result['callStack'] = parse.getCallStack;
         }
     } else {
         result = {
@@ -22,7 +23,6 @@ export default function runSimulation(currFileId, files, callback) {
     }
 
     if (callback) {
-        console.log(result)
         callback(result)
     } else {
         console.log("No callback specified for simulator. Simulation result", result);
