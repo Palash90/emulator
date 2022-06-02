@@ -16,9 +16,7 @@ export default function runSimulation(currFileId, files, callback) {
             result['getValues'] = (input, ast) => getValues(input, ast)
             function getValues(obj, ast) {
                 var values = {};
-                var stack = {};
                 ast.outputs.map(out => {
-                    console.log(obj)
                     values[out] = ast.operations[out](obj);
                 });
                 ast['inputValues'] = obj;
