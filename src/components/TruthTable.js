@@ -41,10 +41,10 @@ export default function TruthTable(props) {
         for (const key in obj) {
             values.push(obj[key]);
         }
-        var valueAndStack = simulationResult.getValues(obj, simulationResult.ast);
+        simulationResult.getValues(obj, simulationResult.ast);
 
-        for (var key in valueAndStack.values) {
-            values.push(valueAndStack.values[key])
+        for (var key in simulationResult.ast.outputValues) {
+            values.push(simulationResult.ast.outputValues[key])
         }
 
         return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
