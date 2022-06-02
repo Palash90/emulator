@@ -7,19 +7,42 @@ export default function ChipDesign() {
     const { simulationResult } = useContext(SimulationContext);
 
     const [result, setResult] = useState();
+    const [changedKey, setChangedKey] = useState();
+    const [inputs, setInputs] = useState();
 
     useEffect(() => {
+        console.log("Inside sr key hook", inputs)
         var input = {}
         simulationResult.ast.inputs.map(inp => {
             input[inp] = false;
         });
+        setInputs(input)
         var outputValues = simulationResult.getValues(input, simulationResult.ast);
         var ast = { ...simulationResult.ast };
         ast['inputValues'] = input;
         ast['outputValues'] = outputValues;
         setResult({ ast: ast })
-    }, [simulationResult])
-    return result && result.ast ? <Chip chip={result.ast} /> : <p>Hold your breath</p>
+    }, [])
+
+    useEffect(() => {
+        console.log("inside change key hook", inputs)
+        var input = {}
+        if (inputs) {
+            console.log(inputs)
+            for (var key in inputs) {
+                input[key] = key === changedKey ? !inputs[key] : inputs[key]
+            }
+            console.log(input)
+            setInputs(input)
+            var outputValues = simulationResult.getValues(input, simulationResult.ast);
+            var ast = { ...simulationResult.ast };
+            ast['inputValues'] = input;
+            ast['outputValues'] = outputValues;
+            setResult({ ast: ast })
+        }
+    }, [changedKey])
+
+    return result && result.ast ? <Chip setChangedKey={setChangedKey} chip={result.ast} /> : <p>Hold your breath</p>
 }
 function Chip(props) {
     var iconStr;
@@ -73,7 +96,7 @@ function Chip(props) {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
                                 <text key={uuid()} x="-15" y={inputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{inputLine.key}</text>
-                                <circle cx="-30" className="inputButton" cy={inputLine.yPos} r="4" stroke="black" strokeWidth="2" fill={inputLine.value ? "green" : "red"} onClick={() => props.changeValue(inputLine.key)} />
+                                <circle cx="-30" className="inputButton" cy={inputLine.yPos} r="4" stroke="black" strokeWidth="2" fill={inputLine.value ? "green" : "red"} onClick={() => props.setChangedKey(inputLine.key)} />
                                 <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="1" />
                             </g>
                         })
