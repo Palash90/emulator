@@ -3,8 +3,6 @@ import SimulationContext from "./SimulationContext";
 import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
 
-
-
 export default function ChipDesign() {
     const { simulationResult } = useContext(SimulationContext);
 
@@ -33,18 +31,22 @@ function Chip(props) {
     var inputValues = props.chip['inputValues'];
     var outputValues = props.chip.outputValues;
 
-    var counter = 0;
+    // Adding 2 to original length to make empty space on both sides
+    var inputLength = Object.entries(inputValues).length + 2;
+    var outputLength = Object.entries(outputValues).length + 2;
+
+    var counter = 1;
 
     for (var key in inputValues) {
-        inputLines.push({ value: inputValues[key], key: key, yPos: 10 + counter });
-        counter = counter + 10;
+        inputLines.push({ value: inputValues[key], key: key, yPos: counter * chipHeight / inputLength });
+        counter++;
     }
 
-    counter = 0;
+    counter = 1;
 
     for (var key in outputValues) {
-        outputLines.push({ value: outputValues[key], key: key, yPos: 10 + counter });
-        counter = counter + 10;
+        outputLines.push({ value: outputValues[key], key: key, yPos: counter * chipHeight / outputLength });
+        counter = counter + 1;
     }
 
     if (props.chip.icon) {
@@ -58,7 +60,7 @@ function Chip(props) {
             '</linearGradient>' +
             '</defs>' +
             '<g><rect width="100" height="80" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
-            '<text x="50" y="40" font-family="Verdana" font-size="10" fill="blue" text-anchor="middle">' + props.chip.chip + '</text></g>' +
+            '<text x="50" y="40" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + props.chip.chip + '</text></g>' +
             '</svg>'
     }
 

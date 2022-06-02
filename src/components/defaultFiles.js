@@ -8,7 +8,7 @@ const defaultFiles = [
   {
     "key": 2,
     "name": "And.hdl",
-    "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\nimport rect.svg;\n\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notb);\n    Nor(a=nota, b=notb, out=out);\n}"
+    "content": "/*\n* Applying De' Morgan's law.\n*/\nimport Not.hdl;\nimport And.svg;\n\n\nCHIP And {\n  IN a, b;\n  OUT out;\n  \n  PARTS:\n    Not(a=a, out=nota); \n    Not(a=b, out=notb);\n    Nor(a=nota, b=notb, out=out);\n}"
   },
   {
     "key": 7,
@@ -47,8 +47,8 @@ const defaultFiles = [
   },
   {
     "key": 8,
-    "name": "rect.svg",
-    "content": "<svg width=\"120\" height=\"100\">\n                    <defs>\n                        <linearGradient id=\"grad3\" x1=\"0%\" y1=\"100%\" x2=\"100%\" y2=\"0%\">\n                            <stop offset=\"10%\" style=\"stop-color:#09203F;stop-opacity:1\" />\n                            <stop offset=\"90%\" style=\"stop-color:#537895;stop-opacity:1\" />\n                        </linearGradient>\n                    </defs>\n                    <g>\n                        <rect width=\"100\" height=\"80\" style=\"fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)\" />\n                        <text x=\"0\" y=\"50\" font-family=\"Verdana\" font-size=\"10\" fill=\"white\">And\n                        </text></g>\n                </svg>\n"
+    "name": "And.svg",
+    "content": "<svg width=\"120\" height=\"100\">\n                    <defs>\n                        <linearGradient id=\"grad3\" x1=\"0%\" y1=\"100%\" x2=\"100%\" y2=\"0%\">\n                            <stop offset=\"10%\" style=\"stop-color:#09203F;stop-opacity:1\" />\n                            <stop offset=\"90%\" style=\"stop-color:#367588;stop-opacity:1\" />\n                        </linearGradient>\n                    </defs>\n                    <g>\n                        <rect width=\"100\" height=\"80\" style=\"fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)\" />\n                        <text x=\"50\" y=\"40\" font-family=\"Verdana\" text-anchor=\"middle\" font-size=\"10\" fill=\"yellow\">And\n                        </text></g>\n                </svg>\n"
   }
 ]
 
