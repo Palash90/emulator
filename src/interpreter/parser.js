@@ -16,8 +16,6 @@ const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
 
-var chipCallStack = [];
-
 const Tokenizer = () => {
     var tokens = [];
     var pointer = 0;
@@ -283,6 +281,7 @@ const evaluateAst = (fileName, chipName, ast) => {
 
     var operations = {};
     var chipDetails = {};
+    var chipCallStack = {};
 
     parts.map(part => {
 
@@ -352,8 +351,8 @@ const evaluateAst = (fileName, chipName, ast) => {
             partOutputs.map(output => {
                 operations[output.source] = (input) => {
                     var values = getValues(input, output.source);
-                    chipCallStack.push({ chip: chip, callName: output.source, values: values });
                     var returnValue = chip.operations[output.dest](values)
+                    chipCallStack[output.source] = { chip: chip, inputValues: values, outputValues: returnValue };
                     return returnValue;
                 }
             })
@@ -371,12 +370,22 @@ const evaluateAst = (fileName, chipName, ast) => {
                 });
                 return values
             }
-
-
-        })
+        });
     });
 
     evaluationResult.operations = operations;
+    evaluationResult.chipCallStack = chipCallStack;
+    evaluationResult.clearCallStack = () => {
+        evaluationResult.chipCallStack = { ...evaluationResult.chipCallStack }
+        if (evaluationResult.chipCallStack) {
+            for (var chip in evaluationResult.chipCallStack) {
+                console.log(evaluationResult.chipCallStack[chip].chip)
+                if (evaluationResult.chipCallStack[chip].chip && evaluationResult.chipCallStack[chip].chip.clearCallStack)
+                    evaluationResult.chipCallStack[chip].chip.clearCallStack();
+            }
+        }
+        chipCallStack = {};
+    }
     return evaluationResult;
 }
 
@@ -666,16 +675,9 @@ export default function parse(file, content, files) {
         return handleFailure(file + ":" + error);
     }
 
-    parse.getCallStack = () => {
-        var newCallStack = [...chipCallStack];
-        chipCallStack = [];
-        return newCallStack;
-    }
-
     try {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
         var result = evaluate({ error: false, ast: ast })
-        chipCallStack = [];
         return result;
     } catch (error) {
         return handleFailure(error);

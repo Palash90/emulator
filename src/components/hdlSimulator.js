@@ -19,7 +19,6 @@ export default function runSimulation(currFileId, files, callback) {
                 var stack = {};
                 ast.outputs.map(out => {
                     values[out] = ast.operations[out](obj);
-                    stack[out] = parse.getCallStack();
                 });
                 return { values, stack };
             }

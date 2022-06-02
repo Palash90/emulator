@@ -46,8 +46,6 @@ export default function TruthTable(props) {
             values.push(valueAndStack.values[key])
         }
 
-        console.log(valueAndStack.stack);
-
         return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
     };
 
