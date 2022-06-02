@@ -73,7 +73,8 @@ function Chip(props) {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
                                 <text key={uuid()} x="-15" y={inputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{inputLine.key}</text>
-                                <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="2" />
+                                <circle cx="-30" cy={inputLine.yPos} r="4" stroke="black" stroke-width="2" fill={inputLine.value ? "green" : "red"} />
+                                <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="1" />
                             </g>
                         })
                     }
@@ -82,7 +83,8 @@ function Chip(props) {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
                                 <text key={uuid()} x="115" y={outputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{outputLine.key}</text>
-                                <line key={uuid()} x1="100" x2="130" y1={outputLine.yPos} y2={outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="2" />
+                                <circle cx="130" cy={outputLine.yPos} r="4" stroke="#fff5be" stroke-width="1" fill={outputLine.value ? "green" : "red"} />
+                                <line key={uuid()} x1="100" x2="130" y1={outputLine.yPos} y2={outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
                             </g>
                         })
                     }
