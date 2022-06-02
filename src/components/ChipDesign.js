@@ -6,26 +6,33 @@ import uuid from "react-uuid";
 
 
 export default function ChipDesign() {
-    const { simulationResult } = useContext(SimulationContext);
-    console.log(simulationResult);
-    return <Chip chip={simulationResult.ast} />
+    const {simulationResult} = useContext(SimulationContext)
+    return <Chip chip={simulationResult.ast} /> 
 }
 function Chip(props) {
     var iconStr;
     var chipHeight = 100;
     var chipWidth = 120;
 
-    var inputLines = props.chip.inputs.length + 2;
-    var outputLines = props.chip.outputs.length + 2;
-    var inputLinesPosition = [];
-    var outputLinesPosition = [];
-    for (var i = 1; i < (inputLines - 1); i++) {
-        inputLinesPosition.push(i * (chipHeight / inputLines));
+    var inputLines = [];
+    var outputLines = [];
+    var inputValues = props.chip['inputValues'];
+    var outputValues = props.chip.outputValues;
+
+    var counter = 0;
+
+    for (var key in inputValues) {
+        inputLines.push({ value: inputValues[key].value, key: key, yPos: 10 + counter });
+        counter = counter + 10;
     }
 
-    for (var i = 1; i < (outputLines - 1); i++) {
-        outputLinesPosition.push(i * (chipHeight / outputLines));
+    counter = 0;
+
+    for (var key in outputValues) {
+        outputLines.push({ value: outputValues[key].value, key: key, yPos: 10 + counter });
+        counter = counter + 10;
     }
+
 
     if (props.chip.icon) {
         iconStr = props.chip.icon;
@@ -48,14 +55,20 @@ function Chip(props) {
                 <g>
                     <SVG src={iconStr} />
                     {
-                        inputLinesPosition.map(inputLine => {
-                            return <line key={uuid()} x1="-30" x2="0" y1={inputLine} y2={inputLine} stroke="orange" strokeWidth="2" />
+                        inputLines.map(inputLine => {
+                            return <g key={uuid()}>
+                                <text key={uuid()} x="-15" y={inputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{inputLine.key}</text>
+                                <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="2" />
+                            </g>
                         })
                     }
 
                     {
-                        outputLinesPosition.map(outputLine => {
-                            return <line key={uuid()} x1="100" x2="130" y1={outputLine} y2={outputLine} stroke="orange" strokeWidth="2" />
+                        outputLines.map(outputLine => {
+                            return <g key={uuid()}>
+                                <text key={uuid()} x="115" y={outputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{outputLine.key}</text>
+                                <line key={uuid()} x1="100" x2="130" y1={outputLine.yPos} y2={outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="2" />
+                            </g>
                         })
                     }
 
