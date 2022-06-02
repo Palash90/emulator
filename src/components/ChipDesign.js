@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import SimulationContext from "./SimulationContext";
 import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
@@ -6,8 +6,22 @@ import uuid from "react-uuid";
 
 
 export default function ChipDesign() {
-    const {simulationResult} = useContext(SimulationContext)
-    return <Chip chip={simulationResult.ast} /> 
+    const { simulationResult } = useContext(SimulationContext);
+
+    const [result, setResult] = useState();
+
+    useEffect(() => {
+        var input = {}
+        simulationResult.ast.inputs.map(inp => {
+            input[inp] = false;
+        });
+        var outputValues = simulationResult.getValues(input, simulationResult.ast);
+        var ast = { ...simulationResult.ast };
+        ast['inputValues'] = input;
+        ast['outputValues'] = outputValues;
+        setResult({ ast: ast })
+    }, [simulationResult])
+    return result && result.ast ? <Chip chip={result.ast} /> : <p>Hold your breath</p>
 }
 function Chip(props) {
     var iconStr;
@@ -22,17 +36,16 @@ function Chip(props) {
     var counter = 0;
 
     for (var key in inputValues) {
-        inputLines.push({ value: inputValues[key].value, key: key, yPos: 10 + counter });
+        inputLines.push({ value: inputValues[key], key: key, yPos: 10 + counter });
         counter = counter + 10;
     }
 
     counter = 0;
 
     for (var key in outputValues) {
-        outputLines.push({ value: outputValues[key].value, key: key, yPos: 10 + counter });
+        outputLines.push({ value: outputValues[key], key: key, yPos: 10 + counter });
         counter = counter + 10;
     }
-
 
     if (props.chip.icon) {
         iconStr = props.chip.icon;

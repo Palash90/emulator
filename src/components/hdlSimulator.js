@@ -19,8 +19,7 @@ export default function runSimulation(currFileId, files, callback) {
                 ast.outputs.map(out => {
                     values[out] = ast.operations[out](obj);
                 });
-                ast['inputValues'] = obj;
-                ast['outputValues'] = values;
+                return values;
             }
         }
     } else {

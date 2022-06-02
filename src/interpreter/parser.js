@@ -389,7 +389,6 @@ const evaluateAst = (fileName, chipName, ast) => {
         evaluationResult.chipCallStack = { ...evaluationResult.chipCallStack }
         if (evaluationResult.chipCallStack) {
             for (var chip in evaluationResult.chipCallStack) {
-                console.log(evaluationResult.chipCallStack[chip].chip)
                 if (evaluationResult.chipCallStack[chip].chip && evaluationResult.chipCallStack[chip].chip.clearCallStack)
                     evaluationResult.chipCallStack[chip].chip.clearCallStack();
             }
