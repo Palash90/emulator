@@ -15,6 +15,7 @@ const IMPORT = "IMPORT";
 const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
+const ICON = "ICON"
 
 const Tokenizer = () => {
     var tokens = [];
@@ -273,9 +274,17 @@ const evaluateAst = (fileName, chipName, ast) => {
         outputs: []
     }
 
+
     ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
     ast.filter(el => el.type === INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
     ast.filter(el => el.type === OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
+
+    if (ast.filter(el => el.type === ICON) && ast.filter(el => el.type === ICON).length > 1) {
+        throw fileName + ": One chip can have only one icon file"
+    } else {
+        evaluationResult.icon = ast.filter(el => el.type === ICON)[0];
+    }
+
 
     var parts = ast.filter(el => el.type === PARTS);
 
@@ -314,7 +323,6 @@ const evaluateAst = (fileName, chipName, ast) => {
                 " output:" +
                 JSON.stringify((chip.outputs));
             }
-
 
             var chipInputs = [...chip.inputs];
             var chipOutputs = [...chip.outputs];
@@ -626,6 +634,8 @@ const AstGenerator = () => {
             var parsedHdlFileContent = AstGenerator.generate(token.value, importedFileTokens, getFileContent);
 
             ast.push({ type: IMPORT, importedAst: parsedHdlFileContent });
+        } else {
+            ast.push({ type: ICON, svg: importedFileContent });
         }
 
         // Next token should be the semicolon operator
@@ -662,7 +672,6 @@ const AstGenerator = () => {
 
 AstGenerator();
 
-
 function handleFailure(errorMessage) {
     return {
         error: true,
@@ -677,7 +686,7 @@ export default function parse(file, content, files) {
     const getFileContent = (fileName) => {
         var matchedFiles = files.filter(el => el.name === fileName);
         if (matchedFiles.length < 1) {
-            return handleFailure(file + " :File not found: " + fileName);
+            return handleFailure("File not found: " + fileName);
         }
         return matchedFiles[0].content
     }
