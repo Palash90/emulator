@@ -613,12 +613,15 @@ const AstGenerator = () => {
         }
 
         var importedFileContent = getFileContent(token.value);
-        var importedFileTokens = Tokenizer.tokenize(importedFileContent)
 
-        AstGenerator();
-        var parsedHdlFileContent = AstGenerator.generate(token.value, importedFileTokens, getFileContent);
+        if (token.value.split('.').pop() !== 'svg') {
+            var importedFileTokens = Tokenizer.tokenize(importedFileContent)
 
-        ast.push({ type: IMPORT, importedAst: parsedHdlFileContent });
+            AstGenerator();
+            var parsedHdlFileContent = AstGenerator.generate(token.value, importedFileTokens, getFileContent);
+
+            ast.push({ type: IMPORT, importedAst: parsedHdlFileContent });
+        }
 
         // Next token should be the semicolon operator
         token = Peek();
