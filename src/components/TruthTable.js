@@ -28,6 +28,7 @@ export default function TruthTable(props) {
         generateAllBinaryCombinations(n, arr, i + 1);
     }
 
+    console.log(simulationResult)
     let n = simulationResult.ast.inputs.length;
 
     let arr = new Array(n);
@@ -40,7 +41,7 @@ export default function TruthTable(props) {
         for (const key in obj) {
             values.push(obj[key]);
         }
-        var valueAndStack = simulationResult.getValueAndStack(obj, simulationResult.ast);
+        var valueAndStack = simulationResult.getValues(obj, simulationResult.ast);
 
         for (var key in valueAndStack.values) {
             values.push(valueAndStack.values[key])

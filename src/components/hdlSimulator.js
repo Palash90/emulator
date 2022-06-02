@@ -13,8 +13,8 @@ export default function runSimulation(currFileId, files, callback) {
         } else {
             var ast = parse(file.name, file.content, files);
             result = ast;
-            result['getValueAndStack'] = (input, ast) => getValueCallStack(input, ast)
-            function getValueCallStack(obj, ast) {
+            result['getValues'] = (input, ast) => getValues(input, ast)
+            function getValues(obj, ast) {
                 var values = {};
                 var stack = {};
                 ast.outputs.map(out => {
