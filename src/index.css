@@ -171,6 +171,9 @@ a.nav-link {
   resize: both;
   overflow: auto;
   border: 1px dashed #aaa;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 svg {
@@ -182,5 +185,13 @@ svg {
   height: 250px;
 }
 
-.tableFixHead          { overflow: auto; height: 250px; }
-.tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
+.tableFixHead {
+  overflow: auto;
+  height: 250px;
+}
+
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

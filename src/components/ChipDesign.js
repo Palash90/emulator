@@ -20,7 +20,7 @@ export default function ChipDesign() {
             '</linearGradient>' +
             '</defs>' +
             '<g><rect width="100" height="80" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
-            '<text x="0" y="50" font-family="Verdana" font-size="10" fill="blue">' + simulationResult.ast.chip + '</text></g>' +
+            '<text x="50" y="40" font-family="Verdana" font-size="10" fill="blue" text-anchor="middle">' + simulationResult.ast.chip + '</text></g>' +
             '</svg>'
     }
 
