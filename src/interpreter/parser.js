@@ -279,10 +279,12 @@ const evaluateAst = (fileName, chipName, ast) => {
     ast.filter(el => el.type === INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
     ast.filter(el => el.type === OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
 
-    if (ast.filter(el => el.type === ICON) && ast.filter(el => el.type === ICON).length > 1) {
+    var icons = ast.filter(el => el.type === ICON);
+
+    if (icons && icons.length > 1) {
         throw fileName + ": One chip can have only one icon file"
-    } else {
-        evaluationResult.icon = ast.filter(el => el.type === ICON)[0];
+    } else if (icons.length === 1) {
+        evaluationResult.icon = icons[0]['svg'];
     }
 
 
