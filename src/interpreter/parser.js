@@ -614,6 +614,11 @@ const AstGenerator = () => {
 
         var importedFileContent = getFileContent(token.value);
 
+        if (importedFileContent.error) {
+            clear();
+            throw importedFileContent.errorMessage;
+        }
+
         if (token.value.split('.').pop() !== 'svg') {
             var importedFileTokens = Tokenizer.tokenize(importedFileContent)
 
@@ -669,7 +674,13 @@ export default function parse(file, content, files) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
-    const getFileContent = (fileName) => files.filter(el => el.name === fileName)[0].content;
+    const getFileContent = (fileName) => {
+        var matchedFiles = files.filter(el => el.name === fileName);
+        if (matchedFiles.length < 1) {
+            return handleFailure(file + " :File not found: " + fileName);
+        }
+        return matchedFiles[0].content
+    }
 
     var tokens;
     try {
