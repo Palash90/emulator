@@ -166,8 +166,8 @@ a.nav-link {
 
 .svg-container {
   margin: 8px;
-  width: 300px;
-  height: 150px;
+  width: auto;
+  height: 300px;
   resize: both;
   overflow: auto;
   border: 1px dashed #aaa;
@@ -177,3 +177,10 @@ svg {
   width: 95%;
   height: 95%;
 }
+
+.table-responsive {
+  height: 250px;
+}
+
+.tableFixHead          { overflow: auto; height: 250px; }
+.tableFixHead thead th { position: sticky; top: 0; z-index: 1; }

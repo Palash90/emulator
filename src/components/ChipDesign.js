@@ -19,11 +19,9 @@ export default function ChipDesign() {
             '<stop offset="90%" style="stop-color:#4D4855;stop-opacity:1" />' +
             '</linearGradient>' +
             '</defs>' +
-
-            '<rect width="100" height="80" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)">' +
-            '<text fill="#ffffff" font-size="45" font-family="Verdana" x="150" y="86">' +
-            "HHH    " + '</text>' +
-            '</rect></svg>'
+            '<g><rect width="100" height="80" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
+            '<text x="0" y="50" font-family="Verdana" font-size="10" fill="blue">' + simulationResult.ast.chip + '</text></g>' +
+            '</svg>'
     }
 
     return <>

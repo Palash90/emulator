@@ -56,25 +56,27 @@ export default function TruthTable(props) {
                 <Navbar.Brand href="#">{simulationResult.ast.chip + " Truth Table"}</Navbar.Brand>
             </Container>
         </Navbar>
-        <Table responsive striped bordered hover size="sm" variant="dark">
-            <thead>
-                <tr>
-                    {simulationResult.ast.inputs.map(inp => {
-                        return <th key={uuid()}>{inp}</th>;
-                    })}
-                    {simulationResult.ast.outputs.map(el => {
-                        return <th key={uuid()}>{el}</th>;
-                    })}
-                </tr>
-            </thead>
-            <tbody>
-                {inputs.map(inp => {
-                    return <tr key={uuid()}>
-                        {getTd(inp)}
+        <div className="tableFixHead ">
+            <Table responsive striped bordered hover size="sm" variant="dark">
+                <thead>
+                    <tr>
+                        {simulationResult.ast.inputs.map(inp => {
+                            return <th key={uuid()}>{inp}</th>;
+                        })}
+                        {simulationResult.ast.outputs.map(el => {
+                            return <th key={uuid()}>{el}</th>;
+                        })}
                     </tr>
-                })}
-            </tbody>
-        </Table>
+                </thead>
+                <tbody>
+                    {inputs.map(inp => {
+                        return <tr key={uuid()}>
+                            {getTd(inp)}
+                        </tr>
+                    })}
+                </tbody>
+            </Table>
+        </div>
     </>
 }
 
