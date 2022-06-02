@@ -196,3 +196,13 @@ svg {
   top: 0;
   z-index: 1;
 }
+
+.inputButton {
+  cursor: "pointer";
+  transition: all 0.35s;
+  transform-origin: 0.1% 0%;
+}
+
+.inputButton:hover {
+  transform: scale(1.02);
+}
