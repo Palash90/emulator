@@ -1,8 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import FileContext from "./FileContext";
-import SplitPane from "react-split-pane";
 import "./Editor.css";
-import OutputWindow from "./OutputWindow";
 import CodeMirror from '@uiw/react-codemirror';
 import "codemirror/lib/codemirror.css";
 import { oneDark } from '@codemirror/theme-one-dark';
@@ -107,8 +105,24 @@ function MultipleEditors(props) {
 function OnlyEditor(props) {
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+    const { changed, setChanged } = useState(false);
+    const [height, setHeight] = useState(vh * 85 / 100 + "px");
+    const [width, setWidth] = useState((vw * 99 / 100 - props.editorWidth) + "px");
 
-    const [changed, setChanged] = useState(false);
+    useEffect(() => {
+        function handleResize() {
+            console.log("handling resize")
+            setHeight(vh * 85 / 100 + "px")
+            setWidth((vw * 99 / 100 - props.editorWidth) + "px")
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return _ => {
+            window.removeEventListener('resize', handleResize);
+        }
+    })
+
     var editorValue = props.file.content;
 
     return <div key={uuid()} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === props.element ? 10 : 0 }}>
@@ -116,10 +130,11 @@ function OnlyEditor(props) {
             value={editorValue}
             theme={oneDark}
             extensions={[javascript({ jsx: true })]}
-            height={vh * 85 / 100 + "px"}
-            width={(vw * 99 / 100 - props.editorWidth) + "px"}
+            height={height}
+            width={width}
             onChange={(value, viewUpdate) => {
-                editorValue = value
+                editorValue = value;
+                setChanged(true);
             }}
             onKeyDown={event => props.handleKeyDown(event, props.element, editorValue)}
             key={uuid()} />
