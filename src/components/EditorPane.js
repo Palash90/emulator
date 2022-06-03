@@ -77,7 +77,7 @@ function MultipleEditors(props) {
         let charCode = String.fromCharCode(event.which).toLowerCase();
         if ((event.ctrlKey || event.metaKey) && charCode === 's') {
             event.preventDefault();
-            alert("CTRL+S Pressed");
+            props.save(element, value)
         }
     };
 
@@ -95,7 +95,7 @@ function MultipleEditors(props) {
             <div key={uuid()} style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-                    return file ? <OnlyEditor editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
+                    return file ? <OnlyEditor key={uuid()} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
                 })}
             </div>
         </div>
@@ -108,21 +108,20 @@ function OnlyEditor(props) {
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
-    const [value, setValue] = useState(props.file.content);
-
-    console.log(props)
+    const [changed, setChanged] = useState(false);
+    var editorValue = props.file.content;
 
     return <div key={uuid()} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === props.element ? 10 : 0 }}>
         <CodeMirror
-            value={value}
+            value={editorValue}
             theme={oneDark}
             extensions={[javascript({ jsx: true })]}
             height={vh * 85 / 100 + "px"}
             width={(vw * 99 / 100 - props.editorWidth) + "px"}
             onChange={(value, viewUpdate) => {
-                setValue(value);
+                editorValue = value
             }}
-            onKeyDown={event => props.handleKeyDown(event, props.element, value)}
+            onKeyDown={event => props.handleKeyDown(event, props.element, editorValue)}
             key={uuid()} />
     </div>;
 }

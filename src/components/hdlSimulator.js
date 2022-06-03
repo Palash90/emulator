@@ -13,6 +13,8 @@ export default function runSimulation(currFileId, files, callback) {
         } else {
             var ast = parse(file.name, file.content, files);
             result = ast;
+            if (typeof (result) === 'string')
+                return;
             result['getValues'] = (input, ast) => getValues(input, ast)
             function getValues(obj, ast) {
                 var values = {};

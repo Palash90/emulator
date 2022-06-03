@@ -417,6 +417,8 @@ const AstGenerator = () => {
                     handleImportStatement(getFileContent);
                 } else if (token.type === KEYWORD && token.value === 'CHIP') {
                     handleChipDefinition();
+                } else {
+                    handleParseError("EOF", token);
                 }
             }
         } catch (err) {
@@ -681,9 +683,15 @@ function handleFailure(errorMessage) {
 }
 
 export default function parse(file, content, files) {
+    console.log(file)
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
+    if (file.split('.').pop() === 'svg') {
+        console.log('returning sbg')
+        return content;
+    }
+
     const getFileContent = (fileName) => {
         var matchedFiles = files.filter(el => el.name === fileName);
         if (matchedFiles.length < 1) {

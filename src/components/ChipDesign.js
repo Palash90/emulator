@@ -11,7 +11,6 @@ export default function ChipDesign() {
     const [inputs, setInputs] = useState();
 
     useEffect(() => {
-        console.log("Inside sr key hook", inputs)
         var input = {}
         simulationResult.ast.inputs.map(inp => {
             input[inp] = false;
@@ -25,7 +24,6 @@ export default function ChipDesign() {
     }, [])
 
     useEffect(() => {
-        console.log("inside change key hook", inputs)
         var input = {}
         if (inputs) {
             console.log(inputs)
