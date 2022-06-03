@@ -62,9 +62,7 @@ export const EditorPane = (props) => {
 
 function MultipleEditors(props) {
     const { files } = useContext(FileContext);
-    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 
-    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
     const chooseOrCloseFile = (element, closeFile) => {
         if (!closeFile) {
@@ -74,13 +72,14 @@ function MultipleEditors(props) {
         }
     }
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event, element, value) => {
+        console.log("handleKeyDown")
         let charCode = String.fromCharCode(event.which).toLowerCase();
         if ((event.ctrlKey || event.metaKey) && charCode === 's') {
             event.preventDefault();
             alert("CTRL+S Pressed");
         }
-    }
+    };
 
     if (props.openFiles && props.openFiles.length > 0) {
         return <div key={uuid()}>
@@ -96,20 +95,7 @@ function MultipleEditors(props) {
             <div key={uuid()} style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-                    return file ? <div key={uuid()} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === element ? 10 : 0 }}>
-                        <CodeMirror
-                            value={file.content}
-                            theme={oneDark}
-                            extensions={[javascript({ jsx: true })]}
-                            height={vh * 85 / 100 + "px"}
-                            width={(vw * 99 / 100 - props.editorWidth) + "px"}
-                            onChange={(value, viewUpdate) => {
-                                console.log(value, element)
-                            }}
-                            onKeyDown={handleKeyDown}
-                            key={uuid()}
-                        />
-                    </div> : <></>
+                    return file ? <OnlyEditor editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
                 })}
             </div>
         </div>
@@ -118,3 +104,26 @@ function MultipleEditors(props) {
         return <></>
     }
 }
+function OnlyEditor(props) {
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+    const [value, setValue] = useState(props.file.content);
+
+    console.log(props)
+
+    return <div key={uuid()} style={{ margin: "5px", position: "absolute", textAlign: "left", zIndex: props.currFile === props.element ? 10 : 0 }}>
+        <CodeMirror
+            value={value}
+            theme={oneDark}
+            extensions={[javascript({ jsx: true })]}
+            height={vh * 85 / 100 + "px"}
+            width={(vw * 99 / 100 - props.editorWidth) + "px"}
+            onChange={(value, viewUpdate) => {
+                setValue(value);
+            }}
+            onKeyDown={event => props.handleKeyDown(event, props.element, value)}
+            key={uuid()} />
+    </div>;
+}
+
