@@ -74,6 +74,14 @@ function MultipleEditors(props) {
         }
     }
 
+    const handleKeyDown = (event) => {
+        let charCode = String.fromCharCode(event.which).toLowerCase();
+        if ((event.ctrlKey || event.metaKey) && charCode === 's') {
+            event.preventDefault();
+            alert("CTRL+S Pressed");
+        }
+    }
+
     if (props.openFiles && props.openFiles.length > 0) {
         return <div key={uuid()}>
             <div key={uuid()} style={{ display: "flex", flexDirection: "row" }}>{
@@ -96,8 +104,9 @@ function MultipleEditors(props) {
                             height={vh * 85 / 100 + "px"}
                             width={(vw * 99 / 100 - props.editorWidth) + "px"}
                             onChange={(value, viewUpdate) => {
-                                props.save(element, value);
+                                console.log(value, element)
                             }}
+                            onKeyDown={handleKeyDown}
                             key={uuid()}
                         />
                     </div> : <></>
