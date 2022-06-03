@@ -2,11 +2,22 @@ import { useContext, useState } from "react";
 import SimulationContext from "./SimulationContext";
 import TruthTable from "./TruthTable";
 import ChipDesign from "./ChipDesign";
+import SVG from 'react-inlinesvg';
 
 function OutputWindow(props) {
     const { simulationResult } = useContext(SimulationContext);
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+    console.log(simulationResult)
+
+    if (typeof (simulationResult) === 'string') {
+        return <div className="svg-container">
+            <svg viewBox="0 0 100 100">
+                <SVG src={simulationResult} />
+            </svg>
+        </div>
+    }
 
     if (simulationResult && Object.keys(simulationResult).length === 0 && Object.getPrototypeOf(simulationResult) === Object.prototype) {
         return <></>
