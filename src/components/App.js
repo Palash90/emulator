@@ -8,7 +8,7 @@ import { Modal, Button } from "react-bootstrap";
 import SimulationContext from "./SimulationContext";
 import ModalContext from "./ModalContext";
 import FileContext from "./FileContext";
-import {isMobile} from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 const storedFiles = JSON.parse(localStorage.getItem('files'));
 const existingFiles = storedFiles && storedFiles.length > 0 ? storedFiles || defaultFiles : defaultFiles;
@@ -20,7 +20,7 @@ function App() {
   const [openFiles, setOpenFiles] = useState();
   const [modalOptions, setModalOptions] = useState({});
 
-  if(isMobile){
+  if (isMobile) {
     return <div>This application can only be viewed on Desktop Browser</div>
   }
 
@@ -53,23 +53,27 @@ function ModalWindow() {
     show={modalOptions.showModal}
     onHide={closeModal}
     backdrop="static"
-    keyboard={false}
+    keyboard={modalOptions.info}
     size='sm'
     className="special_modal"
   >
-    <Modal.Header closeButton>
-      <Modal.Title>{modalOptions.title}</Modal.Title>
-    </Modal.Header>
+    {
+      modalOptions.info ? <></> :
+        <Modal.Header closeButton>
+          <Modal.Title>{modalOptions.title}</Modal.Title>
+        </Modal.Header>
+    }
     <Modal.Body>
       {modalOptions.body}
     </Modal.Body>
-    <Modal.Footer>
-      <Button variant="primary" onClick={() => closeModal()}>
-        Close
-      </Button>
-      <Button variant="danger" onClick={() => closeModalWithAction()}>Understood</Button>
-    </Modal.Footer>
-  </Modal>;
+    {modalOptions.info ? <></> :
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => closeModal()}>
+          Close
+        </Button>
+        <Button variant="danger" onClick={() => closeModalWithAction()}>Understood</Button>
+      </Modal.Footer>}
+  </Modal>
 }
 export default App;
 

@@ -7,11 +7,14 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { javascript } from '@codemirror/lang-javascript';
 import { CloseButton } from "react-bootstrap";
 import uuid from "react-uuid";
+import ModalContext from "./ModalContext";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
     const file = files.find((el) => el.key === currFile);
     var fileOpen = openFiles ? openFiles.filter(el => el === currFile).length > 0 : false;
+
+    const { setModalOptions } = useContext(ModalContext);
 
     var closeFile = (key) => {
         var newOpenfiles = openFiles.filter(el => el !== key);
@@ -35,6 +38,12 @@ export const EditorPane = (props) => {
         }
     }
 
+    const handleShow = (key) => {
+        var file = files.filter(el => el.key === key)[0];
+        var body = "File " + (file ? file.name : "") + " Saved";
+        setModalOptions({ info: true, showModal: true, body: body });
+    }
+
     var saveNewCode = (key, code) => {
         var newFile = { key: key, name: file.name, content: code };
         var newFiles = files.filter(function (f) {
@@ -44,6 +53,7 @@ export const EditorPane = (props) => {
         newFiles.push(newFile);
         newFiles = newFiles.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
         setFiles(newFiles);
+        handleShow(key);
     };
 
     return (
