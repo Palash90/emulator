@@ -53,9 +53,10 @@ function ModalWindow() {
     show={modalOptions.showModal}
     onHide={closeModal}
     backdrop="static"
-    keyboard={modalOptions.info}
+    keyboard={false}
     size='sm'
     className="special_modal"
+    style={modalOptions.info ? { color: "var(--bs-info)" } : { color: "var(--bs-warning)" }}
   >
     {
       modalOptions.info ? <></> :
@@ -63,17 +64,19 @@ function ModalWindow() {
           <Modal.Title>{modalOptions.title}</Modal.Title>
         </Modal.Header>
     }
-    <Modal.Body>
+    < Modal.Body >
       {modalOptions.body}
-    </Modal.Body>
-    {modalOptions.info ? <></> :
-      <Modal.Footer>
-        <Button variant="primary" onClick={() => closeModal()}>
-          Close
-        </Button>
-        <Button variant="danger" onClick={() => closeModalWithAction()}>Understood</Button>
-      </Modal.Footer>}
-  </Modal>
+    </ Modal.Body >
+    {
+      modalOptions.info ? <></> :
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => closeModal()}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={() => closeModalWithAction()}>Understood</Button>
+        </Modal.Footer>
+    }
+  </Modal >
 }
 export default App;
 

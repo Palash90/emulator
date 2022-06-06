@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import FileContext from "./FileContext";
 import "./Editor.css";
 import CodeMirror from '@uiw/react-codemirror';
@@ -42,6 +42,7 @@ export const EditorPane = (props) => {
         var file = files.filter(el => el.key === key)[0];
         var body = "File " + (file ? file.name : "") + " Saved";
         setModalOptions({ info: true, showModal: true, body: body });
+        setTimeout(() => setModalOptions({ showModal: false, info: true }), 1000);
     }
 
     var saveNewCode = (key, code) => {
@@ -99,7 +100,7 @@ function MultipleEditors(props) {
                     return file ? <div key={uuid()} className="text-white file-header" >
                         <span key={uuid()} onClick={() => chooseOrCloseFile(element, false)}>{file.name}</span>
                         <CloseButton key={uuid()} style={{ width: '2px', height: '2px', verticalAlign: 'top', margin: '3px', padding: '0.3em 0.3em' }} onClick={() => chooseOrCloseFile(element, true)} />
-                    </div> : <></>
+                    </div> : <React.Fragment key={uuid()}></React.Fragment>
                 })
             }</div>
             <div key={uuid()} style={{ position: "relative" }}>
@@ -108,7 +109,7 @@ function MultipleEditors(props) {
                     if (file) {
                         editorContent[element] = file.content;
                     }
-                    return file ? <OnlyEditor key={uuid()} save={props.save} getEditorContent={getEditorContent} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
+                    return file ? <OnlyEditor key={uuid()} save={props.save} getEditorContent={getEditorContent} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <React.Fragment key={uuid()}></React.Fragment>
                 })}
             </div>
         </div>
