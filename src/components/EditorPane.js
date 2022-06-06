@@ -63,9 +63,7 @@ function MultipleEditors(props) {
 
     var editorContent = {};
 
-
     const chooseOrCloseFile = (element, closeFile) => {
-        props.save(props.currFile, editorContent[props.currFile])
         if (!closeFile) {
             props.setCurrFile(element)
         } else {
@@ -100,7 +98,7 @@ function MultipleEditors(props) {
                     if (file) {
                         editorContent[element] = file.content;
                     }
-                    return file ? <OnlyEditor key={uuid()} getEditorContent={getEditorContent} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
+                    return file ? <OnlyEditor key={uuid()} save={props.save} getEditorContent={getEditorContent} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
                 })}
             </div>
         </div>
@@ -109,6 +107,7 @@ function MultipleEditors(props) {
         return <></>
     }
 }
+
 function OnlyEditor(props) {
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
@@ -147,4 +146,3 @@ function OnlyEditor(props) {
             key={uuid()} />
     </div>;
 }
-
