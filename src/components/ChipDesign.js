@@ -92,8 +92,8 @@ function Chip(props) {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
                                 <text key={uuid()} x="-15" y={inputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{inputLine.key}</text>
-                                <circle cx="-30" className="inputButton" cy={inputLine.yPos} r="4" stroke="black" strokeWidth="2" fill={inputLine.value ? "green" : "red"} onClick={() => props.changeInput(inputLine.key)} />
-                                <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="1" />
+                                <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "darkred"} strokeWidth="1" />
+                                <circle cx="-30" className="inputButton" cy={inputLine.yPos} r="5" stroke="black" strokeWidth="2" fill={inputLine.value ? "darkgreen" : "darkred"} onClick={() => props.changeInput(inputLine.key)} />
                             </g>
                         })
                     }
@@ -102,8 +102,11 @@ function Chip(props) {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
                                 <text key={uuid()} x="115" y={outputLine.yPos - 2} fontFamily="Verdana" fontSize="5" fill="white">{outputLine.key}</text>
-                                <circle cx="130" cy={outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} />
                                 <line key={uuid()} x1="100" x2="130" y1={outputLine.yPos} y2={outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
+                                <circle cx="130" cy={outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
+                                    <animate attributeName="fill" values={outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
+                                </circle>
+
                             </g>
                         })
                     }

@@ -161,7 +161,7 @@ a.nav-link {
 
 .special_modal .modal-content {
   background-color: var(--bs-dark);
-  
+
 }
 
 .svg-container {
@@ -199,10 +199,8 @@ svg {
 
 .inputButton {
   cursor: "pointer";
-  transition: all 0.35s;
-  transform-origin: 0.1% 0%;
 }
 
 .inputButton:hover {
-  
+  cursor: pointer;
 }
