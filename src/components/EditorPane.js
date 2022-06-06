@@ -61,8 +61,11 @@ export const EditorPane = (props) => {
 function MultipleEditors(props) {
     const { files } = useContext(FileContext);
 
+    var editorContent = {};
+
 
     const chooseOrCloseFile = (element, closeFile) => {
+        props.save(props.currFile, editorContent[props.currFile])
         if (!closeFile) {
             props.setCurrFile(element)
         } else {
@@ -70,12 +73,13 @@ function MultipleEditors(props) {
         }
     }
 
+    var getEditorContent = (element, value) => editorContent[element] = value;
+
     const handleKeyDown = (event, element, value) => {
-        console.log("handleKeyDown")
         let charCode = String.fromCharCode(event.which).toLowerCase();
         if ((event.ctrlKey || event.metaKey) && charCode === 's') {
             event.preventDefault();
-            props.save(element, value)
+            props.save(element, editorContent[element])
         }
     };
 
@@ -93,7 +97,10 @@ function MultipleEditors(props) {
             <div key={uuid()} style={{ position: "relative" }}>
                 {props.openFiles.map(element => {
                     var file = files.filter(el => el.key === element)[0];
-                    return file ? <OnlyEditor key={uuid()} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
+                    if (file) {
+                        editorContent[element] = file.content;
+                    }
+                    return file ? <OnlyEditor key={uuid()} getEditorContent={getEditorContent} editorWidth={props.editorWidth} currFile={props.currFile} element={element} file={file} handleKeyDown={handleKeyDown} /> : <></>
                 })}
             </div>
         </div>
@@ -134,7 +141,7 @@ function OnlyEditor(props) {
             width={width}
             onChange={(value, viewUpdate) => {
                 editorValue = value;
-                setChanged(true);
+                props.getEditorContent(props.element, editorValue);
             }}
             onKeyDown={event => props.handleKeyDown(event, props.element, editorValue)}
             key={uuid()} />
