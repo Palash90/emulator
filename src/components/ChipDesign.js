@@ -5,9 +5,7 @@ import uuid from "react-uuid";
 
 export default function ChipDesign() {
     const { simulationResult } = useContext(SimulationContext);
-
     const [result, setResult] = useState();
-    // const [changedKey, setChangedKey] = useState();
     const [inputs, setInputs] = useState();
 
     useEffect(() => {
@@ -41,9 +39,22 @@ export default function ChipDesign() {
     return result && result.ast ? <Chip changeInput={changeInput} chip={result.ast} /> : <p>Hold your breath</p>
 }
 function Chip(props) {
+    var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
     var iconStr;
     var chipHeight = 100;
     var chipWidth = 120;
+
+    useEffect(() => {
+        function handleResize() {
+            vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+            vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+        }
+        window.addEventListener('resize', handleResize);
+        return _ => {
+            window.removeEventListener('resize', handleResize);
+        }
+    })
 
     var inputLines = [];
     var outputLines = [];
@@ -85,7 +96,7 @@ function Chip(props) {
 
     return <>
         <div className="svg-container">
-            <svg viewBox="0 0 100 100">
+            <svg viewBox="0 0 100 100" height={vh / 2} width={vw / 2} onDoubleClick={() => props.chip.chipCallStack ? console.log(props.chip) : console.log("No Call Stac")}>
                 <g>
                     <SVG src={iconStr} />
                     <text key={uuid()} x="-30" y={5} fontFamily="Verdana" fontSize="7" fill="#03DAC6">Input</text>

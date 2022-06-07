@@ -9,8 +9,6 @@ function OutputWindow(props) {
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
-    console.log(simulationResult)
-
     if (typeof (simulationResult) === 'string') {
         return <div className="svg-container">
             <svg viewBox="0 0 100 100">
