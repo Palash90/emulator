@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import raw from '../constants/markdown.md';
+import raw from '../constants/README.md';
 
 function HelpWindow(props) {
 
@@ -13,7 +13,7 @@ function HelpWindow(props) {
             setMarkdown(text);
         });
 
-    return <ReactMarkdown children={markdown} remarkPlugins={[remarkGfm]} />
+    return <div style={{ textAlign: "left" }}><ReactMarkdown children={markdown} remarkPlugins={[remarkGfm]} /></div>
 }
 
 export default HelpWindow;
