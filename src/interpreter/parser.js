@@ -690,7 +690,6 @@ function handleFailure(errorMessage) {
 }
 
 export default function parse(file, content, files) {
-    console.log(file)
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }

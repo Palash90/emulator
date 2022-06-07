@@ -67,7 +67,7 @@ function ButtonPane(files, currFile, setSimulationResult, setEditorEnabled, help
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => { setHelpEnabled(false); setEditorEnabled(true) }}>Edit</Button>
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => { setHelpEnabled(false); setEditorEnabled(false); runSimulation(currFile, files, (result) => setSimulationResult(result)) }}>Run</Button>
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(files))}`} download="project.json">Download</Button>
-        <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => showDeleteProjectModal()}>Delete</Button>
+        <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => showDeleteProjectModal()}>Delete Project</Button>
         <Button className="btn-dark btn-sm" type="button" onClick={() => setHelpEnabled(!helpEnabled)}>{helpEnabled ? "Back" : "Help"}</Button>
     </div >;
 }

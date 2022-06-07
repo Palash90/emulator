@@ -49,11 +49,6 @@ const defaultFiles = [
     "key": 3,
     "name": "Xor.hdl",
     "content": "/*\n* Xor Chip\n* Xor(a,b) = a And Not(b) Or b And Not(a)\n*/\n\nimport And.hdl;\nimport Or.hdl;\nimport Not.hdl;\n\nCHIP Xor {\n  IN a, b;\n  OUT out;\n\n  PARTS:\n    Not(a=a, out=nota);\n    Not(a=b, out=notb);\n    And(a=a, b=notb, out=anotb);\n    And(a=b, b=nota, out=bnota);\n    Or(a=anotb, b=bnota, out=out);\n}"
-  },
-  {
-    "key": 9,
-    "name": "D_Latch.hdl",
-    "content": "import Not.hdl;\n\nCHIP D_Latch {\n  IN d;\n  OUT q, qnot;\n\n  PARTS:\n    Not(a=d, out=r);\n    Nor(a=d, b=q, out=qnot);\n    Nor(a=r, b=qnot, out=q);\n}"
   }
 ]
 
