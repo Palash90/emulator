@@ -369,15 +369,22 @@ const evaluateAst = (fileName, chipName, ast) => {
 
             var getValues = (input, part) => {
                 var values = {}
-                chipDetails[part].partInputs.map(pi => {
-                    if (pi.source in input) {
-                        values[pi.dest] = input[pi.source]
-                    } else if (pi.source in operations) {
-                        values[pi.dest] = operations[pi.source](input)
-                    } else {
-                        throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
-                    }
-                });
+                try {
+                    chipDetails[part].partInputs.map(pi => {
+                        if (pi.source in input) {
+                            values[pi.dest] = input[pi.source]
+                        } else if (pi.source in operations) {
+                            values[pi.dest] = operations[pi.source](input)
+                        } else {
+                            throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
+                        }
+                    });
+                    values['error'] = false;
+                } catch (error) {
+                    values['error'] = true;
+                    values['errorMessage'] = error
+                }
+
                 return values
             }
         });

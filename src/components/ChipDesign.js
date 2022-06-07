@@ -88,6 +88,7 @@ function Chip(props) {
             <svg viewBox="0 0 100 100">
                 <g>
                     <SVG src={iconStr} />
+                    <text key={uuid()} x="-30" y={5} fontFamily="Verdana" fontSize="7" fill="#03DAC6">Input</text>
                     {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
@@ -97,7 +98,7 @@ function Chip(props) {
                             </g>
                         })
                     }
-
+                    <text key={uuid()} x="115" y={5} fontFamily="Verdana" fontSize="7" fill="#BB86FC">Output</text>
                     {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
