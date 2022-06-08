@@ -82,17 +82,34 @@ function Chip(props) {
 
         chipHeight = (Math.max(inputLength, outputLength) < 5) ? 100 : (Math.max(inputLength, outputLength) * 20);
 
+        var horizontal = false;
+
+        if (Math.max(inputLength, outputLength) >= 8) {
+            chipHeight = 100;
+            chipWidth = (Math.max(inputLength, outputLength) * 20);
+            horizontal = true;
+        }
+
         var counter = 1;
 
         for (var key in inputValues) {
-            inputLines.push({ value: inputValues[key], key: key, yPos: (counter * chipHeight / inputLength) + 15 });
+            if (horizontal) {
+                inputLines.push({ value: inputValues[key], key: key, yPos: 150, xPos: (counter * chipWidth / inputLength) + 5 });
+            } else {
+                inputLines.push({ value: inputValues[key], key: key, xPos: "-15", yPos: (counter * chipHeight / inputLength) + 15 });
+            }
+
             counter++;
         }
 
         counter = 1;
 
         for (var key in outputValues) {
-            outputLines.push({ value: outputValues[key], key: key, yPos: (counter * chipHeight / outputLength) + 15 });
+            if (horizontal) {
+                outputLines.push({ value: outputValues[key], key: key, yPos: 0, xPos: (counter * chipWidth / outputLength) + 5 });
+            } else {
+                outputLines.push({ value: outputValues[key], key: key, xPos: "105", yPos: (counter * chipHeight / outputLength) + 15 });
+            }
             counter = counter + 1;
         }
     }
@@ -110,22 +127,22 @@ function Chip(props) {
             '<stop offset="90%" style="stop-color:#4D4855;stop-opacity:1" />' +
             '</linearGradient>' +
             '</defs>' +
-            '<g><rect width="100" height="' + chipHeight + '" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
+            '<g><rect width="' + chipWidth + '" height="' + chipHeight + '" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
             '<text x="' + (chipWidth / 2) + '" y="' + (chipHeight / 2) + '" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + props.chip.chip + '</text></g>' +
             '</svg>'
     }
 
     return <>
         <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%" }}>
-            <svg viewBox={"0 0 100 " + (chipHeight + 15)} onDoubleClick={() => props.chip.chipCallStack ? console.log(props.chip) : console.log("No Call Stac")}>
+            <svg viewBox={"0 0 " + (chipWidth + 15) + " " + (chipHeight + 15)}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
-                    <text key={uuid()} x="115" y={8} fontFamily="Verdana" fontSize="10" fill="#BB86FC">Output</text>
-                    <text key={uuid()} x="-30" y={8} fontFamily="Verdana" fontSize="10" fill="#03DAC6">Input</text>
+                    <text key={uuid()} x={horizontal ? "0" : "115"} y={horizontal ? 0 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC">Output</text>
+                    <text key={uuid()} x={horizontal ? "0" : "-30"} y={horizontal ? 145 : 8} fontFamily="Verdana" fontSize="10" fill="#03DAC6">Input</text>
                     {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
-                                <text key={uuid()} x="-15" y={inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
+                                <text key={uuid()} x={inputLine.xPos} y={inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
                                 <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "darkred"} strokeWidth="1" />
                                 <circle cx="-30" className="inputButton" cy={inputLine.yPos} r="5" stroke="black" strokeWidth="2" fill={inputLine.value ? "darkgreen" : "darkred"} onClick={() => props.changeInput(inputLine.key)} />
                             </g>
@@ -134,7 +151,7 @@ function Chip(props) {
                     {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
-                                <text key={uuid()} x="115" y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
+                                <text key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
                                 <line key={uuid()} x1="100" x2="130" y1={outputLine.yPos} y2={outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
                                 <circle cx="130" cy={outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
                                     <animate attributeName="fill" values={outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
