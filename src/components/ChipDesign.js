@@ -85,6 +85,7 @@ function Chip(props) {
         if (Math.max(inputLength, outputLength) > 10) {
             chipHeight = 100;
             chipWidth = (Math.max(inputLength, outputLength) * 20);
+            chipWidth = chipWidth < 375 ? 375 : chipWidth;
             horizontal = true;
         }
         var counter = 1;

@@ -31,7 +31,7 @@ function OutputWindow(props) {
         return <>
             <ChipDesign />
             {
-                simulationResult.ast.inputs.length <= 4 ? <TruthTable /> : <></>
+                Math.max(simulationResult.ast.inputs.length, simulationResult.ast.outputs.length) <= 4 ? <TruthTable /> : <></>
             }
         </>
     }
