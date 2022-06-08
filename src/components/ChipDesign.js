@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import SimulationContext from "./SimulationContext";
 import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
+import { Table } from "react-bootstrap";
 
 export default function ChipDesign() {
     const { simulationResult } = useContext(SimulationContext);
@@ -71,6 +72,65 @@ function Chip(props) {
     var outputLines = [];
     var inputValues = props.chip['inputValues'];
     var outputValues = props.chip.outputValues;
+    var maxGroupLength = 0;
+
+    const groupIt = (array) => {
+        let resultObj = {};
+
+        for (let i = 0; i < array.length; i++) {
+            let currentWord = array[i];
+            let firstChar = currentWord[0];
+            let innerArr = [];
+            if (resultObj[firstChar] === undefined) {
+                innerArr.push(currentWord);
+                resultObj[firstChar] = innerArr
+            } else {
+                resultObj[firstChar].push(currentWord)
+            }
+        }
+        return resultObj
+    }
+
+    var inputGroups = groupIt(Object.keys(inputValues));
+    var outputGroups = groupIt(Object.keys(outputValues));
+    var inputValuesGroup = {};
+    var outputValuesGroup = {};
+
+    for (var inputGroupKey in inputGroups) {
+        var group = inputGroups[inputGroupKey];
+        group = group.length > 1 ? group.map(el => parseInt(el.replace(inputGroupKey, ''))) : group;
+        group = group.sort();
+
+        var value = 0;
+        if (group.length > 1) {
+            group.map((el, index) => {
+                value = value + (inputValues[inputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
+            });
+        } else {
+            value = inputValues[group[0]] ? 1 : 0;
+        }
+        maxGroupLength = group.length > maxGroupLength ? group.length : maxGroupLength;
+
+        inputValuesGroup[group.length > 1 ? inputGroupKey : group[0]] = value;
+    }
+
+    for (var outputGroupKey in outputGroups) {
+        var group = outputGroups[outputGroupKey];
+        group = group.length > 1 ? group.map(el => parseInt(el.replace(outputGroupKey, ''))) : group;
+        group = group.sort();
+
+        var value = 0;
+        if (group.length > 1) {
+            group.map((el, index) => {
+                value = value + (outputValues[outputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
+            });
+        } else {
+            value = outputValues[group[0]] ? 1 : 0;
+        }
+        maxGroupLength = group.length > maxGroupLength ? group.length : maxGroupLength;
+
+        outputValuesGroup[group.length > 1 ? outputGroupKey : group[0]] = value;
+    }
 
     var inputLength = 0, outputLength = 0;
 
@@ -131,7 +191,7 @@ function Chip(props) {
     }
 
     return <>
-        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%" }}>
+        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%" }}>
             <svg viewBox={"0 0 " + (chipWidth + 15) + " " + (chipHeight + 15)}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
@@ -161,5 +221,34 @@ function Chip(props) {
                 </g>
             </svg>
         </div>
+        {
+            maxGroupLength < 8 ? <></> : <Table responsive striped bordered hover size="sm" variant="dark">
+                <thead>
+                    <tr>
+                        {Object.keys(inputValuesGroup).map(el => {
+                            return <th key={uuid()}>{el}</th>;
+                        })}
+                        {Object.keys(outputValuesGroup).map(el => {
+                            return <th key={uuid()}>{el}</th>;
+                        })}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr >
+                        {
+                            Object.keys(inputValuesGroup).map(el => {
+                                return <td key={uuid()}>{inputValuesGroup[el]}</td>
+                            })
+                        }
+                        {
+                            Object.keys(outputValuesGroup).map(el => {
+                                return <td key={uuid()}>{outputValuesGroup[el]}</td>
+                            })
+                        }
+                    </tr>
+
+                </tbody>
+            </Table>
+        }
     </>
 }
