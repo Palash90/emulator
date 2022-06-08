@@ -75,21 +75,18 @@ function Chip(props) {
     var inputLength = 0, outputLength = 0;
 
     if (!props.error) {
-
-        // Adding 2 to original length to make empty space on both sides
         inputLength = Object.entries(inputValues).length + 1;
-        outputLength = Object.entries(outputValues).length + 1;
 
+        outputLength = Object.entries(outputValues).length + 1;
         chipHeight = (Math.max(inputLength, outputLength) < 5) ? 100 : (Math.max(inputLength, outputLength) * 20);
 
         var horizontal = false;
 
-        if (Math.max(inputLength, outputLength) >= 8) {
+        if (Math.max(inputLength, outputLength) > 10) {
             chipHeight = 100;
             chipWidth = (Math.max(inputLength, outputLength) * 20);
             horizontal = true;
         }
-
         var counter = 1;
 
         for (var key in inputValues) {
@@ -137,14 +134,14 @@ function Chip(props) {
             <svg viewBox={"0 0 " + (chipWidth + 15) + " " + (chipHeight + 15)}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
-                    <text key={uuid()} x={horizontal ? "0" : "115"} y={horizontal ? 0 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC">Output</text>
-                    <text key={uuid()} x={horizontal ? "0" : "-30"} y={horizontal ? 145 : 8} fontFamily="Verdana" fontSize="10" fill="#03DAC6">Input</text>
+                    <text key={uuid()} x={horizontal ? chipWidth / 2 : "115"} y={horizontal ? -20 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC" textAnchor="middle">Output</text>
+                    <text key={uuid()} x={horizontal ? chipWidth / 2 : "-30"} y={horizontal ? 162 : 8} fontFamily="Verdana" fontSize="10" fill="#03DAC6" textAnchor="middle">Input</text>
                     {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
-                                <text key={uuid()} x={inputLine.xPos} y={inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
-                                <line key={uuid()} x1="-30" x2="0" y1={inputLine.yPos} y2={inputLine.yPos} stroke={inputLine.value ? "green" : "darkred"} strokeWidth="1" />
-                                <circle cx="-30" className="inputButton" cy={inputLine.yPos} r="5" stroke="black" strokeWidth="2" fill={inputLine.value ? "darkgreen" : "darkred"} onClick={() => props.changeInput(inputLine.key)} />
+                                <text key={uuid()} x={inputLine.xPos} y={horizontal ? inputLine.yPos : inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
+                                <line key={uuid()} x1={horizontal ? inputLine.xPos : -30} x2={horizontal ? inputLine.xPos : "0"} y1={horizontal ? 135 : inputLine.yPos} y2={horizontal ? 115 : inputLine.yPos} stroke={inputLine.value ? "green" : "darkred"} strokeWidth="1" />
+                                <circle cx={horizontal ? inputLine.xPos : "-30"} className="inputButton" cy={horizontal ? 135 : inputLine.yPos} r="5" stroke="black" strokeWidth="2" fill={inputLine.value ? "darkgreen" : "darkred"} onClick={() => props.changeInput(inputLine.key)} />
                             </g>
                         })
                     }
@@ -152,8 +149,8 @@ function Chip(props) {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
                                 <text key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
-                                <line key={uuid()} x1="100" x2="130" y1={outputLine.yPos} y2={outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
-                                <circle cx="130" cy={outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
+                                <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
+                                <circle cx={horizontal ? outputLine.xPos : "130"} cy={horizontal ? outputLine.yPos + 2 : outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
                                     <animate attributeName="fill" values={outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
                                 </circle>
 
