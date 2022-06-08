@@ -13,7 +13,17 @@ const defaultFiles = [
   {
     "key": 8,
     "name": "And.svg",
-    "content": "<svg width=\"120\" height=\"100\">\n                    <defs>\n                        <linearGradient id=\"grad3\" x1=\"0%\" y1=\"100%\" x2=\"100%\" y2=\"0%\">\n                            <stop offset=\"10%\" style=\"stop-color:#09203F;stop-opacity:1\" />\n                            <stop offset=\"90%\" style=\"stop-color:#367588;stop-opacity:1\" />\n                        </linearGradient>\n                    </defs>\n                    <g>\n                        <rect width=\"100\" height=\"80\" style=\"fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)\" />\n                        <text x=\"50\" y=\"40\" font-family=\"Verdana\" text-anchor=\"middle\" font-size=\"10\" fill=\"yellow\">And\n                        </text></g>\n                </svg>\n"
+    "content": "<svg width=\"120\" height=\"100\">\n                    <defs>\n                        <linearGradient id=\"grad3\" x1=\"0%\" y1=\"100%\" x2=\"100%\" y2=\"0%\">\n                            <stop offset=\"10%\" style=\"stop-color:#09203F;stop-opacity:1\" />\n                            <stop offset=\"90%\" style=\"stop-color:#367588;stop-opacity:1\" />\n                        </linearGradient>\n                    </defs>\n                    <g>\n                        <rect width=\"$width\" height=\"$height\" style=\"fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)\" />\n                        <text x=\"$txtPosX\" y=\"$txtPosY\" font-family=\"Verdana\" text-anchor=\"middle\" font-size=\"10\" fill=\"yellow\">And\n                        </text></g>\n                </svg>\n"
+  },
+  {
+    "key": 10,
+    "name": "EightBitAdder.hdl",
+    "content": "import FourBitAdder.hdl;\n\nCHIP EightBitAdder {\n  IN cin, \n     a8, a7, a6, a5, a4, a3, a2, a1,\n     b8, b7, b6, b5, b4, b3, b2, b1;\n  OUT cout, s8, s7, s6, s5, s4, s3, s2, s1;\n\n  PARTS:\n    FourBitAdder(a1=a1, a2=a2, a3=a3, a4=a4, b1=b1, b2=b2, b3=b3, b4=b4, cin=cin, s1=s1, s2=s2, s3=s3, s4=s4, cout=c1);\n    FourBitAdder(a1=a5, a2=a6, a3=a7, a4=a7, b1=b5, b2=b6, b3=b7, b4=b8, cin=c1, s1=s5, s2=s6, s3=s7, s4=s8, cout=cout);\n}"
+  },
+  {
+    "key": 9,
+    "name": "FourBitAdder.hdl",
+    "content": "import FullAdder.hdl;\nimport Xor.hdl;\n\nCHIP FourBitAdder{\n  IN cin, a4, a3, a2, a1, b4, b3, b2, b1;\n  OUT cout, s4, s3, s2, s1;\n\n  PARTS:\n    Xor(a=b1, b=cin, out=xorb1);\n    Xor(a=b2, b=cin, out=xorb2);\n    Xor(a=b3, b=cin, out=xorb3);\n    Xor(a=b4, b=cin, out=xorb4);\n    FullAdder(a=a1, b=xorb1, cin=cin, s=s1, cout=c1);\n    FullAdder(a=a2, b=xorb2, cin=c1, s=s2, cout=c2);\n    FullAdder(a=a3, b=xorb3, cin=c2, s=s3, cout=c3);\n    FullAdder(a=a4, b=xorb4, cin=c3, s=s4, cout=cout); \n}"
   },
   {
     "key": 7,

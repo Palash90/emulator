@@ -15,7 +15,7 @@ const existingFiles = storedFiles && storedFiles.length > 0 ? storedFiles || def
 
 function App() {
   const [simulationResult, setSimulationResult] = useState({});
-  const [currFile, setCurrFile] = useState(7);
+  const [currFile, setCurrFile] = useState();
   const [files, setFiles] = useState(existingFiles);
   const [openFiles, setOpenFiles] = useState();
   const [modalOptions, setModalOptions] = useState({});

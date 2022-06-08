@@ -61,9 +61,15 @@ function ButtonPane(files, currFile, setSimulationResult, setEditorEnabled, help
         return localStorage.setItem('files', JSON.stringify([]));
     }
 
+    const handleShow = () => {
+        var body = "Project Saved";
+        setModalOptions({ info: true, showModal: true, body: body });
+        setTimeout(() => setModalOptions({ showModal: false, info: true }), 1000);
+    }
+
     return <div className="btn-group btn-block btn-group-xs buttonPane" role="group">
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => showNewProjectModal()}>New</Button>
-        <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => localStorage.setItem('files', JSON.stringify(files))}>Save Project</Button>
+        <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() =>{ localStorage.setItem('files', JSON.stringify(files)); handleShow(); }}>Save Project</Button>
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => { setHelpEnabled(false); setEditorEnabled(true) }}>Edit</Button>
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} onClick={() => { setHelpEnabled(false); setEditorEnabled(false); runSimulation(currFile, files, (result) => setSimulationResult(result)) }}>Run</Button>
         <Button className="btn-dark btn-sm" type="button" disabled={helpEnabled} href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(files))}`} download="project.json">Download</Button>

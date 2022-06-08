@@ -1,10 +1,12 @@
 import uuid from "react-uuid";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Container, Navbar, Table } from "react-bootstrap";
 import SimulationContext from "./SimulationContext";
 
 export default function TruthTable(props) {
     const { simulationResult } = useContext(SimulationContext);
+    const [error, setError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
     var inputs = [];
 
     function generateAllBinaryCombinations(n, arr, i) {
@@ -40,13 +42,19 @@ export default function TruthTable(props) {
         for (const key in obj) {
             values.push(obj[key]);
         }
-        var outputValues = simulationResult.getValues(obj, simulationResult.ast);
+        try {
+            var outputValues = simulationResult.getValues(obj, simulationResult.ast);
 
-        for (var key in outputValues) {
-            values.push(outputValues[key])
+            for (var key in outputValues) {
+                values.push(outputValues[key])
+            }
+
+            return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
+        } catch (error) {
+            setError(true);
+            setErrorMsg(error)
         }
 
-        return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
     };
 
     return <>
@@ -55,27 +63,29 @@ export default function TruthTable(props) {
                 <Navbar.Brand href="#">{simulationResult.ast.chip + " Truth Table"}</Navbar.Brand>
             </Container>
         </Navbar>
-        <div className="tableFixHead ">
-            <Table responsive striped bordered hover size="sm" variant="dark">
-                <thead>
-                    <tr>
-                        {simulationResult.ast.inputs.map(inp => {
-                            return <th key={uuid()}>{inp}</th>;
-                        })}
-                        {simulationResult.ast.outputs.map(el => {
-                            return <th key={uuid()}>{el}</th>;
-                        })}
-                    </tr>
-                </thead>
-                <tbody>
-                    {inputs.map(inp => {
-                        return <tr key={uuid()}>
-                            {getTd(inp)}
+        {
+            error ? <p className="text-warning">{JSON.stringify(errorMsg)}</p> : <div className="tableFixHead ">
+                <Table responsive striped bordered hover size="sm" variant="dark">
+                    <thead>
+                        <tr>
+                            {simulationResult.ast.inputs.map(inp => {
+                                return <th key={uuid()}>{inp}</th>;
+                            })}
+                            {simulationResult.ast.outputs.map(el => {
+                                return <th key={uuid()}>{el}</th>;
+                            })}
                         </tr>
-                    })}
-                </tbody>
-            </Table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {inputs.map(inp => {
+                            return <tr key={uuid()}>
+                                {getTd(inp)}
+                            </tr>
+                        })}
+                    </tbody>
+                </Table>
+            </div>
+        }
     </>
 }
 
