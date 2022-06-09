@@ -209,8 +209,9 @@ svg {
   display: flex;
 }
 
-.clock>div:nth-child(2) {
+.clock>div {
   flex: 1;
+  margin: 5px;
 }
 
 .svgtxt{
