@@ -104,7 +104,10 @@ function Chip(props) {
         var value = 0;
         if (group.length > 1) {
             group.map((el, index) => {
-                value = value + (inputValues[inputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
+                if (index === group.length - 1)
+                    value = value - (inputValues[inputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
+                else
+                    value = value + (inputValues[inputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
             });
         } else {
             value = inputValues[group[0]] ? 1 : 0;
@@ -122,7 +125,10 @@ function Chip(props) {
         var value = 0;
         if (group.length > 1) {
             group.map((el, index) => {
-                value = value + (outputValues[outputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
+                if (index === group.length - 1)
+                    value = value - (outputValues[outputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
+                else
+                    value = value + (outputValues[outputGroupKey + el] ? 1 : 0) * Math.pow(2, index)
             });
         } else {
             value = outputValues[group[0]] ? 1 : 0;
@@ -192,7 +198,7 @@ function Chip(props) {
 
     return <>
         <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%" }}>
-            <svg viewBox={"0 0 " + (chipWidth + 15) + " " + (chipHeight + 15)}>
+            <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
                     <text key={uuid()} x={horizontal ? chipWidth / 2 : "115"} y={horizontal ? -20 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC" textAnchor="middle">Output</text>
