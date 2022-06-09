@@ -200,7 +200,7 @@ function Chip(props) {
     }
 
     return <>
-        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "98%" }}>
+        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "90%" }}>
             <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
