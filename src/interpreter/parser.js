@@ -687,7 +687,6 @@ export default function parse(file, content, files) {
         return handleFailure("No content to simulate");
     }
     if (file.split('.').pop() === 'svg') {
-        console.log('returning sbg')
         return content;
     }
 

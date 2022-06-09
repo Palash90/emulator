@@ -128,7 +128,6 @@ function OnlyEditor(props) {
 
     useEffect(() => {
         function handleResize() {
-            console.log("handling resize")
             setHeight(vh * 85 / 100 + "px")
             setWidth((vw * 99 / 100 - props.editorWidth) + "px")
         }

@@ -121,7 +121,6 @@ function Chip(props) {
         var group = outputGroups[outputGroupKey];
         group = group.length > 1 ? group.map(el => parseInt(el.replace(outputGroupKey, ''))) : group;
         group = group.sort((a, b) => a - b);
-        console.log(group)
         var value = 0;
         if (group.length > 1) {
             group.map((el, index) => {
@@ -139,8 +138,6 @@ function Chip(props) {
     }
 
     var inputLength = 0, outputLength = 0;
-
-    console.log(inputGroups, outputGroups)
 
     if (!props.error) {
         inputLength = Object.entries(inputValues).length + 1;
