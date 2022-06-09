@@ -99,7 +99,7 @@ function Chip(props) {
     for (var inputGroupKey in inputGroups) {
         var group = inputGroups[inputGroupKey];
         group = group.length > 1 ? group.map(el => parseInt(el.replace(inputGroupKey, ''))) : group;
-        group = group.sort();
+        group = group.sort((a, b) => a - b);
 
         var value = 0;
         if (group.length > 1) {
@@ -120,8 +120,8 @@ function Chip(props) {
     for (var outputGroupKey in outputGroups) {
         var group = outputGroups[outputGroupKey];
         group = group.length > 1 ? group.map(el => parseInt(el.replace(outputGroupKey, ''))) : group;
-        group = group.sort();
-
+        group = group.sort((a, b) => a - b);
+        console.log(group)
         var value = 0;
         if (group.length > 1) {
             group.map((el, index) => {
@@ -139,6 +139,8 @@ function Chip(props) {
     }
 
     var inputLength = 0, outputLength = 0;
+
+    console.log(inputGroups, outputGroups)
 
     if (!props.error) {
         inputLength = Object.entries(inputValues).length + 1;
