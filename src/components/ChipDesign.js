@@ -4,7 +4,7 @@ import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
 import { Table } from "react-bootstrap";
 
-export default function ChipDesign() {
+export default function ChipDesign(props) {
     const { simulationResult } = useContext(SimulationContext);
     const [result, setResult] = useState();
     const [inputs, setInputs] = useState();
@@ -16,6 +16,7 @@ export default function ChipDesign() {
         simulationResult.ast.inputs.map(inp => {
             input[inp] = false;
         });
+        input['CLOCK'] = props.clockState;
         setInputs(input)
         try {
             var outputValues = simulationResult.getValues(input, simulationResult.ast);
@@ -27,7 +28,7 @@ export default function ChipDesign() {
             setError(true);
             setErrorMsg(error);
         }
-    }, [])
+    }, [props])
 
     const changeInput = (changedKey) => {
         var input = {}
@@ -35,6 +36,7 @@ export default function ChipDesign() {
             for (var key in inputs) {
                 input[key] = key === changedKey ? !inputs[key] : inputs[key]
             }
+            input['CLOCK'] = props.clockState;
             setInputs(input)
             try {
                 var outputValues = simulationResult.getValues(input, simulationResult.ast);
@@ -73,6 +75,8 @@ function Chip(props) {
     var inputValues = props.chip['inputValues'];
     var outputValues = props.chip.outputValues;
     var maxGroupLength = 0;
+
+    inputValues = (({ CLOCK, ...o }) => o)(inputValues);
 
     const groupIt = (array) => {
         let resultObj = {};
@@ -191,7 +195,7 @@ function Chip(props) {
             '</linearGradient>' +
             '</defs>' +
             '<g><rect width="' + chipWidth + '" height="' + chipHeight + '" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
-            '<text x="' + (chipWidth / 2) + '" y="' + (chipHeight / 2) + '" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + props.chip.chip + '</text></g>' +
+            '<text class="svgtxt" x="' + (chipWidth / 2) + '" y="' + (chipHeight / 2) + '" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + props.chip.chip + '</text></g>' +
             '</svg>'
     }
 
@@ -200,12 +204,12 @@ function Chip(props) {
             <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
-                    <text key={uuid()} x={horizontal ? chipWidth / 2 : "115"} y={horizontal ? -20 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC" textAnchor="middle">Output</text>
-                    <text key={uuid()} x={horizontal ? chipWidth / 2 : "-30"} y={horizontal ? 162 : 8} fontFamily="Verdana" fontSize="10" fill="#03DAC6" textAnchor="middle">Input</text>
+                    <text className="svgtxt" key={uuid()} x={horizontal ? chipWidth / 2 : "115"} y={horizontal ? -20 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC" textAnchor="middle">Output</text>
+                    <text className="svgtxt" key={uuid()} x={horizontal ? chipWidth / 2 : "-30"} y={horizontal ? 162 : 8} fontFamily="Verdana" fontSize="10" fill="#03DAC6" textAnchor="middle">Input</text>
                     {
                         inputLines.map(inputLine => {
                             return <g key={uuid()}>
-                                <text key={uuid()} x={inputLine.xPos} y={horizontal ? inputLine.yPos : inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
+                                <text className="svgtxt" key={uuid()} x={inputLine.xPos} y={horizontal ? inputLine.yPos : inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
                                 <line key={uuid()} x1={horizontal ? inputLine.xPos : -30} x2={horizontal ? inputLine.xPos : "0"} y1={horizontal ? 135 : inputLine.yPos} y2={horizontal ? 115 : inputLine.yPos} stroke={inputLine.value ? "green" : "darkred"} strokeWidth="1" />
                                 <circle cx={horizontal ? inputLine.xPos : "-30"} className="inputButton" cy={horizontal ? 135 : inputLine.yPos} r="5" stroke="black" strokeWidth="2" fill={inputLine.value ? "darkgreen" : "darkred"} onClick={() => props.changeInput(inputLine.key)} />
                             </g>
@@ -214,7 +218,7 @@ function Chip(props) {
                     {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
-                                <text key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
+                                <text className="svgtxt" key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
                                 <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
                                 <circle cx={horizontal ? outputLine.xPos : "130"} cy={horizontal ? outputLine.yPos + 2 : outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
                                     <animate attributeName="fill" values={outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
@@ -231,10 +235,10 @@ function Chip(props) {
                 <thead>
                     <tr>
                         {Object.keys(inputValuesGroup).map(el => {
-                            return <th key={uuid()}>{el}</th>;
+                            return <th className="svgtxt" key={uuid()}>{el}</th>;
                         })}
                         {Object.keys(outputValuesGroup).map(el => {
-                            return <th key={uuid()}>{el}</th>;
+                            return <th className="svgtxt" key={uuid()}>{el}</th>;
                         })}
                     </tr>
                 </thead>
@@ -242,12 +246,12 @@ function Chip(props) {
                     <tr >
                         {
                             Object.keys(inputValuesGroup).map(el => {
-                                return <td key={uuid()}>{inputValuesGroup[el]}</td>
+                                return <td className="svgtxt" key={uuid()}>{inputValuesGroup[el]}</td>
                             })
                         }
                         {
                             Object.keys(outputValuesGroup).map(el => {
-                                return <td key={uuid()}>{outputValuesGroup[el]}</td>
+                                return <td className="svgtxt" key={uuid()}>{outputValuesGroup[el]}</td>
                             })
                         }
                     </tr>
