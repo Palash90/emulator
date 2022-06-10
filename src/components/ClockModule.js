@@ -38,10 +38,10 @@ export default function ClockModule(props) {
                                 />
                             </Col>
                             <Col>
-                                <Form.Range disabled={manual} value={freq} step={100} min={100} max={2500} onChange={(value) => setFreq(value.target.value)} />
+                                {manual ? <></> : <Form.Range disabled={manual} value={freq} step={100} min={100} max={2500} onChange={(value) => setFreq(value.target.value)} />}
                             </Col>
                             <Col>
-                                <Form.Label>{freq + " ms"}</Form.Label>
+                                {manual ? <></> : <Form.Label>{parseFloat(1000 / freq).toFixed(2) + " Hz"}</Form.Label>}
                             </Col>
                         </Row>
                     </Form.Group>
