@@ -238,6 +238,23 @@ const builtInChips = [
         operations: {
             out: (norInput) => !(norInput['a'] || norInput['b'])
         }
+    },
+    {
+        chip: "DLatch",
+        inputs: ["D", "E"],
+        outputs: ["Q"],
+        D:false,
+        operations: {
+            
+            Q: function (latchInput) {
+                if (latchInput['E']) {
+                    this.D = latchInput['D'];
+                    return this.D;
+                } else {
+                    return this.D;
+                }
+            }
+        }
     }
 ];
 
@@ -310,6 +327,7 @@ const evaluateAst = (fileName, chipName, ast) => {
                 imported = true;
             } else if (builtinChip && builtinChip.length > 0) {
                 chip = Object.assign({}, builtinChip[0]);
+                chip.operations = { ...builtinChip[0].operations };
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
