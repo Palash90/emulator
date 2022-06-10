@@ -56,6 +56,11 @@ export default function ClockModule(props) {
                     <line x1="25" x2="35" y1="20" y2="20" stroke={manual ? "white" : "gray"} strokeWidth="2" />
                 </svg>
             </Col>
+            <Col>
+                <svg style={{ border: "dashed 1px gray", height: "25", width: "22", cursor: manual ? "pointer" : "default" }}>
+                    <circle cx="10" cy="12" r="8" stroke="black" strokeWidth="1" fill={props.clockState ? "blue" : "transparent"} />
+                </svg>
+            </Col>
         </Row >
     </div>
 }

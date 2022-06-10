@@ -12,6 +12,8 @@ Below is the list of features that would be beneficial to the projects but I cou
 - Edit not saved icon
 - On Double click of chip
 - File rename
+- Could not implement QNot on DLatch
+- Error handling during execution
 
 ## Contributors
 

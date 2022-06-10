@@ -240,15 +240,39 @@ const builtInChips = [
         }
     },
     {
-        chip: "DLatch",
+        chip: "DFlipFlop",
         inputs: ["D", "E"],
         outputs: ["Q"],
-        D:false,
+        D: false,
         operations: {
-            
+
             Q: function (latchInput) {
                 if (latchInput['E']) {
                     this.D = latchInput['D'];
+                    return this.D;
+                } else {
+                    return this.D;
+                }
+            }
+        }
+    },
+    {
+        chip: "JKFlipFlop",
+        inputs: ["J", "K", "E"],
+        outputs: ["Q"],
+        D: false,
+        operations: {
+            Q: function (latchInput) {
+                if (latchInput['E']) {
+                    if (latchInput['J'] && latchInput['K']) {
+                        this.D = !this.D;
+                    } else if (latchInput['J'] && !latchInput['K']) {
+                        this.D = true;
+                    } else if (!latchInput['J'] && latchInput['K']) {
+                        this.D = false;
+                    } else {
+                        this.D = this.D;
+                    }
                     return this.D;
                 } else {
                     return this.D;
