@@ -3,10 +3,12 @@ import FileContext from "./FileContext";
 import { useContext } from "react";
 import { CloseButton } from "react-bootstrap";
 import ModalContext from "./ModalContext";
+import ScreenSizeContext from "./ScreenSizeContext";
 
 function FilesPane(props) {
   const { files, setFiles, currFile, setCurrFile } = useContext(FileContext);
   const { setModalOptions } = useContext(ModalContext);
+  const { vw, vh } = useContext(ScreenSizeContext);
 
   const handleClose = (key) => {
     deleteFile(key);
@@ -30,9 +32,9 @@ function FilesPane(props) {
   var sortedFiles = newFiles.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
   return (
-    <div  >
+    <div>
       <h6>Files:</h6>
-      <ul>
+      <ul  style={{ height:vh*2/3, overflowY: "auto" }}>
         {sortedFiles.map((el, i) => {
           return FileDisplay(i, currFile, setCurrFile, el, handleShow, props.setEditorEnabled, props.setHelpEnabled);
         })}
