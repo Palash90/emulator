@@ -170,17 +170,17 @@ function Chip(props) {
                     <text className="svgtxt" key={uuid()} x={horizontal ? chipWidth / 2 : "115"} y={horizontal ? -20 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC" textAnchor="middle">Output</text>
                     <text className="svgtxt" key={uuid()} x={horizontal ? chipWidth / 2 : "-30"} y={horizontal ? 162 : 8} fontFamily="Verdana" fontSize="10" fill="#03DAC6" textAnchor="middle">Input</text>
                     {
-                        inputLines.map(inputLine => {
+                        inputLines.map((inputLine, index) => {
                             return <g key={uuid()}>
                                 <text className="svgtxt" key={uuid()} x={inputLine.xPos} y={horizontal ? inputLine.yPos : inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
-                                <line key={uuid()} x1={horizontal ? inputLine.xPos : -30} x2={horizontal ? inputLine.xPos : "0"} y1={horizontal ? 135 : inputLine.yPos} y2={horizontal ? 115 : inputLine.yPos} stroke={inputLine.value ? "green" : "darkred"} strokeWidth="1" />
-                                <svg x={(horizontal ? inputLine.xPos : -30) - 6} y={(horizontal ? 135 : inputLine.yPos) - 6} className="inputButton" onClick={() => props.changeInput(inputLine.key)}>
-                                    <rect width="12" height="12" rx="1.5" ry="1.5" fill="#464646" strokeWidth="1" />
-                                    <rect x=".75" y=".75" width="10.5" height="10.5" rx="1.5" ry="1.5" fill="#eaeaea" />
-                                    <linearGradient id="grad-up" x1="0" x2="1" y1="0" y2="1">
-                                        <stop stop-color="#ffffff" offset="0" />
-                                        <stop stop-color={inputLine.value ? "green" : "red"} offset="0.3" />
-                                        <stop stop-color={inputLine.value ? "green" : "red"} offset="0.5" />
+                                <line key={uuid()} x1={horizontal ? inputLine.xPos : -30} x2={horizontal ? inputLine.xPos : "0"} y1={horizontal ? 135 : inputLine.yPos} y2={horizontal ? 115 : inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="1" />
+                                <svg key={uuid()} x={(horizontal ? inputLine.xPos : -30) - 6} y={(horizontal ? 135 : inputLine.yPos) - 6} className="inputButton" onClick={() => props.changeInput(inputLine.key)}>
+                                    <rect width="12" height="12" rx="1.5" ry="1.5" fill="gray" strokeWidth="2" />
+                                    <rect x=".75" y=".75" width="10.5" height="10.5" rx="1.5" ry="1.5" fill="#cacaca" />
+                                    <linearGradient id={"grad-up" + index} x1="0" x2="1" y1="0" y2="1">
+                                        <stop stopColor="#ffffff" offset="0" />
+                                        <stop stopColor={inputLine.value ? "green" : "red"} offset="0.3" />
+                                        <stop stopColor={inputLine.value ? "green" : "red"} offset="0.5" />
                                         <stop offset="1" />
                                     </linearGradient>
                                     <g fill="#1b1b1b">
@@ -190,10 +190,9 @@ function Chip(props) {
                                         <circle cx="1.767" cy="10.197" r=".37" />
                                     </g>
 
-                                    <circle class="button-contour" cx="6" cy="6" r="12" fill="url(grad-up)" />
-                                    <circle cx="6" cy="6" r="2.9" fill={inputLine.value ? "green" : "red"} stroke="#2f2f2f" stroke-opacity=".47" stroke-width=".08" />
-                                    <circle cx="6" cy="6" r="3.822" fill="url(#a)" />
+                                    <circle cx="6" cy="6" r="3.8" fill={"url(#grad-up" + index + ")"} />
                                     <circle cx="6" cy="6" r="2.9" fill={inputLine.value ? "green" : "red"} stroke="#2f2f2f" strokeOpacity=".47" strokeWidth=".08" />
+                                    <circle cx="6" cy="6" r="2.9" fill={inputLine.value ? "green" : "red"} stroke="blue" strokeOpacity=".47" strokeWidth=".08" />
                                 </svg>
                             </g>
                         })
