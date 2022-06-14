@@ -3,6 +3,7 @@ import SimulationContext from "./SimulationContext";
 import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
 import { Table } from "react-bootstrap";
+import ScreenSizeContext from "./ScreenSizeContext";
 
 export default function ChipDesign(props) {
     const { simulationResult } = useContext(SimulationContext);
@@ -30,28 +31,15 @@ export default function ChipDesign(props) {
     return props.error ? <div className="svg-container text-warning">{props.errorMsg}</div> : (props.result && props.result.ast ? <Chip error={props.error} errorMsg={props.errorMsg} changeInput={changeInput} chip={props.result.ast} /> : <></>)
 }
 function Chip(props) {
-    var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
     var iconStr;
     var chipHeight;
     var chipWidth = 100;
-
-    useEffect(() => {
-        function handleResize() {
-            vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-            vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-        }
-        window.addEventListener('resize', handleResize);
-        return _ => {
-            window.removeEventListener('resize', handleResize);
-        }
-    })
-
     var inputLines = [];
     var outputLines = [];
     var inputValues = props.chip['inputValues'];
     var outputValues = props.chip.outputValues;
     var maxGroupLength = 0;
+    const { vw, vh } = useContext(ScreenSizeContext);
 
     inputValues = (({ CLOCK, ...o }) => o)(inputValues);
 

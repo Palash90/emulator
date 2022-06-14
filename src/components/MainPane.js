@@ -10,6 +10,7 @@ import SimulationContext from "./SimulationContext";
 import ModalContext from "./ModalContext";
 import OutputWindow from "./OutputWindow";
 import HelpWindow from "./HelpWindow";
+import ScreenSizeContext from "./ScreenSizeContext";
 
 export default function MainPane() {
     const [editorEnabled, setEditorEnabled] = useState(true);
@@ -17,10 +18,9 @@ export default function MainPane() {
     const { files, currFile } = useContext(FileContext);
     const { setSimulationResult } = useContext(SimulationContext);
     const [editorWidth, setEditorWidth] = useState(parseInt(localStorage.getItem('splitPosBottomPane') || 230));
+    const { vw } = useContext(ScreenSizeContext);
 
     const handleEditorWidthResize = (size) => {
-        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-
         if (size < vw * 70 / 100) {
             setEditorWidth(size);
             localStorage.setItem('splitPosBottomPane', size)

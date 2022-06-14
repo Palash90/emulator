@@ -8,6 +8,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { CloseButton } from "react-bootstrap";
 import uuid from "react-uuid";
 import ModalContext from "./ModalContext";
+import ScreenSizeContext from "./ScreenSizeContext";
 
 export const EditorPane = (props) => {
     const { files, currFile, setFiles, openFiles, setOpenFiles, setCurrFile } = useContext(FileContext);
@@ -121,24 +122,9 @@ function MultipleEditors(props) {
 }
 
 function OnlyEditor(props) {
-    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-    const { changed, setChanged } = useState(false);
+    const { vw, vh } = useContext(ScreenSizeContext);
     const [height, setHeight] = useState(vh * 85 / 100 + "px");
     const [width, setWidth] = useState((vw * 99 / 100 - props.editorWidth) + "px");
-
-    useEffect(() => {
-        function handleResize() {
-            setHeight(vh * 85 / 100 + "px")
-            setWidth((vw * 99 / 100 - props.editorWidth) + "px")
-        }
-
-        window.addEventListener('resize', handleResize);
-
-        return _ => {
-            window.removeEventListener('resize', handleResize);
-        }
-    })
 
     var editorValue = props.file.content;
 
