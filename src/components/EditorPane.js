@@ -54,6 +54,7 @@ export const EditorPane = (props) => {
         newFiles.push(newFile);
         newFiles = newFiles.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
         setFiles(newFiles);
+        localStorage.setItem('files', JSON.stringify(newFiles));
         handleShow(key);
     };
 
