@@ -194,7 +194,7 @@ function Chip(props) {
             </svg>
         </div>
         {
-            maxGroupLength < 8 ? <></> : <Table responsive striped bordered hover size="sm" variant="dark">
+            maxGroupLength < 4 ? <></> : <Table responsive striped bordered hover size="sm" variant="dark">
                 <thead>
                     <tr>
                         {Object.keys(inputValuesGroup).map(el => {
