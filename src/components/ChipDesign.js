@@ -6,51 +6,28 @@ import { Table } from "react-bootstrap";
 
 export default function ChipDesign(props) {
     const { simulationResult } = useContext(SimulationContext);
-    const [result, setResult] = useState();
-    const [inputs, setInputs] = useState();
-    const [error, setError] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
-
-    useEffect(() => {
-        var input = {}
-        simulationResult.ast.inputs.map(inp => {
-            input[inp] = false;
-        });
-        input['CLOCK'] = props.clockState;
-        setInputs(input)
-        try {
-            var outputValues = simulationResult.getValues(input, simulationResult.ast);
-            var ast = { ...simulationResult.ast };
-            ast['inputValues'] = input;
-            ast['outputValues'] = outputValues;
-            setResult({ ast: ast })
-        } catch (error) {
-            setError(true);
-            setErrorMsg(error);
-        }
-    }, [props])
 
     const changeInput = (changedKey) => {
         var input = {}
-        if (inputs) {
-            for (var key in inputs) {
-                input[key] = key === changedKey ? !inputs[key] : inputs[key]
+        if (props.inputs) {
+            for (var key in props.inputs) {
+                input[key] = key === changedKey ? !props.inputs[key] : props.inputs[key]
             }
             input['CLOCK'] = props.clockState;
-            setInputs(input)
+            props.setInputs(input)
             try {
                 var outputValues = simulationResult.getValues(input, simulationResult.ast);
                 var ast = { ...simulationResult.ast };
                 ast['inputValues'] = input;
                 ast['outputValues'] = outputValues;
-                setResult({ ast: ast })
+                props.setResult({ ast: ast })
             } catch (error) {
-                setError(true);
-                setErrorMsg(error);
+                props.setError(true);
+                props.setErrorMsg(error);
             }
         }
     };
-    return error ? <div className="svg-container text-warning">{errorMsg}</div> : (result && result.ast ? <Chip error={error} errorMsg={errorMsg} changeInput={changeInput} chip={result.ast} /> : <></>)
+    return props.error ? <div className="svg-container text-warning">{props.errorMsg}</div> : (props.result && props.result.ast ? <Chip error={props.error} errorMsg={props.errorMsg} changeInput={changeInput} chip={props.result.ast} /> : <></>)
 }
 function Chip(props) {
     var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)

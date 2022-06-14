@@ -1,15 +1,48 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import SimulationContext from "./SimulationContext";
 import TruthTable from "./TruthTable";
 import ChipDesign from "./ChipDesign";
 import SVG from 'react-inlinesvg';
 import ClockModule from "./ClockModule";
+import { Col, Row } from "react-bootstrap";
 
 function OutputWindow(props) {
     const { simulationResult } = useContext(SimulationContext);
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
     const [clockState, setClockState] = useState(false);
+    const [result, setResult] = useState();
+    const [inputs, setInputs] = useState();
+    const [error, setError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+
+    function calculateInputs(allFalse) {
+        if (typeof (simulationResult) !== 'string') {
+            var input = {};
+            simulationResult.ast.inputs.map(inp => {
+                input[inp] = allFalse ? false : inputs[inp];
+            });
+            input['CLOCK'] = clockState;
+            setInputs(input);
+            try {
+                var outputValues = simulationResult.getValues(input, simulationResult.ast);
+                var ast = { ...simulationResult.ast };
+                ast['inputValues'] = input;
+                ast['outputValues'] = outputValues;
+                setResult({ ast: ast });
+            } catch (error) {
+                setError(true);
+                setErrorMsg(error);
+            }
+        }
+    }
+
+    useEffect(() => calculateInputs(true), []);
+    useEffect(() => {
+        if (inputs) {
+            calculateInputs(false)
+        }
+    }, [clockState]);
 
     if (typeof (simulationResult) === 'string') {
         var svgStr = simulationResult.replace('$height', 80);
@@ -35,7 +68,7 @@ function OutputWindow(props) {
             {
                 clocked ? <ClockModule clockState={clockState} setClockState={setClockState} /> : <></>
             }
-            <ChipDesign clockState={clockState} />
+            <ChipDesign error={error} setError={setError} errorMsg={errorMsg} setErrorMsg={setErrorMsg} result={result} setResult={setResult} inputs={inputs} setInputs={setInputs} clockState={clockState} />
             {
                 Math.max(simulationResult.ast.inputs.length, simulationResult.ast.outputs.length) <= 4 ? <TruthTable clockState={clockState} /> : <></>
             }
