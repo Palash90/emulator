@@ -42,6 +42,7 @@ function Chip(props) {
     inputValues = (({ CLOCK, ...o }) => o)(inputValues);
 
     const [selected, setSelected] = useState("");
+    const [reveal, setReveal] = useState(false);
 
     const groupIt = (array) => {
         let resultObj = {};
@@ -160,13 +161,13 @@ function Chip(props) {
             '</linearGradient>' +
             '</defs>' +
             '<g><rect width="' + chipWidth + '" height="' + chipHeight + '" style="fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)"/>' +
-            '<text class="svgtxt" x="' + (chipWidth / 2) + '" y="' + (chipHeight / 2) + '" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + props.chip.chip + '</text></g>' +
+            '<text class="svgtxt" x="' + (chipWidth / 2) + '" y="' + (chipHeight / 2) + '" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + (typeof (props.chip.chip) === 'string' ? props.chip.chip : props.chip.chip.chip) + '</text></g>' +
             '</svg>'
     }
 
     return <>
-        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "90%" }}>
-            <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
+        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "90%" }} onDoubleClick={() => { console.log(props.chip); setReveal(true); }}>
+            {(!reveal || !props.chip.chipCallStack) ? <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
                     <text className="svgtxt" key={uuid()} x={horizontal ? chipWidth / 2 : "115"} y={horizontal ? -20 : 8} fontFamily="Verdana" fontSize="10" fill="#BB86FC" textAnchor="middle">Output</text>
@@ -212,7 +213,8 @@ function Chip(props) {
                         })
                     }
                 </g>
-            </svg>
+            </svg> : Object.keys(props.chip.chipCallStack).map(el => <Chip key={uuid()} chip={props.chip.chipCallStack[el]} />)
+            }
         </div>
         {
             maxGroupLength < 4 ? <></> : <Table responsive striped bordered hover size="sm" variant="dark">
