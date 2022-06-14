@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import SimulationContext from "./SimulationContext";
 import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
 import { Table } from "react-bootstrap";
-import ScreenSizeContext from "./ScreenSizeContext";
 
 export default function ChipDesign(props) {
     const { simulationResult } = useContext(SimulationContext);
@@ -39,7 +38,6 @@ function Chip(props) {
     var inputValues = props.chip['inputValues'];
     var outputValues = props.chip.outputValues;
     var maxGroupLength = 0;
-    const { vw, vh } = useContext(ScreenSizeContext);
 
     inputValues = (({ CLOCK, ...o }) => o)(inputValues);
 

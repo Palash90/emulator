@@ -4,7 +4,6 @@ import TruthTable from "./TruthTable";
 import ChipDesign from "./ChipDesign";
 import SVG from 'react-inlinesvg';
 import ClockModule from "./ClockModule";
-import { Col, Row } from "react-bootstrap";
 import ScreenSizeContext from "./ScreenSizeContext";
 
 function OutputWindow(props) {
