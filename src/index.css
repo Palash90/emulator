@@ -223,3 +223,8 @@ svg {
   -o-user-select:none;
   user-select:none;
 }
+
+svg:active .button-contour {
+  transform: rotate(180deg);
+  transform-origin: 6px 6px;
+}
