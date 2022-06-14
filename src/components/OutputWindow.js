@@ -69,7 +69,7 @@ function OutputWindow(props) {
             }
             <ChipDesign error={error} setError={setError} errorMsg={errorMsg} setErrorMsg={setErrorMsg} result={result} setResult={setResult} inputs={inputs} setInputs={setInputs} clockState={clockState} />
             {
-                Math.max(simulationResult.ast.inputs.length, simulationResult.ast.outputs.length) <= 4 ? <TruthTable clockState={clockState} /> : <></>
+                Math.max(simulationResult.ast.inputs.length, simulationResult.ast.outputs.length) <= 4 && !clocked ? <TruthTable clockState={clockState} /> : <></>
             }
         </>
     }
