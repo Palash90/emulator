@@ -17,7 +17,7 @@ function OutputWindow(props) {
     const [errorMsg, setErrorMsg] = useState('');
 
     function calculateInputs(allFalse) {
-        if (typeof (simulationResult) !== 'string') {
+        if (typeof (simulationResult) !== 'string' && !simulationResult.error) {
             var input = {};
             simulationResult.ast.inputs.map(inp => {
                 input[inp] = allFalse ? false : inputs[inp];
