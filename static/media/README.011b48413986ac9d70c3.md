@@ -1,9 +1,13 @@
 
-# Minimalistic Hardware Emulator
+# Onlline HDL Emulator
 
-This is a Hardware Emulation Platform with minimal hardware description support. The emulator works on a Hardware Description Language (HDL). You can write the HDL Program and click on the Run button. The emulator builds an Abstract Syntax Tree (AST) and the runs it. It also generates a truth table with all the possible binary combinations of the inputs as mentioned in the File.
+This is a Hardware Emulation Platform with minimal hardware description support. The emulator works on a Hardware Description Language (HDL). You can write the HDL Program and click on the Run button. The emulator builds an Abstract Syntax Tree (AST) and the runs it. It also generates a truth table with all the possible binary combinations of the inputs as mentioned in the File. Truth table works only upto 4 inputs, beyond that, it is cumbersome to verify all the input and output combinations manually. However, for more inputs, the emulator draws a table by grouping inputs and outputs of similar name. 
+For example, if the inputs are a1, a2, a3, a4, a5, a6, a7, a8 then a column named a with a decimal equivalent of the binary input.
 
 **N.B:** The emulator is not optimized and can only be used for education purpose. Some Good to Have Features are yet to be implemented. Check the 'Pending Features' section.
+
+## Live Demo
+The application is running live [here](http://emulator.palashkantikundu.in/) 
 
 ## Pending Features
 

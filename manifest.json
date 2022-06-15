@@ -1,6 +1,6 @@
 {
-  "short_name": "Minimalistic Hardware Emulator",
-  "name": "Design and simuate your hardware on web",
+  "short_name": "Online HDL Emulator",
+  "name": "Design and emulate your hardware on web",
   "icons": [
     {
       "src": "favicon.ico",
