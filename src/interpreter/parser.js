@@ -240,7 +240,7 @@ const builtInChips = [
         }
     },
     {
-        chip: "DFlipFlop",
+        chip: "DLatch",
         inputs: ["D", "E"],
         outputs: ["Q"],
         D: false,

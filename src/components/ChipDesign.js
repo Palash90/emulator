@@ -166,7 +166,7 @@ function Chip(props) {
     }
 
     return <>
-        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "90%" }} onDoubleClick={() => { console.log(props.chip); setReveal(true); }}>
+        <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "90%" }} onDoubleClick={() => { console.log(props.chip); setReveal(false); }}>
             {(!reveal || !props.chip.chipCallStack) ? <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
                 <g>
                     <SVG src={iconStr} x='0' y='15' />
@@ -177,7 +177,7 @@ function Chip(props) {
                             return <g key={uuid()}>
                                 <text className="svgtxt" key={uuid()} x={inputLine.xPos} y={horizontal ? inputLine.yPos : inputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{inputLine.key}</text>
                                 <line key={uuid()} x1={horizontal ? inputLine.xPos : -30} x2={horizontal ? inputLine.xPos : "0"} y1={horizontal ? 135 : inputLine.yPos} y2={horizontal ? 115 : inputLine.yPos} stroke={inputLine.value ? "green" : "red"} strokeWidth="1" />
-                                <svg key={uuid()} x={(horizontal ? inputLine.xPos : -30) - 6} y={(horizontal ? 135 : inputLine.yPos) - 6} className="inputButton" onMouseOver={() => setSelected('inpBut-' + index)} onClick={() => { props.changeInput(inputLine.key); }}>
+                                <svg key={uuid()} x={(horizontal ? inputLine.xPos : -30) - 6} y={(horizontal ? 135 : inputLine.yPos) - 6} className="inputButton" onMouseOver={() => setSelected('inpBut-' + index)} onMouseLeave={() => setSelected('')} onClick={() => { props.changeInput(inputLine.key); }}>
                                     <rect width="12" height="12" rx="1.5" ry="1.5" fill="gray" strokeWidth="2" />
                                     <rect x=".75" y=".75" width="10.5" height="10.5" rx="1.5" ry="1.5" fill="#cacaca" />
                                     <linearGradient id={"grad-up" + index} x1="0" x2="1" y1="0" y2="1">
