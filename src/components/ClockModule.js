@@ -6,13 +6,16 @@ export default function ClockModule(props) {
     const [freq, setFreq] = useState(100);
 
     var clock = () => {
-        if (manual)
-            props.setClockState(!props.clockState);
+        if (manual){
+            props.setClockState(true);
+            setTimeout(() => props.setClockState(false), 5);
+        }
     }
 
     useEffect(() => {
         const interval = !manual ? setInterval(() => {
-            props.setClockState(!props.clockState);
+            props.setClockState(true);
+            setTimeout(() => props.setClockState(false), 5);
         }, freq) : null;
         return () => clearInterval(interval);
     }, [manual, freq, props]);
