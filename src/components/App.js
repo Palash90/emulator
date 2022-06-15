@@ -14,7 +14,7 @@ import ScreenSizeContext from './ScreenSizeContext';
 const storedFiles = JSON.parse(localStorage.getItem('files'));
 const existingFiles = storedFiles && storedFiles.length > 0 ? storedFiles || defaultFiles : defaultFiles;
 
-function MinimalHardwareEmulator() {
+function HDLEmulator() {
   var ivw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
   var ivh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
@@ -97,5 +97,5 @@ function ModalWindow() {
     }
   </Modal >
 }
-export default MinimalHardwareEmulator;
+export default HDLEmulator;
 
