@@ -4,18 +4,19 @@ import { useState, useEffect } from "react";
 export default function ClockModule(props) {
     const [manual, setManual] = useState();
     const [freq, setFreq] = useState(100);
+    const pulseWidth = 20;
 
     var clock = () => {
-        if (manual){
+        if (manual) {
             props.setClockState(true);
-            setTimeout(() => props.setClockState(false), 5);
+            setTimeout(() => props.setClockState(false), pulseWidth);
         }
     }
 
     useEffect(() => {
         const interval = !manual ? setInterval(() => {
             props.setClockState(true);
-            setTimeout(() => props.setClockState(false), 5);
+            setTimeout(() => props.setClockState(false), pulseWidth);
         }, freq) : null;
         return () => clearInterval(interval);
     }, [manual, freq, props]);
