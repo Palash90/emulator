@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 export default function ClockModule(props) {
     const [manual, setManual] = useState();
     const [freq, setFreq] = useState(100);
+    const [manualPulseWidth, setManualPulseWidth] = useState(5000);
     const pulseWidth = 20;
 
     var clock = () => {
         if (manual) {
             props.setClockState(true);
-            setTimeout(() => props.setClockState(false), pulseWidth);
+            setTimeout(() => props.setClockState(false), manualPulseWidth);
         }
     }
 
@@ -42,10 +43,10 @@ export default function ClockModule(props) {
                                 />
                             </Col>
                             <Col>
-                                {manual ? <></> : <Form.Range disabled={manual} value={freq} step={100} min={100} max={2500} onChange={(value) => setFreq(value.target.value)} />}
+                                {manual ? <Form.Range disabled={!manual} value={manualPulseWidth} step={1000} min={5000} max={30000} onChange={(value) => setManualPulseWidth(value.target.value)} /> : <Form.Range disabled={manual} value={freq} step={100} min={100} max={2500} onChange={(value) => setFreq(value.target.value)} />}
                             </Col>
                             <Col>
-                                {manual ? <></> : <Form.Label>{parseFloat(1000 / freq).toFixed(2) + " Hz"}</Form.Label>}
+                                {manual ? <Form.Label>{"Wd " + (manualPulseWidth / 1000) + " s"}</Form.Label> : <Form.Label>{parseFloat(1000 / freq).toFixed(2) + " Hz"}</Form.Label>}
                             </Col>
                         </Row>
                     </Form.Group>

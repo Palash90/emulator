@@ -17,6 +17,7 @@ export default function ChipDesign(props) {
             props.setInputs(input)
             try {
                 var outputValues = simulationResult.getValues(input, simulationResult.ast);
+                simulationResult.clearBus();
                 var ast = { ...simulationResult.ast };
                 ast['inputValues'] = input;
                 ast['outputValues'] = outputValues;
