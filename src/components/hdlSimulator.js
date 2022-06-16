@@ -21,7 +21,6 @@ export default function runSimulation(currFileId, files, callback) {
                     try {
                         ast.outputs.map(out => {
                             var val = ast.operations[out](obj);
-                            console.log(out, val)
                             values[out] = val;
                         });
                     } catch (error) {

@@ -266,24 +266,30 @@ const builtInChips = [
     },
     {
         chip: "BusBit",
-        inputs: ["in",],
+        inputs: ["in", 'num'],
         outputs: ["out"],
         operations: {
             out: function (busInput) {
                 if (busInput['in'].type !== buffer) {
                     throw "Bus can only have buffers as input";
                 }
-                busValueTracker[this.id][busInput['in'].id] = busInput['in'].value;
+
+                if (!busValueTracker[busInput['num']]) {
+                    console.log("Adding new entry to bus")
+                    busValueTracker[busInput['num']] = {};
+                }
+                
+                busValueTracker[busInput['num']][busInput['in'].id] = busInput['in'].value;
 
                 console.log("busValueTracker", busValueTracker)
 
-                var activeBusConnections = Object.keys(busValueTracker[this.id]).filter(el => busValueTracker[this.id][el] !== undefined);
-               
+                var activeBusConnections = Object.keys(busValueTracker[busInput['num']]).filter(el => busValueTracker[busInput['num']][el] !== undefined);
+
                 if (activeBusConnections.length > 1) {
                     throw "More than one value on bus are active. Please check your circuit and check buffer conditions.";
                 }
-               
-                return activeBusConnections.length === 1 ? busValueTracker[this.id][activeBusConnections[0]] : undefined;
+
+                return activeBusConnections.length === 1 ? busValueTracker[busInput['num']][activeBusConnections[0]] : undefined;
             }
         }
     },
@@ -401,12 +407,6 @@ const evaluateAst = (fileName, chipName, ast) => {
                 chip.operations = { ...builtinChip[0].operations };
                 var chipId = uuid();
                 chip.operations.id = chipId;
-
-                if (chip.chip === 'BusBit') {
-                    console.log('Making a bus bit', chip, busValueTracker, Object.keys(busValueTracker).length);
-                    busValueTracker[chipId] = {};
-                }
-
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
@@ -471,7 +471,10 @@ const evaluateAst = (fileName, chipName, ast) => {
                         values[pi.dest] = input[pi.source]
                     } else if (pi.source in operations) {
                         values[pi.dest] = operations[pi.source](input)
+                    } else if (!isNaN(parseInt(pi.source))) {
+                        values[pi.dest] = parseInt(pi.source);
                     } else {
+                        console.log(typeof (pi.source))
                         throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
                     }
                 });
@@ -663,8 +666,8 @@ const AstGenerator = () => {
         Consume();
 
         token = Peek();
-        if (token.type !== VARIABLE) {
-            handleParseError("Variable", token);
+        if (token.type !== VARIABLE && token.type !== INT_LITERAL) {
+            handleParseError("Variable or integer literal", token);
         }
 
         parameter.source = token;
@@ -753,7 +756,7 @@ const AstGenerator = () => {
 
     const handleParseError = (exptected, token) => {
         clear();
-        var err = fileName + ":Expected " + exptected + ", but got '" + (token.type === EOF ? 'EOF' : token.value);
+        var err = fileName + ":Expected " + exptected + ", but got '" + (token.type === EOF ? 'EOF' : token.value) + token.type;
         err = err + (token.type === EOF ? "'" : ("' at line:" + token.line));
         throw err;
     }
