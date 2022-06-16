@@ -1,5 +1,4 @@
 import parse from '../interpreter/parser';
-import { clearBus } from '../interpreter/parser';
 
 export default function runSimulation(currFileId, files, callback) {
     var result;
@@ -16,7 +15,6 @@ export default function runSimulation(currFileId, files, callback) {
             result = ast;
             console.log(ast)
             if (typeof (result) !== 'string') {
-                result['clearBus'] = () => clearBus();
                 result['getValues'] = (input, ast) => getValues(input, ast)
                 function getValues(obj, ast) {
                     var values = {};

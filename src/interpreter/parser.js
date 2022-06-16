@@ -19,10 +19,7 @@ const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
 const ICON = "ICON"
 const busValueTracker = {};
-
-export const clearBus = () => {
-    Object.keys(busValueTracker).map(el => busValueTracker[el] = [])
-}
+const buffer = 'BUFFER'
 
 const Tokenizer = () => {
     var tokens = [];
@@ -260,7 +257,7 @@ const builtInChips = [
                 }
 
                 return {
-                    type: 'buffer',
+                    type: buffer,
                     value: value,
                     id: this.id
                 }
@@ -273,11 +270,20 @@ const builtInChips = [
         outputs: ["out"],
         operations: {
             out: function (busInput) {
-                console.log("Bus values now", busValueTracker);
-                busValueTracker[this.id] = busValueTracker[this.id].concat(busInput['in']);
+                if (busInput['in'].type !== buffer) {
+                    throw "Bus can only have buffers as input";
+                }
+                busValueTracker[this.id][busInput['in'].id] = busInput['in'].value;
 
-                var busValues = busValueTracker[this.id].filter(el => el !== undefined);
-                return busValues.length === 1 ? busValues[0] : undefined;
+                console.log("busValueTracker", busValueTracker)
+
+                var activeBusConnections = Object.keys(busValueTracker[this.id]).filter(el => busValueTracker[this.id][el] !== undefined);
+               
+                if (activeBusConnections.length > 1) {
+                    throw "More than one value on bus are active. Please check your circuit and check buffer conditions.";
+                }
+               
+                return activeBusConnections.length === 1 ? busValueTracker[this.id][activeBusConnections[0]] : undefined;
             }
         }
     },

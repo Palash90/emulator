@@ -6,7 +6,6 @@ import { Table } from "react-bootstrap";
 
 export default function ChipDesign(props) {
     const { simulationResult } = useContext(SimulationContext);
-
     const changeInput = (changedKey) => {
         var input = {}
         if (props.inputs) {
@@ -17,7 +16,6 @@ export default function ChipDesign(props) {
             props.setInputs(input)
             try {
                 var outputValues = simulationResult.getValues(input, simulationResult.ast);
-                simulationResult.clearBus();
                 var ast = { ...simulationResult.ast };
                 ast['inputValues'] = input;
                 ast['outputValues'] = outputValues;
@@ -28,7 +26,9 @@ export default function ChipDesign(props) {
             }
         }
     };
-    return props.error ? <div className="svg-container text-warning">{props.errorMsg}</div> : (props.result && props.result.ast ? <Chip error={props.error} errorMsg={props.errorMsg} changeInput={changeInput} chip={props.result.ast} /> : <></>)
+    var errMsg = props.errorMsg instanceof Error ? JSON.stringify(props.errorMsg.message) : JSON.stringify(props.errorMsg)
+
+    return props.error ? <div className="svg-container text-warning">{errMsg}</div> : (props.result && props.result.ast ? <Chip error={props.error} errorMsg={props.errorMsg} changeInput={changeInput} chip={props.result.ast} /> : <></>)
 }
 function Chip(props) {
     var iconStr;
@@ -139,10 +139,11 @@ function Chip(props) {
         counter = 1;
 
         for (var key in outputValues) {
+            var val = typeof (outputValues[key]) === 'object' ? outputValues[key].value : outputValues[key];
             if (horizontal) {
-                outputLines.push({ value: outputValues[key], key: key, yPos: 0, xPos: (counter * chipWidth / outputLength) + 5 });
+                outputLines.push({ value: val, key: key, yPos: 0, xPos: (counter * chipWidth / outputLength) + 5 });
             } else {
-                outputLines.push({ value: outputValues[key], key: key, xPos: "105", yPos: (counter * chipHeight / outputLength) + 15 });
+                outputLines.push({ value: val, key: key, xPos: "105", yPos: (counter * chipHeight / outputLength) + 15 });
             }
             counter = counter + 1;
         }
@@ -165,7 +166,6 @@ function Chip(props) {
             '<text class="svgtxt" x="' + (chipWidth / 2) + '" y="' + (chipHeight / 2) + '" font-family="Verdana" font-size="10" fill="cyan" text-anchor="middle">' + (typeof (props.chip.chip) === 'string' ? props.chip.chip : props.chip.chip.chip) + '</text></g>' +
             '</svg>'
     }
-
     return <>
         <div className="svg-container" style={{ height: (Math.max(inputLength, outputLength) < 5) ? "60%" : "85%", maxHeight: (Math.max(inputLength, outputLength) < 5) ? "60%" : "90%" }} onDoubleClick={() => { console.log(props.chip); setReveal(false); }}>
             {(!reveal || !props.chip.chipCallStack) ? <svg viewBox={"0 " + (horizontal ? -30 : 0) + " " + (chipWidth + 15) + " " + (chipHeight + (horizontal ? 100 : 15))}>
@@ -207,7 +207,7 @@ function Chip(props) {
                                 <text className="svgtxt" key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
                                 <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value === undefined ? "blue" : outputLine.value ? "green" : "red"} strokeWidth="1" />
                                 <circle cx={horizontal ? outputLine.xPos : "130"} cy={horizontal ? outputLine.yPos + 2 : outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
-                                    <animate attributeName="fill" values={outputLine.value === undefined ? "blue;darkblue;blue" :outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
+                                    <animate attributeName="fill" values={outputLine.value === undefined ? "blue;darkblue;blue" : outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
                                 </circle>
 
                             </g>
