@@ -1,3 +1,5 @@
+import uuid from "react-uuid";
+
 const OPERATOR = 0;
 const SEPARATOR = 1;
 const VARIABLE = 2;
@@ -386,7 +388,7 @@ const evaluateAst = (fileName, chipName, ast) => {
                 chip.operations = { ...builtinChip[0].operations };
                 if (chip.chip === 'BusBit') {
                     console.log('Making a bus bit', chip, busValueTracker, Object.keys(busValueTracker).length);
-                    var busId = Object.keys(busValueTracker).length;
+                    var busId = uuid();
                     chip.operations.id = busId;
                     busValueTracker[busId] = [];
                 }
