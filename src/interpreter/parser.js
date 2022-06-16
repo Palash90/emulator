@@ -278,7 +278,7 @@ const builtInChips = [
                     console.log("Adding new entry to bus")
                     busValueTracker[busInput['num']] = {};
                 }
-                
+
                 busValueTracker[busInput['num']][busInput['in'].id] = busInput['in'].value;
 
                 console.log("busValueTracker", busValueTracker)
@@ -456,12 +456,25 @@ const evaluateAst = (fileName, chipName, ast) => {
             partOutputs.map(part => chipDetails[part.source] = chipObject)
 
             partOutputs.map(output => {
-                operations[output.source] = (input) => {
+                var newOperation = (input) => {
                     var values = getValues(input, output.source);
                     var returnValue = chip.operations[output.dest](values)
                     chipCallStack[output.source] = { chip: chip, inputValues: values, outputValues: returnValue };
                     return returnValue;
                 }
+
+                console.log(operations[output.source] && Array.isArray(operations[output.source]))
+
+                if (operations[output.source] && Array.isArray(operations[output.source])) {
+                    console.log('already an array', output.source)
+                    operations[output.source] = output.source.concat(newOperation);
+                } else if (typeof (operations[output.source]) === 'function') {
+                    console.log('already a fnc', output.source)
+                    operations[output.source] = [operations[output.source]].concat(newOperation);
+                } else {
+                    operations[output.source] = newOperation;
+                }
+
             })
 
             var getValues = (input, part) => {

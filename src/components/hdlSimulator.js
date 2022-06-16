@@ -20,7 +20,7 @@ export default function runSimulation(currFileId, files, callback) {
                     var values = {};
                     try {
                         ast.outputs.map(out => {
-                            var val = ast.operations[out](obj);
+                            var val = Array.isArray(ast.operations[out]) ? ast.operations[out].map(el => el(obj)) : ast.operations[out](obj);
                             values[out] = val;
                         });
                     } catch (error) {
