@@ -49,7 +49,7 @@ export default function TruthTable(props) {
                 values.push(outputValues[key])
             }
 
-            return values.map(val => <td key={uuid()}>{val ? 1 : 0}</td>);
+            return values.map(val => <td key={uuid()}>{val === undefined ? 'x' : val ? 1 : 0}</td>);
         } catch (error) {
             setError(true);
             setErrorMsg(error)
