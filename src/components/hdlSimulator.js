@@ -20,9 +20,23 @@ export default function runSimulation(currFileId, files, callback) {
                 result['getValues'] = (input, ast) => getValues(input, ast)
                 function getValues(obj, ast) {
                     var values = {};
-                    ast.outputs.map(out => {
-                        values[out] = ast.operations[out](obj);
-                    });
+                    try {
+                        ast.outputs.map(out => {
+                            var val = ast.operations[out](obj);
+                            console.log(out, val)
+                            values[out] = val;
+                        });
+                    } catch (error) {
+                        result = {
+                            error: true,
+                            errorMessage: error
+                        };
+                        if (callback) {
+                            callback(result)
+                        } else {
+                            console.log("No callback specified for simulator. Simulation result", result);
+                        }
+                    }
                     return values;
                 }
             }

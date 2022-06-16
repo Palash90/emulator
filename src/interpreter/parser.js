@@ -251,11 +251,18 @@ const builtInChips = [
         inputs: ["in", "e"],
         outputs: ["out"],
         operations: {
-            out: (bufferInput) => {
+            out: function (bufferInput) {
+                var value;
                 if (bufferInput['e']) {
-                    return bufferInput['in'];
+                    value = bufferInput['in'];
                 } else {
-                    return undefined;
+                    value = undefined;
+                }
+
+                return {
+                    type: 'buffer',
+                    value: value,
+                    id: this.id
                 }
             }
         }
@@ -266,11 +273,11 @@ const builtInChips = [
         outputs: ["out"],
         operations: {
             out: function (busInput) {
-                    console.log("Bus values now", busValueTracker);
-                    busValueTracker[this.id] = busValueTracker[this.id].concat(busInput['in']);
+                console.log("Bus values now", busValueTracker);
+                busValueTracker[this.id] = busValueTracker[this.id].concat(busInput['in']);
 
-                    var busValues = busValueTracker[this.id].filter(el => el !== undefined);
-                    return busValues.length === 1 ? busValues[0] : undefined;
+                var busValues = busValueTracker[this.id].filter(el => el !== undefined);
+                return busValues.length === 1 ? busValues[0] : undefined;
             }
         }
     },
@@ -386,12 +393,14 @@ const evaluateAst = (fileName, chipName, ast) => {
             } else if (builtinChip && builtinChip.length > 0) {
                 chip = Object.assign({}, builtinChip[0]);
                 chip.operations = { ...builtinChip[0].operations };
+                var chipId = uuid();
+                chip.operations.id = chipId;
+
                 if (chip.chip === 'BusBit') {
                     console.log('Making a bus bit', chip, busValueTracker, Object.keys(busValueTracker).length);
-                    var busId = uuid();
-                    chip.operations.id = busId;
-                    busValueTracker[busId] = [];
+                    busValueTracker[chipId] = {};
                 }
+
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;

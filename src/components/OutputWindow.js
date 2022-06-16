@@ -59,8 +59,10 @@ function OutputWindow(props) {
         return <></>
     }
 
+    var errMsg = simulationResult.errorMessage instanceof Error ? JSON.stringify(simulationResult.errorMessage.message) : JSON.stringify(simulationResult.errorMessage)
+
     if (simulationResult && simulationResult.error) {
-        return <pre className="text-warning  border border-secondary" style={{ textAlign: 'left', wordWrap: 'break-word', whiteSpace: 'pre-wrap', overflowY: "scroll", width: (vw * 99 / 100 - props.editorWidth) + "px", marginTop: '10px', height: vh * 85 / 100 + "px" }} role="output">{JSON.stringify(simulationResult.errorMessage)}</pre>
+        return <pre className="text-warning  border border-secondary" style={{ textAlign: 'left', wordWrap: 'break-word', whiteSpace: 'pre-wrap', overflowY: "scroll", width: (vw * 99 / 100 - props.editorWidth) + "px", marginTop: '10px', height: vh * 85 / 100 + "px" }} role="output">{errMsg}</pre>
     } else {
         var clocked = simulationResult.ast.inputs.filter(el => el === 'CLOCK').length > 0;
         return <>
