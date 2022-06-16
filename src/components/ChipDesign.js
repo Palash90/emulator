@@ -204,9 +204,9 @@ function Chip(props) {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
                                 <text className="svgtxt" key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
-                                <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value ? "green" : "red"} strokeWidth="1" />
+                                <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value === undefined ? "blue" : outputLine.value ? "green" : "red"} strokeWidth="1" />
                                 <circle cx={horizontal ? outputLine.xPos : "130"} cy={horizontal ? outputLine.yPos + 2 : outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
-                                    <animate attributeName="fill" values={outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
+                                    <animate attributeName="fill" values={outputLine.value === undefined ? "blue;darkblue;blue" :outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
                                 </circle>
 
                             </g>

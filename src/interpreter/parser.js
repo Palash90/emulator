@@ -240,6 +240,20 @@ const builtInChips = [
         }
     },
     {
+        chip: "Buffer",
+        inputs: ["in", "e"],
+        outputs: ["out"],
+        operations: {
+            out: (bufferInput) => {
+                if(bufferInput['e']){
+                    return bufferInput['in'];
+                } else {
+                    return undefined;
+                }
+            }
+        }
+    },
+    {
         chip: "DLatch",
         inputs: ["D", "E"],
         outputs: ["Q"],
