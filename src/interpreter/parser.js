@@ -1,5 +1,5 @@
 
-const uuid = require("react-uuid")
+const nanoid = require("nanoid").nanoid;
 
 const OPERATOR = 0;
 const SEPARATOR = 1;
@@ -683,7 +683,8 @@ const evaluateAst = (fileName, chipName, ast) => {
             } else if (builtinChip && builtinChip.length > 0) {
                 chip = Object.assign({}, builtinChip[0]);
                 chip.operations = { ...builtinChip[0].operations };
-                var chipId = uuid();
+                var chipId = nanoid();
+                console.log(chipId)
                 chip.operations.id = chipId;
                 imported = false;
             } else {
