@@ -1,4 +1,5 @@
-import uuid from "react-uuid";
+
+const uuid = require("react-uuid")
 
 const OPERATOR = 0;
 const SEPARATOR = 1;
@@ -795,7 +796,7 @@ function handleFailure(errorMessage) {
     }
 }
 
-export default function parse(file, content, files) {
+function parse(file, content, files) {
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
@@ -820,6 +821,9 @@ export default function parse(file, content, files) {
 
     try {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
+
+        console.log(ast);
+
         var result = evaluate({ error: false, ast: ast })
         return result;
     } catch (error) {
@@ -827,3 +831,4 @@ export default function parse(file, content, files) {
     }
 }
 
+module.exports = { parse }
