@@ -22,6 +22,8 @@ const ICON = "ICON"
 const busValueTracker = {};
 const buffer = 'BUFFER'
 
+const astMap = {};
+
 const Tokenizer = () => {
     var tokens = [];
     var pointer = 0;
@@ -43,6 +45,7 @@ const Tokenizer = () => {
                     var token = {
                         value: tokenPart,
                         line: line,
+                        id: nanoid()
                     };
                     tokenPart = "";
                     tokens.push(token);
@@ -53,6 +56,7 @@ const Tokenizer = () => {
                     {
                         value: currChar,
                         line: line,
+                        id: nanoid()
                     };
                     tokens.push(opearatorToken);
                 }
@@ -62,7 +66,8 @@ const Tokenizer = () => {
                     var newLineToken =
                     {
                         value: currChar,
-                        line: line
+                        line: line,
+                        id: nanoid()
                     };
                     tokens.push(newLineToken);
                 }
@@ -73,6 +78,7 @@ const Tokenizer = () => {
                     {
                         value: tokenPart,
                         line: line,
+                        id: nanoid()
                     };
                     tokens.push(remainingToken);
                 }
@@ -638,18 +644,8 @@ const evaluate = (ast) => {
 }
 
 const evaluateAst = (fileName, chipName, ast) => {
-    var evaluationResult = {
-        fileName: fileName,
-        chip: chipName,
-        importedChips: [],
-        inputs: [],
-        outputs: []
-    }
 
-
-    ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
-    ast.filter(el => el.type === INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
-    ast.filter(el => el.type === OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
+    var evaluationResult = {};
 
     var icons = ast.filter(el => el.type === ICON);
 
@@ -659,134 +655,9 @@ const evaluateAst = (fileName, chipName, ast) => {
         evaluationResult.icon = icons[0]['svg'];
     }
 
-
     var parts = ast.filter(el => el.type === PARTS);
 
-    var operations = {};
-    var chipDetails = {};
-    var chipCallStack = {};
 
-    parts.map(part => {
-
-        var chipObject = {}
-
-        part.value.map(chipCall => {
-            var importedChip = evaluationResult.importedChips.filter(el => el.chip === chipCall.chip.value);
-            var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
-
-            var chip;
-            var imported;
-
-            if (importedChip && importedChip.length > 0) {
-                chip = Object.assign({}, importedChip[0]);
-                imported = true;
-            } else if (builtinChip && builtinChip.length > 0) {
-                chip = Object.assign({}, builtinChip[0]);
-                chip.operations = { ...builtinChip[0].operations };
-                var chipId = nanoid();
-                console.log(chipId)
-                chip.operations.id = chipId;
-                imported = false;
-            } else {
-                throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
-            }
-
-            if ((chip.inputs.length + chip.outputs.length) != chipCall.parameters.length) {
-                throw fileName +
-                ":Mismatch in chip arguments and parameters at line:" +
-                chipCall.chip.line + " chip '" +
-                chip.chip +
-                "'(" + (imported ? "imported" : "built in") + ") arguments are input:" +
-                JSON.stringify(chip.inputs) +
-                " output:" +
-                JSON.stringify((chip.outputs));
-            }
-
-            var chipInputs = [...chip.inputs];
-            var chipOutputs = [...chip.outputs];
-
-            var partInputs = []
-            var partOutputs = [];
-            var partFunction;
-
-            chipCall.parameters.map(el => {
-                if (chip.inputs.includes(el.destination.value)) {
-                    chipInputs = chipInputs.filter(input => input !== el.destination.value);
-                    partInputs.push({ source: el.source.value, dest: el.destination.value });
-                } else if (chip.outputs.includes(el.destination.value)) {
-                    chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
-                    partOutputs.push({ source: el.source.value, dest: el.destination.value });
-                    partFunction = chip.operations;
-                } else {
-                    throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
-                }
-            });
-
-            if (chipInputs.length > 0) {
-                throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipInputs;
-            }
-            if (chipOutputs.length > 0) {
-                throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
-            }
-
-            chipObject = {
-                partFunction, partInputs, partOutputs
-            }
-            partOutputs.map(part => chipDetails[part.source] = chipObject)
-
-            partOutputs.map(output => {
-                var newOperation = (input) => {
-                    var values = getValues(input, output.source);
-                    var returnValue = chip.operations[output.dest](values)
-                    chipCallStack[output.source] = { chip: chip, inputValues: values, outputValues: returnValue };
-                    return returnValue;
-                }
-
-                console.log(operations[output.source] && Array.isArray(operations[output.source]))
-
-                if (operations[output.source] && Array.isArray(operations[output.source])) {
-                    console.log('already an array', output.source)
-                    operations[output.source] = output.source.concat(newOperation);
-                } else if (typeof (operations[output.source]) === 'function') {
-                    console.log('already a fnc', output.source)
-                    operations[output.source] = [operations[output.source]].concat(newOperation);
-                } else {
-                    operations[output.source] = newOperation;
-                }
-
-            })
-
-            var getValues = (input, part) => {
-                var values = {}
-                chipDetails[part].partInputs.map(pi => {
-                    if (pi.source in input) {
-                        values[pi.dest] = input[pi.source]
-                    } else if (pi.source in operations) {
-                        values[pi.dest] = operations[pi.source](input)
-                    } else if (!isNaN(parseInt(pi.source))) {
-                        values[pi.dest] = parseInt(pi.source);
-                    } else {
-                        console.log(typeof (pi.source))
-                        throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
-                    }
-                });
-                return values
-            }
-        });
-    });
-
-    evaluationResult.operations = operations;
-    evaluationResult.chipCallStack = chipCallStack;
-    evaluationResult.clearCallStack = () => {
-        evaluationResult.chipCallStack = { ...evaluationResult.chipCallStack }
-        if (evaluationResult.chipCallStack) {
-            for (var chip in evaluationResult.chipCallStack) {
-                if (evaluationResult.chipCallStack[chip].chip && evaluationResult.chipCallStack[chip].chip.clearCallStack)
-                    evaluationResult.chipCallStack[chip].chip.clearCallStack();
-            }
-        }
-        chipCallStack = {};
-    }
     return evaluationResult;
 }
 
@@ -824,6 +695,7 @@ function parse(file, content, files) {
 
     try {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
+        ast.id = nanoid();
 
         console.log(ast);
 
