@@ -19,7 +19,7 @@ const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
 const ICON = "ICON"
-const busValueTracker = {};
+var busValueTracker = {};
 const buffer = 'BUFFER'
 
 const astMap = {};
@@ -276,24 +276,26 @@ const builtInChips = [
         inputs: ["in", 'num'],
         outputs: ["out"],
         operations: {
-            out: function (busInput) {
-                if (busInput['in'].type !== buffer) {
-                    throw "Bus can only have buffers as input";
-                }
+            out: function (busInputs) {
+                busInputs.map(busInput => {
+                    if (busInput['in'].type !== buffer) {
+                        throw "Bus can only have buffers as input";
+                    }
 
-                if (!busValueTracker[busInput['num']]) {
-                    busValueTracker[busInput['num']] = {};
-                }
+                    if (!busValueTracker[busInput['num']]) {
+                        busValueTracker[busInput['num']] = {};
+                    }
 
-                busValueTracker[busInput['num']][busInput['in'].id] = busInput['in'].value;
+                    busValueTracker[busInput['num']][busInput['in'].id] = busInput['in'].value;
+                })
 
-                var activeBusConnections = Object.keys(busValueTracker[busInput['num']]).filter(el => busValueTracker[busInput['num']][el] !== undefined);
+                var activeBusConnections = Object.keys(busValueTracker[busInputs[0]['num']]).filter(el => busValueTracker[busInputs[0]['num']][el] !== undefined);
 
                 if (activeBusConnections.length > 1) {
-                    throw "More than one value on bus are active. Please check your circuit and check buffer conditions.";
+                    return null
                 }
 
-                return activeBusConnections.length === 1 ? busValueTracker[busInput['num']][activeBusConnections[0]] : undefined;
+                return activeBusConnections.length === 1 ? busValueTracker[busInputs[0]['num']][activeBusConnections[0]] : undefined;
             }
         }
     },
@@ -673,10 +675,7 @@ const evaluateAst = (fileName, chipName, ast) => {
     var chipCallStack = {};
 
     parts.map(part => {
-        console.log("executing", part.value);
-
         var chipObject = {}
-
         part.value.map(chipCall => {
             var importedChip = evaluationResult.importedChips.filter(el => el.chip === chipCall.chip.value);
             var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
@@ -740,12 +739,64 @@ const evaluateAst = (fileName, chipName, ast) => {
                 partFunction, partInputs, partOutputs
             }
 
-            console.log(chipCall.chip.id, chipObject);
+            partOutputs.map(part => {
+                if (chipDetails[part.source] && Array.isArray(chipDetails[part.source])) {
+                    chipDetails[part.source].push(chipObject);
+                } else if (typeof (chipDetails[part.source]) === 'object') {
+                    chipDetails[part.source] = [chipDetails[part.source]].concat(chipObject);
+                } else {
+                    chipDetails[part.source] = chipObject;
+                }
+            });
 
-            
+            partOutputs.map(output => {
+                operations[output.source] = (input) => {
+                    var values = getValues(input, output.source);
+                    var returnValue = chip.operations[output.dest](values)
+                    chipCallStack[output.source] = { chip: chip, inputValues: values, outputValues: returnValue };
+                    return returnValue;
+                }
+            })
+
+            var getValues = (input, part) => {
+                if (chipDetails[part] && Array.isArray(chipDetails[part])) {
+                    var values = [];
+                    chipDetails[part].map(repeatedPart => {
+                        var value = {};
+                        repeatedPart.partInputs.map(pi => {
+                            if (pi.source in input) {
+                                value[pi.dest] = input[pi.source]
+                            } else if (pi.source in operations) {
+                                value[pi.dest] = operations[pi.source](input)
+                            } else if (!isNaN(parseInt(pi.source))) {
+                                value[pi.dest] = parseInt(pi.source);
+                            } else {
+                                throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
+                            }
+                        });
+                        values.push(value)
+                    })
+                } else {
+                    var values = {}
+                    chipDetails[part].partInputs.map(pi => {
+                        if (pi.source in input) {
+                            values[pi.dest] = input[pi.source]
+                        } else if (pi.source in operations) {
+                            values[pi.dest] = operations[pi.source](input)
+                        } else if (!isNaN(parseInt(pi.source))) {
+                            values[pi.dest] = parseInt(pi.source);
+                        } else {
+                            throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
+                        }
+                    });
+                }
+                return values
+            }
         });
-
     });
+
+    evaluationResult.operations = operations;
+    evaluationResult.chipCallStack = chipCallStack;
 
     return evaluationResult;
 }
@@ -760,6 +811,7 @@ function handleFailure(errorMessage) {
 }
 
 function parse(file, content, files) {
+    busValueTracker = {};
     if (!content || content.length < 1) {
         return handleFailure("No content to simulate");
     }
@@ -784,10 +836,7 @@ function parse(file, content, files) {
 
     try {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
-
-        console.log(ast);
-
-        var result = evaluate({ error: false, ast: ast })
+        var result = evaluate({ error: false, ast: ast, clearBus: () => busValueTracker = {} })
         return result;
     } catch (error) {
         return handleFailure(error);

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SimulationContext from "./SimulationContext";
 import SVG from 'react-inlinesvg';
 import uuid from "react-uuid";
@@ -6,6 +6,7 @@ import { Table } from "react-bootstrap";
 
 export default function ChipDesign(props) {
     const { simulationResult } = useContext(SimulationContext);
+
     const changeInput = (changedKey) => {
         var input = {}
         if (props.inputs) {
@@ -139,7 +140,7 @@ function Chip(props) {
         counter = 1;
 
         for (var key in outputValues) {
-            var val = typeof (outputValues[key]) === 'object' ? outputValues[key].value : outputValues[key];
+            var val = typeof (outputValues[key]) === 'object' ? (outputValues[key]) === null ? null : outputValues[key].value : outputValues[key];
             if (horizontal) {
                 outputLines.push({ value: val, key: key, yPos: 0, xPos: (counter * chipWidth / outputLength) + 5 });
             } else {
@@ -205,10 +206,15 @@ function Chip(props) {
                         outputLines.map(outputLine => {
                             return <g key={uuid()}>
                                 <text className="svgtxt" key={uuid()} x={outputLine.xPos} y={outputLine.yPos - 6} fontFamily="Verdana" fontSize="8" fill="white">{outputLine.key}</text>
-                                <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value === undefined ? "blue" : outputLine.value ? "green" : "red"} strokeWidth="1" />
-                                <circle cx={horizontal ? outputLine.xPos : "130"} cy={horizontal ? outputLine.yPos + 2 : outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
-                                    <animate attributeName="fill" values={outputLine.value === undefined ? "blue;darkblue;blue" : outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
-                                </circle>
+                                <line key={uuid()} x1={horizontal ? outputLine.xPos : 100} x2={horizontal ? outputLine.xPos : "130"} y1={horizontal ? -2 : outputLine.yPos} y2={horizontal ? 15 : outputLine.yPos} stroke={outputLine.value === undefined ? "blue" : outputLine.value === null ? "pink" : outputLine.value ? "green" : "red"} strokeWidth="1" />
+                                <g>
+                                    <circle cx={horizontal ? outputLine.xPos : "130"} cy={horizontal ? outputLine.yPos + 2 : outputLine.yPos} r="4" stroke="#fff5be" strokeWidth="1" fill={outputLine.value ? "green" : "red"} >
+                                        <animate attributeName="fill" values={outputLine.value === undefined ? "blue;darkblue;blue" : outputLine.value === null ? "magenta;" : outputLine.value ? "#01A368;#32CD32;#01A368" : "#C51E3A;#ED2839;#C51E3A"} dur="3s" repeatCount="indefinite" />
+                                    </circle>
+                                    {
+                                        outputLine.value === null ? <text x={horizontal ? outputLine.xPos : "130"} y={(horizontal ? outputLine.yPos + 2 : outputLine.yPos) + 2} textAnchor="middle" stroke="blue" strokeWidth="0.5px" fontSize="6" >E</text> : <></>
+                                    }
+                                </g>
 
                             </g>
                         })

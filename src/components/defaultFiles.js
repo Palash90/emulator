@@ -69,6 +69,11 @@ const defaultFiles = [
     "key": 3,
     "name": "Xor.hdl",
     "content": "/*\n* Xor Chip\n* Xor(a,b) = a And Not(b) Or b And Not(a)\n*/\n\nimport And.hdl;\nimport Or.hdl;\nimport Not.hdl;\n\nCHIP Xor {\n  IN a, b;\n  OUT out;\n\n  PARTS:\n    Not(a=a, out=nota);\n    Not(a=b, out=notb);\n    And(a=a, b=notb, out=anotb);\n    And(a=b, b=nota, out=bnota);\n    Or(a=anotb, b=bnota, out=out);\n}"
+  },
+  {
+    "key": 13,
+    "name": "BusTest.hdl",
+    "content": "import Not.hdl;\n\nCHIP BusTest {\n  IN a, b, ea, eb, ec;\n  OUT a1;\n\n  PARTS:\n    Buffer(in=a, e=ea, out=ba);\n    Buffer(in=b, e=eb, out=bb);\n    Not(a=a, out=nota);\n    Buffer(in=nota, e=ec, out=bnota);\n    BusBit(in=ba, num=1, out=a1);\n    BusBit(in=bb, num=1, out=a1);\n    BusBit(in=bnota, num=1, out=a1);\n}"
   }
 ]
 
