@@ -17,8 +17,6 @@ Below is the list of features that would be beneficial to the projects but I cou
 - On Double click of chip
 - File rename
 - Could not implement QNot on DLatch
-- Error handling during execution
-- Page refresh clears all changes that are not saved with project
 
 ## Contributors
 
