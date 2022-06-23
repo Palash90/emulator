@@ -49,6 +49,7 @@ class NewFile extends Component {
             }
             if (matchedFileNames.length < 1) {
                 var newFileKey = Math.max(...files.map(el => el["key"])) + 1;
+                newFileKey = isFinite(newFileKey) ? newFileKey : 0;
                 files.push({ key: newFileKey, name: this.state.label, content: '' });
                 this.context.setFiles([...files]);
                 this.context.setCurrFile(newFileKey);
