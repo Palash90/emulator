@@ -282,13 +282,10 @@ const builtInChips = [
                 }
 
                 if (!busValueTracker[busInput['num']]) {
-                    console.log("Adding new entry to bus")
                     busValueTracker[busInput['num']] = {};
                 }
 
                 busValueTracker[busInput['num']][busInput['in'].id] = busInput['in'].value;
-
-                console.log("busValueTracker", busValueTracker)
 
                 var activeBusConnections = Object.keys(busValueTracker[busInput['num']]).filter(el => busValueTracker[busInput['num']][el] !== undefined);
 
@@ -376,7 +373,7 @@ const AstGenerator = () => {
         if (chip && chip.length > 0) {
             returnAst.chipDefinition = chip;
         }
-
+        returnAst.id = nanoid();
         return returnAst;
     }
 
@@ -643,9 +640,23 @@ const evaluate = (ast) => {
     return result;
 }
 
+const valueMap = {};
+
 const evaluateAst = (fileName, chipName, ast) => {
 
-    var evaluationResult = {};
+    var evaluationResult = {
+        id: nanoid(),
+        fileName: fileName,
+        chip: chipName,
+        importedChips: [],
+        inputs: [],
+        outputs: []
+    }
+
+
+    ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
+    ast.filter(el => el.type === INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
+    ast.filter(el => el.type === OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
 
     var icons = ast.filter(el => el.type === ICON);
 
@@ -657,6 +668,84 @@ const evaluateAst = (fileName, chipName, ast) => {
 
     var parts = ast.filter(el => el.type === PARTS);
 
+    var operations = {};
+    var chipDetails = {};
+    var chipCallStack = {};
+
+    parts.map(part => {
+        console.log("executing", part.value);
+
+        var chipObject = {}
+
+        part.value.map(chipCall => {
+            var importedChip = evaluationResult.importedChips.filter(el => el.chip === chipCall.chip.value);
+            var builtinChip = builtInChips.filter(el => el.chip === chipCall.chip.value);
+
+            var chip;
+            var imported;
+
+            if (importedChip && importedChip.length > 0) {
+                chip = Object.assign({}, importedChip[0]);
+                imported = true;
+            } else if (builtinChip && builtinChip.length > 0) {
+                chip = Object.assign({}, builtinChip[0]);
+                chip.operations = { ...builtinChip[0].operations };
+                var chipId = nanoid();
+                chip.operations.id = chipId;
+                imported = false;
+            } else {
+                throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
+            }
+
+            if ((chip.inputs.length + chip.outputs.length) != chipCall.parameters.length) {
+                throw fileName +
+                ":Mismatch in chip arguments and parameters at line:" +
+                chipCall.chip.line + " chip '" +
+                chip.chip +
+                "'(" + (imported ? "imported" : "built in") + ") arguments are input:" +
+                JSON.stringify(chip.inputs) +
+                " output:" +
+                JSON.stringify((chip.outputs));
+            }
+
+
+            var chipInputs = [...chip.inputs];
+            var chipOutputs = [...chip.outputs];
+
+            var partInputs = []
+            var partOutputs = [];
+            var partFunction;
+
+            chipCall.parameters.map(el => {
+                if (chip.inputs.includes(el.destination.value)) {
+                    chipInputs = chipInputs.filter(input => input !== el.destination.value);
+                    partInputs.push({ source: el.source.value, dest: el.destination.value });
+                } else if (chip.outputs.includes(el.destination.value)) {
+                    chipOutputs = chipOutputs.filter(output => output !== el.destination.value);
+                    partOutputs.push({ source: el.source.value, dest: el.destination.value });
+                    partFunction = chip.operations;
+                } else {
+                    throw fileName + ":Chip argument not resolved, '" + el.destination.value + "' at line:" + el.destination.line;
+                }
+            });
+
+            if (chipInputs.length > 0) {
+                throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipInputs;
+            }
+            if (chipOutputs.length > 0) {
+                throw fileName + ":Chip parameter not passed for '" + chip.chip + "' at line:" + chipCall.chip.line + " - " + chipOutputs;
+            }
+
+            chipObject = {
+                partFunction, partInputs, partOutputs
+            }
+
+            console.log(chipCall.chip.id, chipObject);
+
+            
+        });
+
+    });
 
     return evaluationResult;
 }
@@ -695,7 +784,6 @@ function parse(file, content, files) {
 
     try {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
-        ast.id = nanoid();
 
         console.log(ast);
 
