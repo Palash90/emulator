@@ -250,7 +250,19 @@ const builtInChips = [
         inputs: ["a", "b"],
         outputs: ["out"],
         operations: {
-            out: (norInput) => !(norInput['a'] || norInput['b'])
+            out: (norInput) => {
+                if (norInput['a'] === null || norInput['b'] === null)
+                    return null;
+
+                var a = typeof (norInput['a']) === 'object' ? norInput['a'].value : norInput['a'];
+                var b = typeof (norInput['b']) === 'object' ? norInput['b'].value : norInput['b'];
+                console.log(a, b)
+
+                if (a === undefined || b === undefined)
+                    return null;
+
+                return !(a || b);
+            }
         }
     },
     {
@@ -314,53 +326,14 @@ const builtInChips = [
         chip: "DLatch",
         inputs: ["D", "E"],
         outputs: ["Q"],
-        D: false,
         operations: {
+            D: false,
             Q: function (latchInput) {
                 if (latchInput['E']) {
-                    this.D = latchInput['D'];
+                    this.D = typeof (latchInput['D']) === 'object' ? latchInput['D'].value : latchInput['D'].value;
                     return this.D;
                 } else {
                     return this.D;
-                }
-            }
-        }
-    },
-    {
-        chip: "JKFlipFlop",
-        inputs: ["J", "K", "E"],
-        outputs: ["Q"],
-        operations: {
-            Q: function (latchInput) {
-                if (jkFlipFlopValueTracker[this.id] && !jkFlipFlopValueTracker[this.id]['recalculateFlipFlop']) {
-                    console.log("Returning old JK FlipFlop value", this.id);
-                    return jkFlipFlopValueTracker[this.id].value;
-                } else {
-                    console.log("Recalculating JK FlipFlop", this.id);
-                    if (!jkFlipFlopValueTracker[this.id]) {
-                        console.log("Initiate value", this.id);
-                        jkFlipFlopValueTracker[this.id] = { value: false };
-                    }
-
-                    if (latchInput['E']) {
-                        if (latchInput['J'] && latchInput['K']) {
-                            console.log("Toggle", jkFlipFlopValueTracker)
-                            jkFlipFlopValueTracker[this.id].value = !jkFlipFlopValueTracker[this.id].value;
-                            console.log("after Toggle", jkFlipFlopValueTracker)
-                        } else if (latchInput['J'] && !latchInput['K']) {
-                            console.log("set")
-                            jkFlipFlopValueTracker[this.id].value = true;
-                        } else if (!latchInput['J'] && latchInput['K']) {
-                            console.log("preset")
-                            jkFlipFlopValueTracker[this.id].value = false;
-                        } else {
-                            console.log("No change")
-                            jkFlipFlopValueTracker[this.id].value = jkFlipFlopValueTracker[this.id].value;
-                        }
-                    }
-
-                    jkFlipFlopValueTracker[this.id]['recalculateFlipFlop'] = false;
-                    return jkFlipFlopValueTracker[this.id].value;
                 }
             }
         }
