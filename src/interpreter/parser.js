@@ -870,7 +870,7 @@ function parse(file, content, files) {
         var ast = AstGenerator.generate(file, tokens, getFileContent);
         var result = evaluate({ error: false, ast: ast })
         result['clearBus'] = () => busValueTracker = {};
-        result['clearJKFlipFlop'] = clockStateChange;
+        result['clockStateChange'] = clockStateChange;
         console.log(result);
         return result;
     } catch (error) {

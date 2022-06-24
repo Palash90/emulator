@@ -14,7 +14,7 @@ export default function runSimulation(currFileId, files, callback) {
             var ast = parse(file.name, file.content, files);
             result = ast;
             if (typeof (result) !== 'string') {
-                result['clearJKFlipFlop'] = ast.clearJKFlipFlop;
+                result['clockStateChange'] = ast.clockStateChange;
                 result['clearBus'] = () => ast.clearBus();
                 result['getValues'] = (input, ast) => getValues(input, ast)
                 function getValues(obj, ast) {

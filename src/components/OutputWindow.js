@@ -17,7 +17,7 @@ function OutputWindow(props) {
     const { vw, vh } = useContext(ScreenSizeContext);
 
     const setClockStateClearFlipFlop = (clockState) => {
-        simulationResult.clearJKFlipFlop(nanoid());
+        simulationResult.clockStateChange(nanoid());
 
         setClockState(clockState);
     }
