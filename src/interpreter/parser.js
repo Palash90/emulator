@@ -251,6 +251,14 @@ const builtInChips = [
         }
     },
     {
+        chip: "Const",
+        inputs: ["in"],
+        outputs: ["out"],
+        operations: {
+            out: (constIn) => constIn['in'] === 1
+        }
+    },
+    {
         chip: "Buffer",
         inputs: ["in", "e"],
         outputs: ["out"],
@@ -319,8 +327,8 @@ const builtInChips = [
         chip: "JKFlipFlop",
         inputs: ["J", "K", "E"],
         outputs: ["Q"],
-        D: false,
         operations: {
+            D: false,
             Q: function (latchInput) {
                 if (latchInput['E']) {
                     if (latchInput['J'] && latchInput['K']) {
@@ -843,4 +851,4 @@ function parse(file, content, files) {
     }
 }
 
-module.exports = { parse }
+export default parse;
