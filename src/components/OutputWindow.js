@@ -5,6 +5,7 @@ import ChipDesign from "./ChipDesign";
 import SVG from 'react-inlinesvg';
 import ClockModule from "./ClockModule";
 import ScreenSizeContext from "./ScreenSizeContext";
+import { nanoid } from "nanoid";
 
 function OutputWindow(props) {
     const { simulationResult } = useContext(SimulationContext);
@@ -14,6 +15,12 @@ function OutputWindow(props) {
     const [error, setError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const { vw, vh } = useContext(ScreenSizeContext);
+
+    const setClockStateClearFlipFlop = (clockState) => {
+        simulationResult.clearJKFlipFlop(nanoid());
+
+        setClockState(clockState);
+    }
 
     function calculateInputs(allFalse) {
         if (typeof (simulationResult) !== 'string' && !simulationResult.error) {
@@ -67,7 +74,7 @@ function OutputWindow(props) {
         var clocked = simulationResult.ast.inputs.filter(el => el === 'CLOCK').length > 0;
         return <>
             {
-                clocked ? <ClockModule clockState={clockState} setClockState={setClockState} /> : <></>
+                clocked ? <ClockModule clockState={clockState} setClockState={setClockStateClearFlipFlop} /> : <></>
             }
             <ChipDesign error={error} setError={setError} errorMsg={errorMsg} setErrorMsg={setErrorMsg} result={result} setResult={setResult} inputs={inputs} setInputs={setInputs} clockState={clockState} />
             {

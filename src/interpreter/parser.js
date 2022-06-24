@@ -19,10 +19,13 @@ const INPUT_VARIABLES = "INPUT_VARIABLES";
 const OUTPUT_VARIABLES = "OUTPUT_VARIABLES";
 const PARTS = "PARTS"
 const ICON = "ICON"
-var busValueTracker = {};
 const buffer = 'BUFFER'
 
-const astMap = {};
+var busValueTracker = {};
+var jkFlipFlopValueTracker = {};
+var lastClockId = undefined;
+var recalculateFlipFlop = false;
+
 
 const Tokenizer = () => {
     var tokens = [];
@@ -328,21 +331,36 @@ const builtInChips = [
         inputs: ["J", "K", "E"],
         outputs: ["Q"],
         operations: {
-            D: false,
             Q: function (latchInput) {
-                if (latchInput['E']) {
-                    if (latchInput['J'] && latchInput['K']) {
-                        this.D = !this.D;
-                    } else if (latchInput['J'] && !latchInput['K']) {
-                        this.D = true;
-                    } else if (!latchInput['J'] && latchInput['K']) {
-                        this.D = false;
-                    } else {
-                        this.D = this.D;
-                    }
-                    return this.D;
+                if (jkFlipFlopValueTracker[this.id] && !jkFlipFlopValueTracker[this.id]['recalculateFlipFlop']) {
+                    console.log("Returning old JK FlipFlop value", this.id);
+                    return jkFlipFlopValueTracker[this.id].value;
                 } else {
-                    return this.D;
+                    console.log("Recalculating JK FlipFlop", this.id);
+                    if (!jkFlipFlopValueTracker[this.id]) {
+                        console.log("Initiate value", this.id);
+                        jkFlipFlopValueTracker[this.id] = { value: false };
+                    }
+
+                    if (latchInput['E']) {
+                        if (latchInput['J'] && latchInput['K']) {
+                            console.log("Toggle", jkFlipFlopValueTracker)
+                            jkFlipFlopValueTracker[this.id].value = !jkFlipFlopValueTracker[this.id].value;
+                            console.log("after Toggle", jkFlipFlopValueTracker)
+                        } else if (latchInput['J'] && !latchInput['K']) {
+                            console.log("set")
+                            jkFlipFlopValueTracker[this.id].value = true;
+                        } else if (!latchInput['J'] && latchInput['K']) {
+                            console.log("preset")
+                            jkFlipFlopValueTracker[this.id].value = false;
+                        } else {
+                            console.log("No change")
+                            jkFlipFlopValueTracker[this.id].value = jkFlipFlopValueTracker[this.id].value;
+                        }
+                    }
+
+                    jkFlipFlopValueTracker[this.id]['recalculateFlipFlop'] = false;
+                    return jkFlipFlopValueTracker[this.id].value;
                 }
             }
         }
@@ -843,8 +861,17 @@ function parse(file, content, files) {
     }
 
     try {
+        const clockStateChange = (clockId) => {
+            if (lastClockId !== clockId) {
+                Object.keys(jkFlipFlopValueTracker).map(value => jkFlipFlopValueTracker[value].recalculateFlipFlop = true);
+                lastClockId = clockId;
+            }
+        }
         var ast = AstGenerator.generate(file, tokens, getFileContent);
-        var result = evaluate({ error: false, ast: ast, clearBus: () => busValueTracker = {} })
+        var result = evaluate({ error: false, ast: ast })
+        result['clearBus'] = () => busValueTracker = {};
+        result['clearJKFlipFlop'] = clockStateChange;
+        console.log(result);
         return result;
     } catch (error) {
         return handleFailure(error);
