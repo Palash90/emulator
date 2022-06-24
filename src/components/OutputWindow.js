@@ -16,12 +16,6 @@ function OutputWindow(props) {
     const [errorMsg, setErrorMsg] = useState('');
     const { vw, vh } = useContext(ScreenSizeContext);
 
-    const setClockStateClearFlipFlop = (clockState) => {
-        simulationResult.clockStateChange(nanoid());
-
-        setClockState(clockState);
-    }
-
     function calculateInputs(allFalse) {
         if (typeof (simulationResult) !== 'string' && !simulationResult.error) {
             var input = {};
@@ -74,7 +68,7 @@ function OutputWindow(props) {
         var clocked = simulationResult.ast.inputs.filter(el => el === 'CLOCK').length > 0;
         return <>
             {
-                clocked ? <ClockModule clockState={clockState} setClockState={setClockStateClearFlipFlop} /> : <></>
+                clocked ? <ClockModule clockState={clockState} setClockState={setClockState} /> : <></>
             }
             <ChipDesign error={error} setError={setError} errorMsg={errorMsg} setErrorMsg={setErrorMsg} result={result} setResult={setResult} inputs={inputs} setInputs={setInputs} clockState={clockState} />
             {

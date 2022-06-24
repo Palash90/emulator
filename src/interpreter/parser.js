@@ -22,10 +22,6 @@ const ICON = "ICON"
 const buffer = 'BUFFER'
 
 var busValueTracker = {};
-var jkFlipFlopValueTracker = {};
-var lastClockId = undefined;
-var recalculateFlipFlop = false;
-
 
 const Tokenizer = () => {
     var tokens = [];
@@ -256,7 +252,6 @@ const builtInChips = [
 
                 var a = typeof (norInput['a']) === 'object' ? norInput['a'].value : norInput['a'];
                 var b = typeof (norInput['b']) === 'object' ? norInput['b'].value : norInput['b'];
-                console.log(a, b)
 
                 if (a === undefined || b === undefined)
                     return null;
@@ -834,16 +829,9 @@ function parse(file, content, files) {
     }
 
     try {
-        const clockStateChange = (clockId) => {
-            if (lastClockId !== clockId) {
-                Object.keys(jkFlipFlopValueTracker).map(value => jkFlipFlopValueTracker[value].recalculateFlipFlop = true);
-                lastClockId = clockId;
-            }
-        }
         var ast = AstGenerator.generate(file, tokens, getFileContent);
         var result = evaluate({ error: false, ast: ast })
         result['clearBus'] = () => busValueTracker = {};
-        result['clockStateChange'] = clockStateChange;
         console.log(result);
         return result;
     } catch (error) {
