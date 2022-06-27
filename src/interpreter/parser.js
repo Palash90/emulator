@@ -1,6 +1,4 @@
 
-const nanoid = require("nanoid").nanoid;
-
 const OPERATOR = 0;
 const SEPARATOR = 1;
 const VARIABLE = 2;
@@ -43,8 +41,7 @@ const Tokenizer = () => {
                 if (tokenPart !== '') {
                     var token = {
                         value: tokenPart,
-                        line: line,
-                        id: nanoid()
+                        line: line
                     };
                     tokenPart = "";
                     tokens.push(token);
@@ -54,8 +51,7 @@ const Tokenizer = () => {
                     var opearatorToken =
                     {
                         value: currChar,
-                        line: line,
-                        id: nanoid()
+                        line: line
                     };
                     tokens.push(opearatorToken);
                 }
@@ -65,8 +61,7 @@ const Tokenizer = () => {
                     var newLineToken =
                     {
                         value: currChar,
-                        line: line,
-                        id: nanoid()
+                        line: line
                     };
                     tokens.push(newLineToken);
                 }
@@ -76,8 +71,7 @@ const Tokenizer = () => {
                     var remainingToken =
                     {
                         value: tokenPart,
-                        line: line,
-                        id: nanoid()
+                        line: line
                     };
                     tokens.push(remainingToken);
                 }
@@ -290,34 +284,6 @@ const builtInChips = [
         }
     },
     {
-        chip: "BusBit",
-        inputs: ["in", 'num'],
-        outputs: ["out"],
-        operations: {
-            out: function (busInputs) {
-                busInputs.map(busInput => {
-                    if (busInput['in'].type !== buffer) {
-                        throw "Bus can only have buffers as input";
-                    }
-
-                    if (!busValueTracker[busInput['num']]) {
-                        busValueTracker[busInput['num']] = {};
-                    }
-
-                    busValueTracker[busInput['num']][busInput['in'].id] = busInput['in'].value;
-                })
-
-                var activeBusConnections = Object.keys(busValueTracker[busInputs[0]['num']]).filter(el => busValueTracker[busInputs[0]['num']][el] !== undefined);
-
-                if (activeBusConnections.length > 1) {
-                    return null
-                }
-
-                return activeBusConnections.length === 1 ? busValueTracker[busInputs[0]['num']][activeBusConnections[0]] : undefined;
-            }
-        }
-    },
-    {
         chip: "DLatch",
         inputs: ["D", "E"],
         outputs: ["Q"],
@@ -369,7 +335,6 @@ const AstGenerator = () => {
         if (chip && chip.length > 0) {
             returnAst.chipDefinition = chip;
         }
-        returnAst.id = nanoid();
         return returnAst;
     }
 
@@ -641,7 +606,6 @@ const valueMap = {};
 const evaluateAst = (fileName, chipName, ast) => {
 
     var evaluationResult = {
-        id: nanoid(),
         fileName: fileName,
         chip: chipName,
         importedChips: [],
@@ -683,8 +647,6 @@ const evaluateAst = (fileName, chipName, ast) => {
             } else if (builtinChip && builtinChip.length > 0) {
                 chip = Object.assign({}, builtinChip[0]);
                 chip.operations = { ...builtinChip[0].operations };
-                var chipId = nanoid();
-                chip.operations.id = chipId;
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
