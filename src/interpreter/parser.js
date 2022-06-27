@@ -241,16 +241,9 @@ const builtInChips = [
         outputs: ["out"],
         operations: {
             out: (norInput) => {
-                if (norInput['a'] === null || norInput['b'] === null)
+                if (norInput['a'] === undefined || norInput['b'] === undefined)
                     return null;
-
-                var a = typeof (norInput['a']) === 'object' ? norInput['a'].value : norInput['a'];
-                var b = typeof (norInput['b']) === 'object' ? norInput['b'].value : norInput['b'];
-
-                if (a === undefined || b === undefined)
-                    return null;
-
-                return !(a || b);
+                return !(norInput['a'] || norInput['b']);
             }
         }
     },
@@ -277,8 +270,7 @@ const builtInChips = [
 
                 return {
                     type: buffer,
-                    value: value,
-                    id: this.id
+                    value: value
                 }
             }
         }
@@ -291,7 +283,7 @@ const builtInChips = [
             D: false,
             Q: function (latchInput) {
                 if (latchInput['E']) {
-                    this.D = typeof (latchInput['D']) === 'object' ? latchInput['D'].value : latchInput['D'].value;
+                    this.D = latchInput['D'];
                     return this.D;
                 } else {
                     return this.D;
