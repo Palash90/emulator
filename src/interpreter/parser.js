@@ -241,7 +241,7 @@ const builtInChips = [
         outputs: ["out"],
         operations: {
             out: (norInput) => {
-                if (norInput['a'] === undefined || norInput['b'] === undefined)
+                if (norInput['a'] === undefined || norInput['b'] === undefined || norInput['a'] === null || norInput['b'] === null)
                     return null;
                 return !(norInput['a'] || norInput['b']);
             }
@@ -268,10 +268,7 @@ const builtInChips = [
                     value = undefined;
                 }
 
-                return {
-                    type: buffer,
-                    value: value
-                }
+                return value;
             }
         }
     },
