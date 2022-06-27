@@ -16,14 +16,19 @@ const defaultFiles = [
     "content": "<svg width=\"120\" height=\"100\">\n                    <defs>\n                        <linearGradient id=\"grad3\" x1=\"0%\" y1=\"100%\" x2=\"100%\" y2=\"0%\">\n                            <stop offset=\"10%\" style=\"stop-color:#09203F;stop-opacity:1\" />\n                            <stop offset=\"90%\" style=\"stop-color:#367588;stop-opacity:1\" />\n                        </linearGradient>\n                    </defs>\n                    <g>\n                        <rect width=\"$width\" height=\"$height\" style=\"fill:url(#grad3);fill-opacity=1;stroke-width:1;stroke:rgb(0,0,0)\" />\n                        <text x=\"$txtPosX\" y=\"$txtPosY\" font-family=\"Verdana\" text-anchor=\"middle\" font-size=\"10\" fill=\"yellow\">And\n                        </text></g>\n                </svg>\n"
   },
   {
-    "key": 11,
-    "name": "Demultiplexer.hdl",
-    "content": "import Not.hdl;\n\nCHIP Demultiplexer{\n  IN a, b, c;\n  OUT o1, o2, o3, o4, o5, o6, o7, o8;\n  PARTS:\n    Not(a=a, out=o1);\n  Not(a=a, out=o2);\n  Not(a=a, out=o3);\n  Not(a=a, out=o4);\n  Not(a=a, out=o5);\n  Not(a=a, out=o6);\n  Not(a=a, out=o7);\n  Not(a=a, out=o8);\n}"
+  "key": 11,
+  "name": "TwoToOneMultiplexer.hdl",
+  "content": "import And.hdl;\nimport Or.hdl;\nimport Not.hdl;\n\nCHIP TwoToOneMultiplexer {\n  IN s, a, b;\n  OUT out;\n\n  PARTS:\n    Not(a=s, out=notS);\n    And(a=notS, b=a, out=aNotS);\n    And(a=s, b=b, out=sb);\n    Or(a=aNotS, b=sb, out=out);\n}"
   },
   {
     "key": 10,
     "name": "EightBitAdder.hdl",
     "content": "import Xor.hdl;\nimport FullAdder.hdl;\n\nCHIP EightBitAdder {\n  IN cin, \n     a8, a7, a6, a5, a4, a3, a2, a1,\n     b8, b7, b6, b5, b4, b3, b2, b1;\n  OUT cout, s8, s7, s6, s5, s4, s3, s2, s1;\n\n  PARTS:\n    Xor(a=b1, b=cin, out=xorb1);\n    Xor(a=b2, b=cin, out=xorb2);\n    Xor(a=b3, b=cin, out=xorb3);\n    Xor(a=b4, b=cin, out=xorb4);\n    Xor(a=b5, b=cin, out=xorb5);\n    Xor(a=b6, b=cin, out=xorb6);\n    Xor(a=b7, b=cin, out=xorb7);\n    Xor(a=b8, b=cin, out=xorb8);\n    FullAdder(a=a1, b=xorb1, cin=cin, s=s1, cout=c1);\n    FullAdder(a=a2, b=xorb2, cin=c1, s=s2, cout=c2);\n    FullAdder(a=a3, b=xorb3, cin=c2, s=s3, cout=c3);\n    FullAdder(a=a4, b=xorb4, cin=c3, s=s4, cout=c4);\n    FullAdder(a=a5, b=xorb5, cin=c4, s=s5, cout=c5);\n    FullAdder(a=a6, b=xorb6, cin=c5, s=s6, cout=c6);\n    FullAdder(a=a7, b=xorb7, cin=c6, s=s7, cout=c7);\n    FullAdder(a=a8, b=xorb8, cin=c7, s=s8, cout=cout);\n}"
+  },
+  {
+  "key": 4,
+  "name": "OneBitAlu.hdl",
+  "content": "import And.hdl;\nimport Or.hdl;\nimport TwoToOneMultiplexer.hdl;\n\nCHIP OneBitAlu {\n  IN op, a, b;\n  OUT out;\n\n  PARTS:\n    And(a=a, b=b, out=andOut);\n    Or(a=a, b=b, out=orOut);\n    TwoToOneMultiplexer(s=op, a=andOut, b=orOut, out=out);\n}"
   },
   {
     "key": 9,
