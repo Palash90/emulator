@@ -287,6 +287,34 @@ const builtInChips = [
                 }
             }
         }
+    },
+    {
+        chip: "JKLatch",
+        inputs: ["J", "K", "E"],
+        outputs: ["Q"],
+        operations: {
+            D: false,
+            Q: function (latchInput) {
+             //   console.log(this.D, latchInput)
+                if (latchInput['E']) {
+                    if (latchInput['J'] && !latchInput['K']) {
+              //          console.log("Change state to true")
+                        this.D = true;
+                    } else if (!latchInput['J'] && latchInput['K']) {
+                //        console.log("Change state to false")
+                        this.D = false;
+                    } else if (!latchInput['J'] && !latchInput['K']) {
+                  //      console.log("No Change")
+                        this.D = this.D;
+                    } else {
+                    //    console.log("Toggle")
+                        this.D = !this.D;
+                    }
+                }
+
+                return this.D;
+            }
+        }
     }
 ];
 

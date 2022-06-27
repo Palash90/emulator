@@ -5,7 +5,7 @@ import ChipDesign from "./ChipDesign";
 import SVG from 'react-inlinesvg';
 import ClockModule from "./ClockModule";
 import ScreenSizeContext from "./ScreenSizeContext";
-import { nanoid } from "nanoid";
+import { Form, Row, Col } from "react-bootstrap";
 
 function OutputWindow(props) {
     const { simulationResult } = useContext(SimulationContext);
@@ -15,6 +15,7 @@ function OutputWindow(props) {
     const [error, setError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const { vw, vh } = useContext(ScreenSizeContext);
+    const [showTable, setShowTable] = useState(false);
 
     function calculateInputs(allFalse) {
         if (typeof (simulationResult) !== 'string' && !simulationResult.error) {
@@ -71,8 +72,21 @@ function OutputWindow(props) {
                 clocked ? <ClockModule clockState={clockState} setClockState={setClockState} /> : <></>
             }
             <ChipDesign error={error} setError={setError} errorMsg={errorMsg} setErrorMsg={setErrorMsg} result={result} setResult={setResult} inputs={inputs} setInputs={setInputs} clockState={clockState} />
+            <Row>
+                <Col>
+                    <Form>
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="Show Truth Table"
+                            value={showTable}
+                            onChange={(value) => setShowTable(value.target.checked)}
+                        />
+                    </Form>
+                </Col>
+            </Row>
             {
-                Math.max(simulationResult.ast.inputs.length, simulationResult.ast.outputs.length) <= 4 && !clocked ? <TruthTable clockState={clockState} /> : <></>
+                showTable ? (Math.max(simulationResult.ast.inputs.length, simulationResult.ast.outputs.length) <= 4 && !clocked ? <TruthTable clockState={clockState} /> : <></>) : <></>
             }
         </>
     }
