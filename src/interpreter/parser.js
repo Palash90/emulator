@@ -806,7 +806,12 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
             });
 
             partOutputs.map(output => {
-                var inputs = chipCall.parameters.map(param => chipName + "." + param.source.value)
+                var inputs = chipCall.parameters.map(param => {
+                    if (chip.inputs.includes(param.destination.value)) {
+                        return chipName + "." + param.source.value;
+                    }
+                });
+                inputs = inputs.filter(el => el !== null && el !== undefined);
                 chipCallStackArr.push({ id: chipName + "." + output.source, type: chip.chip, inputs: inputs, state: 0 });
             });
 
@@ -839,9 +844,6 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
 
     evaluationResult.operations = operations;
     evaluationResult.chipCallStack = chipCallStack;
-
-    console.log(chipCallStackArr)
-
     return evaluationResult;
 }
 
