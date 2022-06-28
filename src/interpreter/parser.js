@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 
 const OPERATOR = 0;
 const SEPARATOR = 1;
@@ -295,19 +296,19 @@ const builtInChips = [
         operations: {
             D: false,
             Q: function (latchInput) {
-             //   console.log(this.D, latchInput)
+                console.log(this.D, latchInput)
                 if (latchInput['E']) {
                     if (latchInput['J'] && !latchInput['K']) {
-              //          console.log("Change state to true")
+                        //          console.log("Change state to true")
                         this.D = true;
                     } else if (!latchInput['J'] && latchInput['K']) {
-                //        console.log("Change state to false")
+                        //        console.log("Change state to false")
                         this.D = false;
                     } else if (!latchInput['J'] && !latchInput['K']) {
-                  //      console.log("No Change")
+                        //      console.log("No Change")
                         this.D = this.D;
                     } else {
-                    //    console.log("Toggle")
+                        //    console.log("Toggle")
                         this.D = !this.D;
                     }
                 }
@@ -732,37 +733,18 @@ const evaluateAst = (fileName, chipName, ast) => {
             })
 
             var getValues = (input, part) => {
-                if (chipDetails[part] && Array.isArray(chipDetails[part])) {
-                    var values = [];
-                    chipDetails[part].map(repeatedPart => {
-                        var value = {};
-                        repeatedPart.partInputs.map(pi => {
-                            if (pi.source in input) {
-                                value[pi.dest] = input[pi.source]
-                            } else if (pi.source in operations) {
-                                value[pi.dest] = operations[pi.source](input)
-                            } else if (!isNaN(parseInt(pi.source))) {
-                                value[pi.dest] = parseInt(pi.source);
-                            } else {
-                                throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
-                            }
-                        });
-                        values.push(value)
-                    })
-                } else {
-                    var values = {}
-                    chipDetails[part].partInputs.map(pi => {
-                        if (pi.source in input) {
-                            values[pi.dest] = input[pi.source]
-                        } else if (pi.source in operations) {
-                            values[pi.dest] = operations[pi.source](input)
-                        } else if (!isNaN(parseInt(pi.source))) {
-                            values[pi.dest] = parseInt(pi.source);
-                        } else {
-                            throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
-                        }
-                    });
-                }
+                var values = {}
+                chipDetails[part].partInputs.map(pi => {
+                    if (pi.source in input) {
+                        values[pi.dest] = input[pi.source]
+                    } else if (pi.source in operations) {
+                        values[pi.dest] = operations[pi.source](input)
+                    } else if (!isNaN(parseInt(pi.source))) {
+                        values[pi.dest] = parseInt(pi.source);
+                    } else {
+                        throw fileName + ": Input or varible not found: " + pi.source + " while determining value of: " + part
+                    }
+                });
                 return values
             }
         });
