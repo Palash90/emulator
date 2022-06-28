@@ -610,100 +610,33 @@ const evaluate = (ast) => {
     }
 
     try {
-        var chipCallStackArr = [];
-        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast, chipCallStackArr)
+     //   result.ast = evaluateAst2(ast.ast.ast)
+        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition,ast.ast.ast)
         result.error = false;
     } catch (err) {
         result.error = true;
         result.errorMessage = err;
     }
 
-
-    var components = [
-        {
-            id: 'And.a',
-            type: 'controlled',
-            inputs: [],
-            state: 0,
-        },
-        {
-            id: 'And.b',
-            type: 'controlled',
-            inputs: [],
-            state: 0,
-        }
-    ];
-
-    components = [...components, ...chipCallStackArr];
-
-    const indexBy = (array, prop) => array.reduce((output, item) => {
-        output[item[prop]] = item;
-        return output;
-    }, {});
-    const componentLookup = indexBy(components, 'id');
-
-    const evaluate = (components, componentLookup) => {
-        console.log(JSON.parse(JSON.stringify(components)));
-
-        const binaryOp = (logicFn, component) => {
-            console.log(component)
-            const aOut = componentLookup[component.inputs[0]];
-            const bOut = componentLookup[component.inputs[1]];
-
-            component.state = (aOut === 'x' || bOut === 'x')
-                ? 'x'
-                : logicFn(aOut.state, bOut.state);
-            return;
-        }
-
-        components.forEach(component => {
-            if (component.type === 'controlled') return;
-            if (component.type === 'Nor') return binaryOp((a, b) => !(a || b), component);
-        });
-
-        console.log(JSON.parse(JSON.stringify(components)));
-    };
-
-    const EVALS_PER_STEP = 1;
-
-    const runFor = 11;
-    const trace = new Trace();
-
-    for (let iteration = 0; iteration < runFor; iteration++) {
-        if (iteration === 0) {
-            componentLookup['And.a'].state = 0;
-            componentLookup['And.b'].state = 0;
-        }
-        if (iteration === 1) {
-            componentLookup['And.a'].state = 0;
-            componentLookup['And.b'].state = 1;
-        }
-        if (iteration === 7) {
-            componentLookup['And.a'].state = 1;
-            componentLookup['And.b'].state = 0;
-        }
-        if (iteration === 9) {
-            componentLookup['And.a'].state = 1;
-            componentLookup['And.b'].state = 1;
-        }
-
-        for (let i = 0; i < EVALS_PER_STEP; i++) {
-            evaluate(components, componentLookup);
-        }
-
-        trace.sample(components);
-    }
-
-    trace.getTraces([
-        'And.out'
-    ]).forEach(trace => console.log(trace));
-
     return result;
 }
 
-const valueMap = {};
+const evaluateAst2 = (ast) => {
+    var imports = ast.filter(el => el.type === IMPORT);
+    var parts = ast.filter(el => el.type === PARTS)[0].value;
 
-const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
+    console.log(imports)
+
+    parts.map(partValue => {
+        var importedChip = imports.filter(el => el.importedAst.chipDefinition === partValue.chip.value);
+        var builtinChip = builtInChips.filter(el => el.chip === partValue.chip.value);
+
+        console.log(importedChip, builtInChips);
+    })
+
+};
+
+const evaluateAst = (fileName, chipName, ast) => {
 
     var evaluationResult = {
         fileName: fileName,
@@ -714,7 +647,7 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
     }
 
 
-    ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast, chipCallStackArr)))
+    ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
     ast.filter(el => el.type === INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
     ast.filter(el => el.type === OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
 
@@ -806,16 +739,6 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
             });
 
             partOutputs.map(output => {
-                var inputs = chipCall.parameters.map(param => {
-                    if (chip.inputs.includes(param.destination.value)) {
-                        return chipName + "." + param.source.value;
-                    }
-                });
-                inputs = inputs.filter(el => el !== null && el !== undefined);
-                chipCallStackArr.push({ id: chipName + "." + output.source, type: chip.chip, inputs: inputs, state: 0 });
-            });
-
-            partOutputs.map(output => {
                 operations[output.source] = (input) => {
                     var values = getValues(input, output.source);
                     var returnValue = chip.operations[output.dest](values)
@@ -844,6 +767,7 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
 
     evaluationResult.operations = operations;
     evaluationResult.chipCallStack = chipCallStack;
+
     return evaluationResult;
 }
 
