@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+const Trace = require('./Trace');
 
 const OPERATOR = 0;
 const SEPARATOR = 1;
@@ -617,7 +617,87 @@ const evaluate = (ast) => {
         result.error = true;
         result.errorMessage = err;
     }
-    console.log(chipCallStackArr)
+
+
+    var components = [
+        {
+            id: 'And.a',
+            type: 'controlled',
+            inputs: [],
+            state: 0,
+        },
+        {
+            id: 'And.b',
+            type: 'controlled',
+            inputs: [],
+            state: 0,
+        }
+    ];
+
+    components = [...components, ...chipCallStackArr];
+
+    const indexBy = (array, prop) => array.reduce((output, item) => {
+        output[item[prop]] = item;
+        return output;
+    }, {});
+    const componentLookup = indexBy(components, 'id');
+
+    const evaluate = (components, componentLookup) => {
+        console.log(JSON.parse(JSON.stringify(components)));
+
+        const binaryOp = (logicFn, component) => {
+            console.log(component)
+            const aOut = componentLookup[component.inputs[0]];
+            const bOut = componentLookup[component.inputs[1]];
+
+            component.state = (aOut === 'x' || bOut === 'x')
+                ? 'x'
+                : logicFn(aOut.state, bOut.state);
+            return;
+        }
+
+        components.forEach(component => {
+            if (component.type === 'controlled') return;
+            if (component.type === 'Nor') return binaryOp((a, b) => !(a || b), component);
+        });
+
+        console.log(JSON.parse(JSON.stringify(components)));
+    };
+
+    const EVALS_PER_STEP = 1;
+
+    const runFor = 11;
+    const trace = new Trace();
+
+    for (let iteration = 0; iteration < runFor; iteration++) {
+        if (iteration === 0) {
+            componentLookup['And.a'].state = 0;
+            componentLookup['And.b'].state = 0;
+        }
+        if (iteration === 1) {
+            componentLookup['And.a'].state = 0;
+            componentLookup['And.b'].state = 1;
+        }
+        if (iteration === 7) {
+            componentLookup['And.a'].state = 1;
+            componentLookup['And.b'].state = 0;
+        }
+        if (iteration === 9) {
+            componentLookup['And.a'].state = 1;
+            componentLookup['And.b'].state = 1;
+        }
+
+        for (let i = 0; i < EVALS_PER_STEP; i++) {
+            evaluate(components, componentLookup);
+        }
+
+        trace.sample(components);
+    }
+
+    trace.getTraces([
+        'And.out'
+    ]).forEach(trace => console.log(trace));
+
     return result;
 }
 
@@ -664,11 +744,9 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
             if (importedChip && importedChip.length > 0) {
                 chip = Object.assign({}, importedChip[0]);
                 imported = true;
-                chip['imported'] = true;
             } else if (builtinChip && builtinChip.length > 0) {
                 chip = Object.assign({}, builtinChip[0]);
                 chip.operations = { ...builtinChip[0].operations };
-                chip['imported'] = false;
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
@@ -728,7 +806,8 @@ const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
             });
 
             partOutputs.map(output => {
-                chipCallStackArr.push({ id: chipName + "." + output.source, type: chip.chip });
+                var inputs = chipCall.parameters.map(param => chipName + "." + param.source.value)
+                chipCallStackArr.push({ id: chipName + "." + output.source, type: chip.chip, inputs: inputs, state: 0 });
             });
 
             partOutputs.map(output => {
