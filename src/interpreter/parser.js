@@ -610,18 +610,20 @@ const evaluate = (ast) => {
     }
 
     try {
-        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
+        var chipCallStackArr = [];
+        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast, chipCallStackArr)
         result.error = false;
     } catch (err) {
         result.error = true;
         result.errorMessage = err;
     }
+    console.log(chipCallStackArr)
     return result;
 }
 
 const valueMap = {};
 
-const evaluateAst = (fileName, chipName, ast) => {
+const evaluateAst = (fileName, chipName, ast, chipCallStackArr) => {
 
     var evaluationResult = {
         fileName: fileName,
@@ -632,7 +634,7 @@ const evaluateAst = (fileName, chipName, ast) => {
     }
 
 
-    ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast)))
+    ast.filter(el => el.type === IMPORT).map(el => evaluationResult.importedChips.push(evaluateAst(el.importedAst.file, el.importedAst.chipDefinition, el.importedAst.ast, chipCallStackArr)))
     ast.filter(el => el.type === INPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.inputs.push(v.value)));
     ast.filter(el => el.type === OUTPUT_VARIABLES).map(el => el.value.map(v => evaluationResult.outputs.push(v.value)));
 
@@ -662,9 +664,11 @@ const evaluateAst = (fileName, chipName, ast) => {
             if (importedChip && importedChip.length > 0) {
                 chip = Object.assign({}, importedChip[0]);
                 imported = true;
+                chip['imported'] = true;
             } else if (builtinChip && builtinChip.length > 0) {
                 chip = Object.assign({}, builtinChip[0]);
                 chip.operations = { ...builtinChip[0].operations };
+                chip['imported'] = false;
                 imported = false;
             } else {
                 throw fileName + ":Chip Not found - '" + chipCall.chip.value + "' at line:" + chipCall.chip.line;
@@ -724,13 +728,17 @@ const evaluateAst = (fileName, chipName, ast) => {
             });
 
             partOutputs.map(output => {
+                chipCallStackArr.push({ id: chipName + "." + output.source, type: chip.chip });
+            });
+
+            partOutputs.map(output => {
                 operations[output.source] = (input) => {
                     var values = getValues(input, output.source);
                     var returnValue = chip.operations[output.dest](values)
                     chipCallStack[output.source] = { chip: chip, inputValues: values, outputValues: returnValue };
                     return returnValue;
                 }
-            })
+            });
 
             var getValues = (input, part) => {
                 var values = {}
@@ -752,6 +760,8 @@ const evaluateAst = (fileName, chipName, ast) => {
 
     evaluationResult.operations = operations;
     evaluationResult.chipCallStack = chipCallStack;
+
+    console.log(chipCallStackArr)
 
     return evaluationResult;
 }
