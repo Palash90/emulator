@@ -610,8 +610,8 @@ const evaluate = (ast) => {
     }
 
     try {
-     //   result.ast = evaluateAst2(ast.ast.ast)
-        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition,ast.ast.ast)
+        evaluateAst2(ast.ast.ast)
+        result.ast = evaluateAst(ast.ast.file, ast.ast.chipDefinition, ast.ast.ast)
         result.error = false;
     } catch (err) {
         result.error = true;
@@ -625,13 +625,21 @@ const evaluateAst2 = (ast) => {
     var imports = ast.filter(el => el.type === IMPORT);
     var parts = ast.filter(el => el.type === PARTS)[0].value;
 
-    console.log(imports)
-
     parts.map(partValue => {
         var importedChip = imports.filter(el => el.importedAst.chipDefinition === partValue.chip.value);
         var builtinChip = builtInChips.filter(el => el.chip === partValue.chip.value);
 
-        console.log(importedChip, builtInChips);
+        if ((importedChip.length + builtinChip.length) === 0) {
+            throw "Chip not found- " + partValue.chip.value + " at line " + partValue.chip.line;
+        } else if ((importedChip.length + builtinChip.length) > 1) {
+            throw "More than one chip definition found- " + partValue.chip.value + " at line " + partValue.chip.line;
+        } else {
+            // Do the coding
+        }
+
+        console.log(importedChip, builtinChip, partValue);
+
+
     })
 
 };
