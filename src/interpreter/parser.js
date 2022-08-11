@@ -622,53 +622,7 @@ const evaluate = (ast) => {
 }
 
 const evaluateAst2 = (ast) => {
-    var imports = ast.filter(el => el.type === IMPORT);
-    var parts = ast.filter(el => el.type === PARTS)[0].value;
-    var operations = [];
-
-    parts.map(partValue => {
-        var importedChip = imports.filter(el => el.importedAst.chipDefinition === partValue.chip.value);
-        var builtinChip = builtInChips.filter(el => el.chip === partValue.chip.value);
-        var chip;
-        var imported;
-
-        if ((importedChip.length + builtinChip.length) > 1) {
-            throw "More than one chip definition found- " + partValue.chip.value + " at line " + partValue.chip.line;
-        } else if (importedChip && importedChip.length > 0) {
-            chip = Object.assign({}, importedChip[0]);
-            imported = true;
-        } else if (builtinChip && builtinChip.length > 0) {
-            chip = Object.assign({}, builtinChip[0]);
-            imported = false;
-        } else {
-            throw "Chip Not found - '" + partValue.chip.value + "' at line:" + partValue.chip.line;
-        }
-
-        if ((chip.inputs.length + chip.outputs.length) != partValue.parameters.length) {
-            throw "" +
-            ":Mismatch in chip arguments and parameters at line:" +
-            partValue.chip.line + " chip '" +
-            chip.chip +
-            "'(" + (imported ? "imported" : "built in") + ") arguments are input:" +
-            JSON.stringify(chip.inputs) +
-            " output:" +
-            JSON.stringify((chip.outputs));
-        }
-
-        if (!imported) {
-        
-            operations.push({
-                id: 'Not Done yet',
-                type: chip.chip,
-                inputs: chip.inputs,
-                state: 0
-            });
-        }
-
-        console.log(importedChip, builtinChip, chip, partValue);
-    })
-
-    return operations;
+   console.log(ast)
 };
 
 const evaluateAst = (fileName, chipName, ast) => {
